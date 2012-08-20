@@ -70,6 +70,10 @@ endif
 
 ; read in data + header
 data=readfits(file+'.fits',header,/silent)
+;if (data eq -1) then data=readfits(file+'.fits',header,exten_no=1)
+; Hack: If the data is in the next extension we read it otherwise we let the script fail later on --JSH
+; Note how this still causes problems down the line, in our checkFUV.py
+; This breaks the 'good' fits files unless we check the dimensions of data first before data eq -1
 readhd,header
 nx=long(naxis1)
 ny=long(naxis2)

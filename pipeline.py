@@ -9,10 +9,10 @@
 #
 # JSH 2010-10-28
 #       
-#     previous edit: 2010-07-20
-#     last edit: 2011-08-05
+#     previous edit: 2011-10-26
+#     last edit: 2012-02-14 -- fedora bug w/ formatting see pdrLib.py also
 
-# import pdb #debugger
+import pdb #debugger
 import pdrLib as pdr       #now includes José's scripts as well
 import numpy as np
 import sys, os             #for sys.argv, os.path.splitext and os.path.exist
@@ -60,9 +60,9 @@ def extractHI(configOpts):
   if os.path.exists('{0}_Regions/{0}_Reg001.fits'.format(output)):
     print "... extracted regions exist - skipping this step."
   else:
-    # if False in map(os.path.exists, [hiImage, hiMaskFile]):
-      # print 'Error: Either the image or the mask does not exist\n'
-      # sys.exit()
+    if False in map(os.path.exists, [hiImage, hiMaskFile]):
+      print 'Error: Either the image or the mask does not exist\n'
+      sys.exit()
     print 'Warning: hardcoded HI region size of 20 pixels'
     pdr.extractFromCoords(hiImage, ds9RegsFile, output, imageDS9 = fuvImage, size=20, mosaic=False, mosaicBack=0)
   print
@@ -104,11 +104,12 @@ def getflux(configOpts):
     #Write: UV fluxes
     fluxfile = open(data_uv, 'w')
     print "Flux info:"
-    print "#PDRID, aperture (arcsec), mean at r (units/pixel), bg flux, cumul. flux, net flux"
+    print "#PDRID, aperture (arcsec), mean at r (units/arcsec^2), bg flux, cumul. flux, net flux"
     fluxfile.write("#PDRID, RA, DEC, aperture (arcsec), mean at r (units/pixel), bg flux, cumul. flux, net flux, sigma net flux\n")
     for n in range(len(fluxtable)):
-      print "{0.PDRID:>3}, {1.aperture:5.2f}, {1.mean_at_r:7.5e}, {1.bgflux:7.5e}, {1.cumulflux:7.5e}, {1.netflux:7.5e}".format(uvcoords[n], fluxtable[n])
-      fluxfile.write("{0.PDRID:>3}, {0.RA}, {0.DEC}, {1.aperture:7.5e}, {1.mean_at_r:7.5e}, {1.bgflux:7.5e}, {1.cumulflux:7.5e}, {1.netflux:7.5e}, {1.sflux:7.5e}\n".format(uvcoords[n], fluxtable[n]))
+      #fedora bug: changed PDRID:>3 to PDRID:3g
+      print "{0.PDRID:3g}, {1.aperture:5.2f}, {1.mean_at_r:7.5e}, {1.bgflux:7.5e}, {1.cumulflux:7.5e}, {1.netflux:7.5e}".format(uvcoords[n], fluxtable[n])
+      fluxfile.write("{0.PDRID:3g}, {0.RA}, {0.DEC}, {1.aperture:7.5e}, {1.mean_at_r:7.5e}, {1.bgflux:7.5e}, {1.cumulflux:7.5e}, {1.netflux:7.5e}, {1.sflux:7.5e}\n".format(uvcoords[n], fluxtable[n]))
     fluxfile.close()
     
   print
@@ -139,10 +140,10 @@ def getHI(configOpts, fluxtable):
       print "Fatal error: number of UV and HI PDRIDs do not match. Try regenerating the HI files."
       exit(0)
   except:
-    # pdb.set_trace()
     #File does not exist, so process HI postage stamp regions.
     #Must have regions with names matching the PDRIDs
     scale = configOpts['HIscale'] # 2.896e19 for NGC 628 (m?)Jy/beam to cm-2
+    hi_bg = configOpts['hiBackground']
     print "Using map scaling of {0} cm-2".format(scale)
     hiresults = [[] for dummy in xrange(5)] #PDRID, ra, dec, NHI, sNHI
     #Warning: up to 999 files
@@ -157,12 +158,28 @@ def getHI(configOpts, fluxtable):
       else:
         logfile = hi_logsbase + "{0:03}.txt".format(int(fluxtable.PDRID[i]))
         patches = pdr.read_secat(catfile, fitsfile, logfile, wcs=True)
+        #Patches are not background-subtracted, that will happen now:
+
         for n in range(len(patches[0])):
+          if patches[2][n] > (hi_bg*2.): 
+            #subtract the background and ignore patches that are fainter than hi_bg
+            hiresults[0].append(fluxtable.PDRID[i])
+            hiresults[1].append(patches[0][n])
+            hiresults[2].append(patches[1][n])
+            hiresults[3].append((patches[2][n]-hi_bg)*scale)
+            hiresults[4].append(hi_bg * scale * 0.5) #fix sN_HI to half the background value
+          else:
+            print "Patch too faint: ", patches[2][n]
+
+        if not np.size(np.where(hiresults[0] == fluxtable.PDRID[i])):
+          print "No suitable patches were found for PDRID ", fluxtable.PDRID[i], "; creating empty entry."
+          #With SExtractor, this is unlikely since it does not pick up the faintest patches
           hiresults[0].append(fluxtable.PDRID[i])
-          hiresults[1].append(patches[0][n])
-          hiresults[2].append(patches[1][n])
-          hiresults[3].append(patches[2][n]*scale)
-          hiresults[4].append(patches[3][n]*scale)
+          hiresults[1].append(0)
+          hiresults[2].append(0)
+          hiresults[3].append(0)
+          hiresults[4].append(0)
+
     #End for
   
     #Finally, convert the results into a rec array and save the results
@@ -176,8 +193,9 @@ def getHI(configOpts, fluxtable):
     for n in range(len(hidata)):
       #print type(hidata[n].NHI)
       #Apparently python 2.6 needs explicit conversion from numpy.float32, so workaround
-      print "{0.PDRID:>3}, {0.RA:14s}, {0.DEC:14s}, {1:7.5g}, {2:7.5g}".format(hidata[n], float(hidata[n].NHI), float(hidata[n].sNHI))
-      hifile.write("{0.PDRID:>3}, {0.RA:14s}, {0.DEC:14s}, {1:7.5g}, {2:7.5g}\n".format(hidata[n], float(hidata[n].NHI), float(hidata[n].sNHI)))
+      #fedora bug: changed PDRID:>3 to PDRID:3g
+      print "{0.PDRID:3g}, {0.RA:14s}, {0.DEC:14s}, {1:7.5g}, {2:7.5g}".format(hidata[n], float(hidata[n].NHI), float(hidata[n].sNHI))
+      hifile.write("{0.PDRID:3g}, {0.RA:14s}, {0.DEC:14s}, {1:7.5g}, {2:7.5g}\n".format(hidata[n], float(hidata[n].NHI), float(hidata[n].sNHI)))
     hifile.close()
   #End of try/except
 
@@ -200,20 +218,21 @@ def getRhoRG(configOpts, fluxtable, hidata, uvheader):
   pa = configOpts['pa']
   incl = configOpts['incl']
   dist = configOpts['distance'] *1e6 #in Mpc but we want pc here
+  #We estimate the error in rho to be of the order of half a pixel size
+  pix_size = uvheader.getXPixelSizeDeg() * 3600 #Assume square pixel
+  srho_fixed = dist / 3600. * np.pi / 180. * 0.5 * pix_size #srho in parsec
 
   print "Calculating Rho_HI, Rgal, G0"
-  print "Warning: using hardcoded values for srho."
   for i in range(np.size(fluxtable.PDRID)):
     Rgal.append(pdr.separation(fluxtable.RA[i], fluxtable.DEC[i], c_RA, c_DEC, pa, incl, dist*1e-3, uvheader)) #dist passed in kpc so Rgal will be in kpc
     while (n < np.size(hidata.PDRID)) and (hidata.PDRID[n] == fluxtable.PDRID[i]):
       rhoHI.append(pdr.separation(fluxtable.RA[i], fluxtable.DEC[i], hidata.RA[n], hidata.DEC[n], pa, incl, dist, uvheader)) #dist in pc 
-      srho.append(18) #<< !!hardcoded error estimate in rho, from error estimates.ods; could be read from internals
+      srho.append(srho_fixed) 
       n += 1
 
   #Variables in: fluxtable.netflux, fluxtable.mean_at_r, dist, pix_size, ext, and rho_HI
   #variable out: G0, contr
-  #dist already extracted above
-  pix_size = uvheader.getXPixelSizeDeg() * 3600 #Assume square pixel
+  #dist already extracted above; pix_size calculated above
   ext = configOpts['ext']
   G0 = []
   contr = [] #source contrast
@@ -226,7 +245,7 @@ def getRhoRG(configOpts, fluxtable, hidata, uvheader):
   #Now we have rhoHI, srho and G0 for each hidata.PDRID
   #G0 and contr end up as a list of arrays, that is unwieldy, so fix here:
   G0 = map(float, G0)
-  contr = map(float, G0)
+  contr = map(float, contr)
 
   return rhoHI, srho, Rgal, G0, contr
 
@@ -246,7 +265,6 @@ def dusttogas(configOpts, fluxtable, hidata, Rgal):
   dusttype, dustmodel = pdr.read_dust(configOpts)
     #dust parameters extracted from configOpts depending on the dust model (const, slope, map)
 
-  # pdb.set_trace()
   dd0 = []; sdd0 = []
   for i in range(np.size(hidata.PDRID)):
     uv_idx = np.where(fluxtable.PDRID == hidata.PDRID[i])[0][0] 
@@ -263,7 +281,7 @@ def dusttogas(configOpts, fluxtable, hidata, Rgal):
       s = 0.1
 
     dd0.append(d)
-    sdd0.append(s) #could be a percentage of dd0 if desired << !! hardcoded, to be fixed !! (maybe in the internals file: default measurement errors)
+    sdd0.append(s) #all errors are absolute
 
   print "Warning: using hardcoded 8.69 solar value and assuming 12+log(O/H) input for dust map"
   print
@@ -293,7 +311,15 @@ def collate(configOpts, fluxtable, hidata, dd0, sdd0, rhoHI, srho, G0, contr):
       #print "{0:>3}, {1:12s}, {2:12s}, {3:8g}, {4:6g}, {5:.3f}, {6:f}, {7:.3f}, {8:.3f}, {9:g}, {10:.3g}, {11:g}".format(hidata.PDRID[i], fluxtable.RA[uv_idx], fluxtable.DEC[uv_idx], hidata.NHI[i], hidata.sNHI[i], dd0[i], sdd0[i], rhoHI[i], srho[i], fluxtable.netflux[uv_idx], fluxtable.sflux[uv_idx], fluxtable.mean_at_r[uv_idx])
 
       #Patch RAs, DECs not written here
-      fullfile.write("{0:>3}, {1:12s}, {2:12s}, {3:8g}, {4:6g}, {5:.3f}, {6:f}, {7:.3f}, {8:.3f}, {9:g}, {10:.3g}, {11:g}\n".format(hidata.PDRID[i], fluxtable.RA[uv_idx], fluxtable.DEC[uv_idx], hidata.NHI[i], hidata.sNHI[i], dd0[i], sdd0[i], rhoHI[i], srho[i], fluxtable.netflux[uv_idx], fluxtable.sflux[uv_idx], fluxtable.mean_at_r[uv_idx]))
+      #fullfile.write("{0:>3}, {1:12s}, {2:12s}, {3:8g}, {4:6g}, {5:.3f}, {6:f}, {7:.3f}, {8:.3f}, {9:g}, {10:.3g}, {11:g}\n".format(hidata.PDRID[i], fluxtable.RA[uv_idx], fluxtable.DEC[uv_idx], hidata.NHI[i], hidata.sNHI[i], dd0[i], sdd0[i], rhoHI[i], srho[i], fluxtable.netflux[uv_idx], fluxtable.sflux[uv_idx], fluxtable.mean_at_r[uv_idx]))
+      #Fedora bug: need to type cast the variables 
+      fullfile.write("{0:>3}, {1:12s}, {2:12s}, {3:8g}, {4:6g}, {5:.3f}, {6:f}, {7:.3f}, {8:.3f}, {9:g}, {10:.3g}, {11:g}\n".format(
+            int(hidata.PDRID[i]), 
+            fluxtable.RA[uv_idx], fluxtable.DEC[uv_idx], 
+            hidata.NHI[i], hidata.sNHI[i], 
+            dd0[i], sdd0[i], rhoHI[i], srho[i], 
+            fluxtable.netflux[uv_idx], fluxtable.sflux[uv_idx], 
+            fluxtable.mean_at_r[uv_idx]))
 
       for m, n in enumerate((hidata.PDRID[i], fluxtable.RA[uv_idx], fluxtable.DEC[uv_idx], hidata.RA[i], hidata.DEC[i], Rgal[uv_idx], hidata.NHI[i], hidata.sNHI[i], dd0[i], sdd0[i], rhoHI[i], srho[i], fluxtable.netflux[uv_idx], fluxtable.sflux[uv_idx], fluxtable.mean_at_r[uv_idx], fluxtable.aperture[uv_idx], G0[i], contr[i], ntot[i], sntot[i])):
           #print m, n
@@ -320,19 +346,30 @@ def calculatentot(configOpts, data):
 
   for i in range(np.size(data.PDRID)):
     data.ntot[i] = pdr.PDRmodel(data.flux[i], ext, dist, data.dd0[i], data.rhoHI[i], data.NHI[i])
-    data.sntot[i] = pdr.errors(data.ntot[i], data.flux[i], data.sflux[i], data.rhoHI[i], data.srho[i], data.dd0[i], data.sdd0[i], data.NHI[i], data.sNHI[i], ext)
+    data.sntot[i] = pdr.errors(data.ntot[i], data.flux[i], data.sflux[i], data.rhoHI[i], data.srho[i], data.dd0[i], data.sdd0[i], data.NHI[i], data.sNHI[i], ext, "errordump.log")
 
   return data
 
 """ FILTER RESULTS"""
 # These filters need to be carefully justified
 def filter(data):
+  pdb.set_trace()
+
   #Filter values here - a placeholder. Need to filter in justifiable ways before writing results.
   #print data.rhoHI
-  print "Censoring rho_HI > 500 pc (plausilibity cut-off)"
+  print 
+  print "Results pre-filtering: ", np.size(data.PDRID)
+
   data = data.compress(data['rhoHI'] < 500) #plausibility cut-off
-  print "Filtering values without dd0 values"
+  #data = data.compress(data['rhoHI'] < 1000)
+  print "Censoring rho_HI > 500 pc (plausilibity cut-off), remaining ", np.size(data.PDRID)
+
+  data = data.compress(data['contr'] > 1)
+  print "Censoring contrast < 1, remaining ", np.size(data.PDRID)
+
   data = data.compress(data['dd0'] > 0.001) #filter the fake values where no dd0 data available
+  print "Filtering values without dd0 values, remaining ", np.size(data.PDRID)
+  print
   return data
 
 """ WRITE RESULTS """
@@ -344,7 +381,7 @@ def dump(configOpts, data):
   print "Results: RA, DEC, Rgal, ntot, sntot, sntot/ntot (%)"
   for i in range(np.size(data.ntot)):
     print "{0:12s}, {1:12s}, {2:7.2f}, {3:5.1e}, {4:5.1e}, {5:3.0f}".format(data.RA[i], data.DEC[i], data.Rgal[i], data.ntot[i], data.sntot[i], data.sntot[i] / data.ntot[i] *100)
-
+  
     #Here we also print a csv for my plotting routines 
     #The PDRID is last for compatibility reasons.
     #Again problem with 'g' and 'str' type in data:
@@ -353,7 +390,12 @@ def dump(configOpts, data):
 
     #Write the full results instead of the limited results above
     #'PDRID, RA, DEC, Rgal, NHI, sNHI, dd0, sdd0, rhoHI, srho, flux, sflux, mean_at_r, G0, contr', ntot, sntot
-    resultcsv.write("{0.PDRID:>3},{0.RA:s},{0.DEC:s},{0.pRA:s}, {0.pDEC:s}, {0.Rgal:g},{1:g},{0.NHI:g},{0.sNHI:g},{0.dd0:g},{0.sdd0:g},{0.rhoHI:g},{0.srho:g},{0.flux:g},{0.sflux:g},{0.mean_at_r:g},{0.aperture:g},{0.G0:g},{0.contr:g},{0.ntot:g},{0.sntot:g}\n".format(data[i], data.Rgal[i]/R25))
+    #Fedora bug
+    #resultcsv.write("{0.PDRID:>3},{0.RA:s},{0.DEC:s},{0.pRA:s}, {0.pDEC:s}, {0.Rgal:g},{1:g},{0.NHI:g},{0.sNHI:g},{0.dd0:g},{0.sdd0:g},{0.rhoHI:g},{0.srho:g},{0.flux:g},{0.sflux:g},{0.mean_at_r:g},{0.aperture:g},{0.G0:g},{0.contr:g},{0.ntot:g},{0.sntot:g}\n".format(data[i], data.Rgal[i]/R25))
+    resultcsv.write("{0.PDRID:3g},{0.RA:s},{0.DEC:s},{0.pRA:s}, {0.pDEC:s}, {0.Rgal:g},{1:g},{0.NHI:g},{0.sNHI:g},{0.dd0:g},{0.sdd0:g},{0.rhoHI:g},{0.srho:g},{0.flux:g},{0.sflux:g},{0.mean_at_r:g},{0.aperture:g},{0.G0:g},{0.contr:g},{0.ntot:g},{0.sntot:g}\n".format(data[i], data.Rgal[i]/R25))
+
+
+  print "Median error: ", np.median(data.sntot / data.ntot) * 100
 
   return 0
 
@@ -378,7 +420,7 @@ def present(data):
 
 if __name__ == '__main__':
 
-  # pdb.set_trace()
+  #pdb.set_trace()
 
   """ Read parameters """
 

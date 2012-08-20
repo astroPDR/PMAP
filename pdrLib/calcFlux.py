@@ -118,7 +118,7 @@ def calcFluxMulti(imageName, coords, rMin, rMax, step=1, centerBox=5.0):
         newYY = np.array(map(float, pdump(qphot.output, 'YCENTER', 'yes', Stdout=1)[nn].split()))[0]
         results.append([nn, coords[nn][0], coords[nn][1], newXX, newYY, areas, fluxes])
         
-    if os.path.exists(qphot.output): os.remove(qphot.output)
+    #if os.path.exists(qphot.output): os.remove(qphot.output)
     
     return results
     

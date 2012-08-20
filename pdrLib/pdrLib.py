@@ -4,8 +4,17 @@
 #Collection of functions for various parts of the PDR method 'pipeline' script pipeline.py
 #Depends on astLib (0.4.0), Pyfits, NumPy & SciPy, (kapteyn), matplotlib, sextutils
 #JSH 2010-02-01
-#    2011-07-14 ~latest edit
+#    2011-07-14
+#    2012-02-14~latest edit (needed to fix a bug on Fedora with formatting)
+#    2012-02-15 edits to avoid divisions by zero (should disqualify the measurement)
+#                 also, fix errors when going outside the dust map
 # & José Sanchez-Gallego
+#    2012-06-04 math range errors for high values of 12+log(O/H)
+
+# Fedora bug: https://bugzilla.redhat.com/show_bug.cgi?format=multiple&id=654269
+#   Workaround is to 'dumb down' the formatting statements and do a type cast in advance
+#   It seems to happen with 'x' and 'd' formatters
+#   Another workaround is to replace the 'd' with 'g', which has the desired effect
 
 #pdrLib is now organized to contain José's routines as well, seperate from this file.
 
@@ -64,19 +73,19 @@ def read_array(filename, dtype, separator=',', comments='#'):
   return np.rec.array(data, dtype=dtype)
 
 def read_coords(filename, separator=',',  comments='#'):
-	#reads a list of coordinates
-	columns = np.dtype([('PDRID', 'int32'), ('RA', '|S14'), ('DEC', '|S14')])
-	data = read_array(filename, columns, separator, comments)
+  #reads a list of coordinates
+  columns = np.dtype([('PDRID', 'int32'), ('RA', '|S14'), ('DEC', '|S14')])
+  data = read_array(filename, columns, separator, comments)
         #print data
         #print np.rec.array(data, dtype=columns)
-	return np.rec.array(data, dtype=columns)
+  return np.rec.array(data, dtype=columns)
 
 def open_image(filename):
-	#opens a fits file and returns an astWCS.WCS object and a FITSimage object that also has a header etc. (Prev. version see pdrLib.py.4)
+  #opens a fits file and returns an astWCS.WCS object and a FITSimage object that also has a header etc. (Prev. version see pdrLib.py.4)
   #reverted to original version since we don't use Kapteyn anymore
-	#the numpy array should be image (raw image)
-	#image = maputils.FITSimage(filename)
-	#return astWCS.WCS(image.hdr, mode="pyfits"), image
+  #the numpy array should be image (raw image)
+  #image = maputils.FITSimage(filename)
+  #return astWCS.WCS(image.hdr, mode="pyfits"), image
   image = fits.open(filename)
   return astWCS.WCS(image[0].header, mode="pyfits"), image[0].data
 
@@ -87,19 +96,27 @@ def logdump(filename, line):
 """ Various PDR method calculations """
 
 def PDRmodel(flux, ext, D_gal, dd0, rho, NHI):
-	#We now expect Dgal in pc, and rho in pc!
+  #We now expect Dgal in pc, and rho in pc!
         #Nowhere do we output G0, whereas people want to know. Quick hack to print it here, might return it as a tuple
-	#scale NHI; and calculate a number-loss friendly conversion factor
-	N = NHI * 1e-21 / 0.78
-	conv = 106 * 0.85 * 10**(ext/2.5) / 0.264 * (D_gal/1e5)**2 #As in Heiner et al. 2008a
-	#print "  conv ", conv
-	#This is duplicate now that we calculate G0 earlier in the pipeline!
-	G0 = 0.85 * flux * 10**(ext/2.5) * (D_gal/rho)**2. / 2.64e-6
-	#print "G0: ", G0 #to check if the calculated G0s are identical
-	#"Original" model:
-	#return (conv * flux*1e15) / (rho**2 * m.sqrt(dd0) * (m.exp(N*dd0) - 1)) #n
-	#Model with Heaton's improvement (Heaton 2009, Eq. 12):
-	return (conv * flux*1e15) * (dd0**0.2) / (rho**2 * m.sqrt(dd0) * (m.exp(N*dd0) - 1)) #n
+  #scale NHI; and calculate a number-loss friendly conversion factor
+  N = NHI * 1e-21 / 0.78
+  conv = 106 * 0.85 * 10**(ext/2.5) / 0.264 * (D_gal/1e5)**2 #As in Heiner et al. 2008a
+  #print "  conv ", conv
+  #This is duplicate now that we calculate G0 earlier in the pipeline!
+  G0 = 0.85 * flux * 10**(ext/2.5) * (D_gal/rho)**2. / 2.64e-6
+  #print "G0: ", G0 #to check if the calculated G0s are identical
+  #"Original" model:
+  #return (conv * flux*1e15) / (rho**2 * m.sqrt(dd0) * (m.exp(N*dd0) - 1)) #n
+  #Model with Heaton's improvement (Heaton 2009, Eq. 12):
+  #avoid division by zero
+  #rewrote expression because denominator can get very large for strange dd0
+  denominator = np.log10(rho**2 * m.sqrt(dd0) * (m.exp(N*dd0) - 1))
+  if (denominator == 0.):
+    return 0.
+  else:
+    numerator = np.log10(conv * flux*1e15 * (dd0**0.2))
+    #return (conv * flux*1e15) * (dd0**0.2) / denominator #n
+    return 10**(numerator - denominator)
 
 
 def Gnaught(flux, D_gal, rho, ext): #D_gal must be in pc
@@ -174,29 +191,40 @@ def contrast(flux_raw, mean_at_r, rho, D_gal):
   else:
     return fuv_at_HI / bg_level #ratio source/background
 
-def errors(n, flux, sF, rho, srho, dd0, sdd0, NHI, sNHI, ext):
-	#Formulas described in Heiner et al. 2008a
-	#!!Errors in F and d/d0 need to be relative, the ones in rho, NHI need to be absolute
-  #Hence F*sF in 'one' and dd0 * sdd0 in 'three'
-	#n = PDRmodel(F, ext, dd0, rho, NHI)
-	N = NHI / 0.78e21
-	sN = sNHI / 0.78e21
-	F = flux*1e15
-	dn_dF = n / F
-	dn_dR = -2 * n / rho
-	dn_dd0 = (-0.5 / dd0*n) - n / (m.exp(N*dd0)-1) * N * m.exp(N*dd0) 
-	dn_dN = - n / (m.exp(N*dd0)-1) * dd0 * m.exp(N*dd0)
-	one = dn_dF**2 * (F*sF)**2
-	two = dn_dR**2 * srho**2
-	three = dn_dd0**2 * (dd0*sdd0)**2
-	four = dn_dN**2 * sN**2
-	#print "  error", one, two, three, four
-	return m.sqrt(one+two+three+four) #sn
+def errors(n, flux, sF, rho, srho, dd0, sdd0, NHI, sNHI, ext, logfile = False):
+  #Formulas described in Heiner et al. 2008a
+  #All errors come in as absolute errors 
+  #n = PDRmodel(F, ext, dd0, rho, NHI)
+  #Some reworking to minimize number loss and calculation
+  N = NHI / 0.78e21
+  sN = sNHI / 0.78e21
+  if (dd0 == 0. or N == 0.): #avoid division by zero; set expfrac high
+    expfrac = 1e6
+  else:
+    expfrac = m.exp(N*dd0) / (m.exp(N*dd0) - 1)
+  if (flux != 0.):
+    one = (sF / flux)**2
+  else:
+    one = 1e6 #avoid division by zero and artificially inflate the error in such a case
+  two = 4 * (srho / rho)**2
+  three = (-1/(2*dd0) - N*expfrac)**2 * sdd0**2
+  four = (-dd0 * expfrac * sN)**2
+  sig_n = n * m.sqrt(one+two+three+four) 
+  if (n == 0.):
+    rel_err = 0.
+  else:
+    rel_err = sig_n / n * 100
+  if (logfile):
+    logdump(logfile, "{} {} {} {} {} {} {}\n".format(one, two, three, four, n, sig_n, rel_err))
+  #JSH 2012-06-04 with strange values of dd0 can end up with nan
+  #  which would be appropriate for a value of which we cannot determine error
+  return sig_n
 
 def determine_dust(scenario,p):
   #Various scenarios to determine d/d0 are recognized through parameter array 'p'
   #Uses separation(...)
   #JSH 2010-02-06; 2010-11-24 (removed calculation of R)
+  #JSH 2012-06-04: limit 12+log(O/H) to 9.5 in map due to extreme values (n < 0.014)
   #Issue: when passing a filename slope still gets parsed and returns an error.  << no it was a calling error
   #Workaround: use 'try' and 'except' in slope so it doesn't get parsed before it is needed
   #Wishlist: replace 'p' by more transparent solution
@@ -214,7 +242,9 @@ def determine_dust(scenario,p):
     #dd0 = 0
     #try:
     dd0 = 10**(float(p[2][0])*p[3][3] + float(p[2][1]))
-    sdd0 = p[2][2] #constant relative error read from inputConfig.dat
+    sdd0 = p[2][2] * dd0 #constant relative error read from inputConfig.dat
+    #It is more convenient to estimate a relative error in this case, but the code expects
+    #an absolute error
     #except:
     #	print "Error in dust model slope."
     return dd0, sdd0
@@ -239,8 +269,12 @@ def determine_dust(scenario,p):
     #!At this time we assume a 12+log(O/H) map so the conversion is hardcoded and should be parameters!!:
       oh =  p[2][1][y,x] 
       if (m.isnan(oh) or oh==0): 
-        #If there is no value at this location we will take the highest value within a small box and warn about it (ignore NaNs)
-        oh = np.nanmax(p[2][1][y-2:y+3,x-2:x+3])
+        #Even if p[2][0] is in image, this box might not be
+        try:
+          #If there is no value at this location we will take the highest value within a small box and warn about it (ignore NaNs)
+          oh = np.nanmax(p[2][1][y-2:y+3,x-2:x+3])
+        except:
+          print "Tried to scan outside image; setting oh to 0"
         if (m.isnan(oh) or oh==0):
           print "Warning: no value found"
         else:
@@ -253,9 +287,14 @@ def determine_dust(scenario,p):
     else: #coordinate is not on the map
         print "Warning: coordinate outside map; setting 0"
     #R = separation(p[0][0], p[0][1], p[1][0], p[1][1], p[3][0], p[3][1], p[3][2], p[4])
+
+    if (oh > 9.5):
+      print "Warning: OH > 9.5 rejected, set to 0"
+      oh = 0
+
     dd0 = 10**(oh - p[2][2])
-    #sdd0 = dd0 * p[2][2] * soh / 10. #absolute error
-    sdd0 = p[2][2] * soh / 10. #return the relative error as expected by the error routine
+    sdd0 = dd0 * p[2][2] * soh / 10. #absolute error; all errors absolute to avoid confusion
+    #sdd0 = p[2][2] * soh / 10. #relative error 
     #a value of oh = 0 will result in artificially high n
     return dd0, sdd0
 
@@ -303,7 +342,7 @@ def generic_flux(filename, coordsPix, maxrad_pix, pix_size = 1.0, contrast = 0.5
                 avglist.append(ring_avg) #current avglist index will be n-1 since it starts at n=1
                 
                 if (logfile):
-                    logdump(logfile, "{0:3d} {1:7.2e} {2:8.3e} {3:7.5e}\n".format(r, fluxlist[n][0], fluxlist[n][1], ring_avg))
+                    logdump(logfile, "{0:3g} {1:7.2e} {2:8.3e} {3:7.5e}\n".format(r, fluxlist[n][0], fluxlist[n][1], ring_avg))
 
             if (n > 1) and (not mean_at_r):
                 #Check if the mean value has dropped to at least 50% (contrast) of the initial value (arbitrary)
@@ -358,8 +397,6 @@ def fuv_flux(imageName, header, coords, configOpts, verbose=False):
   maxrad_pix = int(round(configOpts['maxrad']/pix_size[0])) # Global maximum radius (in pixels)
   coordsPix = np.zeros([len(coords), 2], np.float)
 
-  # pdb.set_trace()
-  
   for p in range(len(coords)): 
     #Define circle center and check pixel size
     x, y = np.round(header.wcs2pix(astCoords.hms2decimal(strip(coords[p].RA), " "), astCoords.dms2decimal(strip(coords[p].DEC), " "))) #x, y not integers so int(x) will trunc not round
@@ -367,7 +404,6 @@ def fuv_flux(imageName, header, coords, configOpts, verbose=False):
     logdump(logfile, "#Source {0} at pixel position: {1}, {2}\n".format(coords[p].PDRID, x, y))
     coordsPix[p, :] = [x, y]
  
-  # pdb.set_trace()
   genericFluxResults =  generic_flux(imageName, coordsPix, maxrad_pix, pix_size[0], 
     configOpts['contrast'], configOpts['fluxerror'], logfile = logfile)
   
@@ -416,14 +452,14 @@ def call_SEx(fitsfile):
 #Call Fergusons's library to read a SExtractor catalog, 
 #produced previously to select HI patches in an individual candidate PDRs
 def read_secat(catfile, fitsfile, logfile=False, wcs=False):
-  patchtable = [[] for dummy in xrange(4)]  #ra, dec, NHI, sNHI
+  patchtable = [[] for dummy in xrange(3)]  #ra, dec, NHI
   #Must catch empty catalog file:
   try: #Call will fail if the catalog file is empty or does not have the expected format
     catalog = se_catalog(catfile, readfile=True, preserve_case=False)
   except:
     print "Warning: no clumps found. Creating empty entry."
     patchtable[0].append(0), patchtable[1].append(0)
-    patchtable[2].append(0), patchtable[3].append(0)
+    patchtable[2].append(0)
     return patchtable
 
   records = len(catalog.alphapeak_j2000)
@@ -438,8 +474,8 @@ def read_secat(catfile, fitsfile, logfile=False, wcs=False):
     patchtable[0].append(astCoords.decimal2hms(a, " "))
     patchtable[1].append(astCoords.decimal2dms(d, " "))
     patchtable[2].append(maxHI)
-    patchtable[3].append(0.1)
-    print "Warning: hardcoding sNHI at 0.1"
+    #patchtable[3].append(0.1)    #error now calculated after calling this routine
+    #print "Warning: hardcoding sNHI at 0.1"
     logdump(logfile, "{} {} {}\n".format(a, d, maxHI))
 
   return patchtable #calling function administrates PDRID
