@@ -8,19 +8,19 @@
 # 2011-08-04: now uses python2.7 because of Pyraf (for flux calculation)
 #
 # JSH 2010-10-28
-#       
+#
 #     previous edit: 2011-10-26
 #     last edit: 2012-02-14 -- fedora bug w/ formatting see pdrLib.py also
 
-import pdb #debugger
-import pdrLib as pdr       #now includes José's scripts as well
+# import pdb  # debugger
+import pdrLib as pdr
 import numpy as np
-import sys, os             #for sys.argv, os.path.splitext and os.path.exist
+import sys, os             # For sys.argv, os.path.splitext and os.path.exist
 
 
 """ Create FUV catalog """
 def createFUVcatalog(configOpts):
-  # Calls the createCatalog routine for the FUV image using the filenames and masks stored 
+  # Calls the createCatalog routine for the FUV image using the filenames and masks stored
   # in the configOpts dictionary
   print 'Creating FUV catalogs ... '
   fuvImage = configOpts['fuvImage']
@@ -55,7 +55,7 @@ def extractHI(configOpts):
   hiMaskFile = configOpts['hiMaskFile'] # << but we want to extract based on UV sources instead
   #hiMaskFile = configOpts['fuvMaskFileRej']
   output = os.path.splitext(hiImage)[0]
-  # Skip the extraction if the first file already exists 
+  # Skip the extraction if the first file already exists
   #  !!hardcoded in extractRegions.py; hardcoded 001
   if os.path.exists('{0}_Regions/{0}_Reg001.fits'.format(output)):
     print "... extracted regions exist - skipping this step."
@@ -79,7 +79,7 @@ def getflux(configOpts):
   uvheader, uvimage = pdr.open_image(configOpts['fuvImage'])
   data_uv = configOpts['data_uv']
   coords_uv = os.path.splitext(configOpts['fuvImage'])[0] + '_Peaks.dat' #as defined earlier
-  
+
   try:
     dummy = file(data_uv, 'r')
     print "... fluxes read from file {0} instead.".format(data_uv)
@@ -98,9 +98,9 @@ def getflux(configOpts):
     #This scaling is useful since clumpfind doesn't seem to work properly with ~1e-15 values.
     fluxtable = pdr.fuv_flux(configOpts['fuvImage'], uvheader, uvcoords, configOpts, verbose = True)
     print "... done"
-  
+
     #print fluxtable.RA, fluxtable.RA[0] #here fluxtable.RA[0] is simply a string
-  
+
     #Write: UV fluxes
     fluxfile = open(data_uv, 'w')
     print "Flux info:"
@@ -111,7 +111,7 @@ def getflux(configOpts):
       print "{0.PDRID:3g}, {1.aperture:5.2f}, {1.mean_at_r:7.5e}, {1.bgflux:7.5e}, {1.cumulflux:7.5e}, {1.netflux:7.5e}".format(uvcoords[n], fluxtable[n])
       fluxfile.write("{0.PDRID:3g}, {0.RA}, {0.DEC}, {1.aperture:7.5e}, {1.mean_at_r:7.5e}, {1.bgflux:7.5e}, {1.cumulflux:7.5e}, {1.netflux:7.5e}, {1.sflux:7.5e}\n".format(uvcoords[n], fluxtable[n]))
     fluxfile.close()
-    
+
   print
   #print "Exiting here."
   #exit(0)
@@ -126,7 +126,7 @@ def getHI(configOpts, fluxtable):
   print "Identifying HI patches ..."
   data_hi = configOpts['data_hi']
   hiImage = configOpts['hiImage']
-  hi_baselist = "{0}_Regions/{0}_Reg".format(os.path.splitext(hiImage)[0]) 
+  hi_baselist = "{0}_Regions/{0}_Reg".format(os.path.splitext(hiImage)[0])
   hi_logsbase = "{0}_Regions/{1}".format(os.path.splitext(hiImage)[0], configOpts['hi_logsbase'])
   try:
     dummy = file(data_hi, 'r')
@@ -150,7 +150,7 @@ def getHI(configOpts, fluxtable):
     for i in range(np.size(fluxtable.PDRID)):
       fitsfile = hi_baselist + "{0:03d}.fits".format(int(fluxtable.PDRID[i]))
       print "Calling SExtractor with file {0}".format(fitsfile)
-  
+
       catfile = pdr.call_SEx(fitsfile)
       if catfile==1:
         print "Fatal error: SExtractor call failed."
@@ -161,7 +161,7 @@ def getHI(configOpts, fluxtable):
         #Patches are not background-subtracted, that will happen now:
 
         for n in range(len(patches[0])):
-          if patches[2][n] > (hi_bg*2.): 
+          if patches[2][n] > (hi_bg*2.):
             #subtract the background and ignore patches that are fainter than hi_bg
             hiresults[0].append(fluxtable.PDRID[i])
             hiresults[1].append(patches[0][n])
@@ -181,7 +181,7 @@ def getHI(configOpts, fluxtable):
           hiresults[4].append(0)
 
     #End for
-  
+
     #Finally, convert the results into a rec array and save the results
     labels = 'PDRID, RA, DEC, NHI, sNHI'
     hidata = pdr.records(hiresults, labels)
@@ -226,8 +226,8 @@ def getRhoRG(configOpts, fluxtable, hidata, uvheader):
   for i in range(np.size(fluxtable.PDRID)):
     Rgal.append(pdr.separation(fluxtable.RA[i], fluxtable.DEC[i], c_RA, c_DEC, pa, incl, dist*1e-3, uvheader)) #dist passed in kpc so Rgal will be in kpc
     while (n < np.size(hidata.PDRID)) and (hidata.PDRID[n] == fluxtable.PDRID[i]):
-      rhoHI.append(pdr.separation(fluxtable.RA[i], fluxtable.DEC[i], hidata.RA[n], hidata.DEC[n], pa, incl, dist, uvheader)) #dist in pc 
-      srho.append(srho_fixed) 
+      rhoHI.append(pdr.separation(fluxtable.RA[i], fluxtable.DEC[i], hidata.RA[n], hidata.DEC[n], pa, incl, dist, uvheader)) #dist in pc
+      srho.append(srho_fixed)
       n += 1
 
   #Variables in: fluxtable.netflux, fluxtable.mean_at_r, dist, pix_size, ext, and rho_HI
@@ -267,7 +267,7 @@ def dusttogas(configOpts, fluxtable, hidata, Rgal):
 
   dd0 = []; sdd0 = []
   for i in range(np.size(hidata.PDRID)):
-    uv_idx = np.where(fluxtable.PDRID == hidata.PDRID[i])[0][0] 
+    uv_idx = np.where(fluxtable.PDRID == hidata.PDRID[i])[0][0]
     #one match expected only -- but uv_idx is an array. So take [0][0], otherwise there will be issues using it
     #print uv_idx, fluxtable.RA[0], fluxtable.RA[uv_idx]#, fluxtable.RA[uv_idx[0]]
     #hack: fluxtable.RA[uv_idx] yields [' hh mm ss '] instead of plain string, which causes problems here. Hence [0]
@@ -312,13 +312,13 @@ def collate(configOpts, fluxtable, hidata, dd0, sdd0, rhoHI, srho, G0, contr):
 
       #Patch RAs, DECs not written here
       #fullfile.write("{0:>3}, {1:12s}, {2:12s}, {3:8g}, {4:6g}, {5:.3f}, {6:f}, {7:.3f}, {8:.3f}, {9:g}, {10:.3g}, {11:g}\n".format(hidata.PDRID[i], fluxtable.RA[uv_idx], fluxtable.DEC[uv_idx], hidata.NHI[i], hidata.sNHI[i], dd0[i], sdd0[i], rhoHI[i], srho[i], fluxtable.netflux[uv_idx], fluxtable.sflux[uv_idx], fluxtable.mean_at_r[uv_idx]))
-      #Fedora bug: need to type cast the variables 
+      #Fedora bug: need to type cast the variables
       fullfile.write("{0:>3}, {1:12s}, {2:12s}, {3:8g}, {4:6g}, {5:.3f}, {6:f}, {7:.3f}, {8:.3f}, {9:g}, {10:.3g}, {11:g}\n".format(
-            int(hidata.PDRID[i]), 
-            fluxtable.RA[uv_idx], fluxtable.DEC[uv_idx], 
-            hidata.NHI[i], hidata.sNHI[i], 
-            dd0[i], sdd0[i], rhoHI[i], srho[i], 
-            fluxtable.netflux[uv_idx], fluxtable.sflux[uv_idx], 
+            int(hidata.PDRID[i]),
+            fluxtable.RA[uv_idx], fluxtable.DEC[uv_idx],
+            hidata.NHI[i], hidata.sNHI[i],
+            dd0[i], sdd0[i], rhoHI[i], srho[i],
+            fluxtable.netflux[uv_idx], fluxtable.sflux[uv_idx],
             fluxtable.mean_at_r[uv_idx]))
 
       for m, n in enumerate((hidata.PDRID[i], fluxtable.RA[uv_idx], fluxtable.DEC[uv_idx], hidata.RA[i], hidata.DEC[i], Rgal[uv_idx], hidata.NHI[i], hidata.sNHI[i], dd0[i], sdd0[i], rhoHI[i], srho[i], fluxtable.netflux[uv_idx], fluxtable.sflux[uv_idx], fluxtable.mean_at_r[uv_idx], fluxtable.aperture[uv_idx], G0[i], contr[i], ntot[i], sntot[i])):
@@ -357,7 +357,7 @@ def filter(data):
 
   #Filter values here - a placeholder. Need to filter in justifiable ways before writing results.
   #print data.rhoHI
-  print 
+  print
   print "Results pre-filtering: ", np.size(data.PDRID)
 
   data = data.compress(data['rhoHI'] < 500) #plausibility cut-off
@@ -381,8 +381,8 @@ def dump(configOpts, data):
   print "Results: RA, DEC, Rgal, ntot, sntot, sntot/ntot (%)"
   for i in range(np.size(data.ntot)):
     print "{0:12s}, {1:12s}, {2:7.2f}, {3:5.1e}, {4:5.1e}, {5:3.0f}".format(data.RA[i], data.DEC[i], data.Rgal[i], data.ntot[i], data.sntot[i], data.sntot[i] / data.ntot[i] *100)
-  
-    #Here we also print a csv for my plotting routines 
+
+    #Here we also print a csv for my plotting routines
     #The PDRID is last for compatibility reasons.
     #Again problem with 'g' and 'str' type in data:
     #print Rgal[i], Rgal[i]/galpars.R25, data.flux[i], data.rhoHI[i], data.NHI[i], data.G0[i], data.dd0[i], ntot[i], np.log10(ntot[i]), data.contr[i]
@@ -414,51 +414,61 @@ def present(data):
   #pdr.plot_n(data.Rgal/R25, np.log10(ntot))
   return 0
 
+
+
 ###############################################################################
 """                                 MAIN                                    """
 ###############################################################################
 
+
+def main(configFile):
+
+    # pdb.set_trace()
+
+    """ Source selection """
+
+    # Todo: separate reading of configFile and skipping clumpfind if _Peaks.dat exists
+    #       (in practice this happens already since no new _Peaks.dat is produced below
+    #       if it exists already)
+
+    # Calls the getRegion routine. Gets the configuration dictionary.
+    configOpts = pdr.getRegions(inputData={'configFile': configFile, 'default': True})
+    #  Output: FUV and HI mask files
+
+    createFUVcatalog(configOpts)
+    #Todo: call reject regions on _Peaks.dat if desired
+
+    extractHI(configOpts)
+
+    uvheader, fluxtable = getflux(configOpts)
+
+    hidata = getHI(configOpts, fluxtable)
+
+    rhoHI, srho, Rgal, G0, contr = getRhoRG(configOpts, fluxtable, hidata, uvheader)
+
+    dd0, sdd0 = dusttogas(configOpts, fluxtable, hidata, Rgal)
+
+    data = collate(configOpts, fluxtable, hidata, dd0, sdd0, rhoHI, srho, G0, contr)
+
+    data = calculatentot(configOpts, data)
+
+    data = filter(data)
+
+    dump(configOpts, data)
+
+    present(data)  # This includes filtering values (a placeholder)
+
+    return
+
+
 if __name__ == '__main__':
 
-  #pdb.set_trace()
+    """ Read parameters """
 
-  """ Read parameters """
+    # To be decoupled from getRegions
+    if len(sys.argv) > 1:
+        configFile = sys.argv[1]
+    else:
+        configFile = None
 
-  # To be decoupled from getRegions
-  if len(sys.argv) > 1:
-    filename = sys.argv[1]
-  else:
-    filename = 'inputConfig.dat'
-
-  """ Source selection """
-
-  # Todo: separate reading of configFile and skipping clumpfind if _Peaks.dat exists
-  #       (in practice this happens already since no new _Peaks.dat is produced below
-  #       if it exists already)
-
-  # Calls the getRegion routine. Gets the configuration dictionary.
-  configOpts = pdr.getRegions(inputData={'configFile': filename, 'default': True})
-  #  Output: FUV and HI mask files
-
-  createFUVcatalog(configOpts)
-  #Todo: call reject regions on _Peaks.dat if desired
-
-  extractHI(configOpts)
-
-  uvheader, fluxtable = getflux(configOpts)
-
-  hidata = getHI(configOpts, fluxtable)
-
-  rhoHI, srho, Rgal, G0, contr = getRhoRG(configOpts, fluxtable, hidata, uvheader)
-
-  dd0, sdd0 = dusttogas(configOpts, fluxtable, hidata, Rgal)
-
-  data = collate(configOpts, fluxtable, hidata, dd0, sdd0, rhoHI, srho, G0, contr)
-
-  data = calculatentot(configOpts, data)
-
-  data = filter(data)
-
-  dump(configOpts, data)
-
-  present(data) #This includes filtering values (a placeholder)
+    main(configFile)

@@ -1,0 +1,1470 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"air",
+				"airmassTmp"
+			],
+			[
+				"band",
+				"bandCond"
+			],
+			[
+				"fac",
+				"factorBand"
+			],
+			[
+				"com",
+				"comaCond"
+			],
+			[
+				"max",
+				"maxExtComa"
+			],
+			[
+				"coma",
+				"maxExtComa"
+			],
+			[
+				"tiles",
+				"tilesCat"
+			],
+			[
+				"fillT",
+				"fillTimes_eBoss  (module)"
+			],
+			[
+				"tile",
+				"tilesNGCobservedInSGC"
+			],
+			[
+				"mean",
+				"meanExposuresInNGC"
+			],
+			[
+				"tim",
+				"timeInNGC"
+			],
+			[
+				"calen",
+				"calendarFile"
+			],
+			[
+				"nT",
+				"nTilesLargeExp"
+			],
+			[
+				"time",
+				"timeLargeExp"
+			],
+			[
+				"airm",
+				"airMasses"
+			],
+			[
+				"per",
+				"perHighAirMass"
+			],
+			[
+				"ob",
+				"obsBit"
+			],
+			[
+				"lst",
+				"LST0"
+			],
+			[
+				"mj",
+				"mjd"
+			],
+			[
+				"sg",
+				"sgcFraction"
+			],
+			[
+				"ngc",
+				"ngcFraction"
+			],
+			[
+				"surv",
+				"survey"
+			],
+			[
+				"ls",
+				"lstInHour"
+			],
+			[
+				"av",
+				"avgRed  (variable)"
+			],
+			[
+				"gal",
+				"galPlane"
+			],
+			[
+				"obs",
+				"obs"
+			],
+			[
+				"sn",
+				"sn_GT_RedThres"
+			],
+			[
+				"SN",
+				"SN_Tmp"
+			],
+			[
+				"S",
+				"SN_Tmp"
+			],
+			[
+				"plt",
+				"plt_Leg"
+			],
+			[
+				"Ma",
+				"maxCycles"
+			],
+			[
+				"zen",
+				"zenithHA"
+			],
+			[
+				"comp",
+				"computeAirmass  (module)"
+			],
+			[
+				"ze",
+				"zenithHA"
+			],
+			[
+				"zenith",
+				"zenithAvoid"
+			],
+			[
+				"da",
+				"dataObs"
+			],
+			[
+				"sur",
+				"survey"
+			],
+			[
+				"fill",
+				"fillTimes"
+			],
+			[
+				"z",
+				"zenithAvoid"
+			],
+			[
+				"moon",
+				"moonSetTime"
+			],
+			[
+				"pre",
+				"previous_setting  (function)"
+			],
+			[
+				"post",
+				"postMR"
+			],
+			[
+				"postM",
+				"postMR"
+			],
+			[
+				"pos",
+				"postMS"
+			],
+			[
+				"moo",
+				"moonSetTime"
+			],
+			[
+				"mo",
+				"morTime"
+			],
+			[
+				"net",
+				"next_setting  (function)"
+			],
+			[
+				"next",
+				"next_rising"
+			],
+			[
+				"nex",
+				"nextMoonRiseTime"
+			],
+			[
+				"nextM",
+				"nextMoonRiseTime"
+			],
+			[
+				"ne",
+				"next_rising  (function)"
+			],
+			[
+				"prev",
+				"prevMoonRiseTime"
+			],
+			[
+				"mjD",
+				"mjdDate"
+			],
+			[
+				"sidT",
+				"sidTime"
+			],
+			[
+				"sta",
+				"startDate"
+			],
+			[
+				"mjd",
+				"mjdDate"
+			],
+			[
+				"begin",
+				"beginObs"
+			],
+			[
+				"pro",
+				"probeSN_Red"
+			],
+			[
+				"in",
+				"indexTile"
+			],
+			[
+				"index",
+				"indexTile"
+			],
+			[
+				"st",
+				"startIndex"
+			],
+			[
+				"obser",
+				"observedTimes"
+			],
+			[
+				"rem",
+				"remainingTimes"
+			],
+			[
+				"ga",
+				"galPlaneIdx"
+			],
+			[
+				"probe",
+				"probeSN_Red"
+			],
+			[
+				"survey",
+				"surveyDuration"
+			],
+			[
+				"re",
+				"remainingTimes  (variable)"
+			],
+			[
+				"calend",
+				"calendarFile"
+			],
+			[
+				"sid",
+				"sidTime"
+			],
+			[
+				"set",
+				"setTime"
+			],
+			[
+				"end",
+				"endObs"
+			],
+			[
+				"begi",
+				"beginObs"
+			],
+			[
+				"inde",
+				"indexTile"
+			],
+			[
+				"ind",
+				"indices"
+			],
+			[
+				"num",
+				"numReqPlates"
+			],
+			[
+				"galp",
+				"galPlaneIdx"
+			],
+			[
+				"su",
+				"survey"
+			],
+			[
+				"ha",
+				"haArray"
+			],
+			[
+				"ix",
+				"idxThreshold"
+			],
+			[
+				"rms_",
+				"rms_rSN"
+			],
+			[
+				"sort",
+				"sortRankPlates"
+			],
+			[
+				"rank",
+				"rankPlates"
+			],
+			[
+				"rec",
+				"recarray"
+			],
+			[
+				"_lst",
+				"_lstBegin"
+			],
+			[
+				"_ls",
+				"_lstEnd  (variable)"
+			],
+			[
+				"_l",
+				"_lstEnd  (variable)"
+			],
+			[
+				"sc",
+				"scheduledTimes"
+			],
+			[
+				"ai",
+				"airmassTmp"
+			],
+			[
+				"al",
+				"alphaRed  (variable)"
+			],
+			[
+				"ca",
+				"calendarFile"
+			],
+			[
+				"cale",
+				"calendarFile"
+			],
+			[
+				"alpha",
+				"alphaRed"
+			],
+			[
+				"_d",
+				"_dustDir"
+			],
+			[
+				"gete",
+				"getenv  (function)"
+			],
+			[
+				"_gL",
+				"_gLat"
+			],
+			[
+				"ra",
+				"raDec"
+			],
+			[
+				"ex",
+				"exec_lines"
+			],
+			[
+				"Moon",
+				"MoonRise"
+			],
+			[
+				"Moo",
+				"MoonRise"
+			],
+			[
+				"auto",
+				"autoreload"
+			],
+			[
+				"cl",
+				"calInstance  (variable)"
+			],
+			[
+				"is",
+				"isinstance"
+			],
+			[
+				"cal",
+				"calInstance"
+			],
+			[
+				"r",
+				"rThreshold"
+			],
+			[
+				"exp",
+				"expTime"
+			],
+			[
+				"night",
+				"nightObsTime"
+			],
+			[
+				"ni",
+				"nightObsTime"
+			],
+			[
+				"Mo",
+				"MornTwi"
+			],
+			[
+				"py",
+				"pyPr"
+			],
+			[
+				"sched",
+				"scheduled_times"
+			],
+			[
+				"surve",
+				"survey_begin"
+			],
+			[
+				"the",
+				"thresholds"
+			],
+			[
+				"tileDa",
+				"tileDataRASorted"
+			],
+			[
+				"dis",
+				"distances"
+			],
+			[
+				"MAN",
+				"MANGAID"
+			],
+			[
+				"save",
+				"saveData"
+			],
+			[
+				"saved",
+				"savedData"
+			],
+			[
+				"sa",
+				"savedData"
+			],
+			[
+				"M",
+				"MANGAID"
+			],
+			[
+				"html",
+				"htmlDistances"
+			],
+			[
+				"url",
+				"urlData"
+			],
+			[
+				"get",
+				"getZIndepDist"
+			],
+			[
+				"MaN",
+				"MaNGA_observing_nights.par	File"
+			],
+			[
+				"ti",
+				"tileID"
+			],
+			[
+				"til",
+				"tileID"
+			],
+			[
+				"bo",
+				"bossObsNights"
+			],
+			[
+				"gals",
+				"galsGT125"
+			],
+			[
+				"galsGT",
+				"galsGT125"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "pipeline.py",
+			"settings":
+			{
+				"buffer_size": 21816,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "PMAP.sublime-project",
+			"settings":
+			{
+				"buffer_size": 73,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 375.0,
+		"selected_items":
+		[
+			[
+				"edit",
+				"Project: Edit"
+			],
+			[
+				"add",
+				"Project: Add Folder"
+			],
+			[
+				"upgr",
+				"Package Control: Upgrade/Overwrite All Packages"
+			],
+			[
+				"up",
+				"Package Control: Upgrade/Overwrite All Packages"
+			],
+			[
+				"sett",
+				"Preferences: Settings - Default"
+			],
+			[
+				"upg",
+				"Package Control: Upgrade/Overwrite All Packages"
+			],
+			[
+				"lint",
+				"SublimeLinter: Reset"
+			],
+			[
+				"linter",
+				"SublimeLinter: Disable Linting"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"sideb",
+				"View: Toggle Open Files in Side Bar"
+			],
+			[
+				"idl",
+				"Set Syntax: IDL"
+			],
+			[
+				"pack",
+				"Package Control: List Packages"
+			],
+			[
+				"wor",
+				"Word Wrap: Toggle"
+			],
+			[
+				"enable",
+				"Package Control: Enable Package"
+			],
+			[
+				"key",
+				"Preferences: Key Bindings - User"
+			],
+			[
+				"keyb",
+				"Preferences: Key Bindings - User"
+			],
+			[
+				"ena",
+				"SublimeCodeIntel: Enable Plugin"
+			],
+			[
+				"disa",
+				"SublimeCodeIntel: Disable Plugin"
+			],
+			[
+				"remo",
+				"Package Control: Remove Package"
+			],
+			[
+				"auto",
+				"Autocomplete file name"
+			],
+			[
+				"",
+				"Autocomplete file name"
+			],
+			[
+				"a",
+				"Autocomplete file name"
+			],
+			[
+				"packa",
+				"Package Control: Disable Package"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: remov",
+				"Package Control: Remove Package"
+			],
+			[
+				"ke",
+				"Preferences: Key Bindings - User"
+			],
+			[
+				"bindi",
+				"Preferences: Key Bindings - Default"
+			],
+			[
+				"rese",
+				"SublimeLinter: Reset"
+			],
+			[
+				"settin",
+				"Preferences: Settings - Default"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 507.0
+	},
+	"console":
+	{
+		"height": 268.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/albireo/Documents/PMAP/pdrLib/clfind2d.pro",
+		"/Users/albireo/Documents/PMAP/PMAP.sublime-project",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/pyProjections/tileFirst.py",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/addStripes.py",
+		"/Users/albireo/Documents/MaNGA/Kyle_Projections/retile.pro",
+		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/pyProjections/calendar.py",
+		"/Users/albireo/Downloads/nightlyB.txt",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/pyProjections/survey.py",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/pyProjections/fillTimes.py",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/manga_tile_centers_adjusted_rasort.dat",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/manga_tile_centers_adjusted_rasort_stripes.dat",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/nightlyC.txt",
+		"/Users/albireo/Documents/MaNGA/Distances/getMaNGADist.py",
+		"/Users/albireo/Documents/MaNGA/Distances/MaNGA_Distances.dat",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/plotter.py",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/Simulation130314_KyleCal/log.dat",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/Simulation130314_Peter/log.dat",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/LSTnightly.txt",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/createCalFile.py",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/MaNGA_Tiles.dat",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/boss_observing_nights.par",
+		"/Users/albireo/Dropbox/Books.md",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/pyProjections/__init__.py",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/compareCalFiles.py",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/MaNGA_Nights.dat",
+		"/Users/albireo/Documents/MaNGA/Misc/projections/TAI2UTC.pro",
+		"/Volumes/Clear 1.0/cnc.nfo",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/pyProjections/fillTimes_eBoss.py",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/pyProjections/retile_eBoss.py",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/maxCycles_Inf/Output.txt",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/__init__.py",
+		"/Users/albireo/Downloads/nbgal_scuba2_rev.dat",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/pyProjections/computeAirmass.py",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/pyProjections/tiles.py",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/pyProjections/retile.py",
+		"/Users/albireo/Downloads/manga_tile_centers_adjusted_rasort.dat",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/MaNGA_New_Tiles.dat",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/tilesDave2Kyle.py",
+		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/Color Scheme - Default/Tomorrow-Night-Bright.tmTheme",
+		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/Color Scheme - Default/Black Pearl II.tmTheme",
+		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/Theme - Soda/Soda Light.sublime-theme",
+		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/Package Control/Package Control.sublime-settings",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/ManGA_Nights.dat",
+		"/Users/albireo/Documents/PhD/Scripts/Staralt.py",
+		"/Users/albireo/.unison/AirPegasus.prf",
+		"/Users/albireo/Documents/MaNGA/Survey/MaNGA_New_Tiles.dat",
+		"/Users/albireo/Downloads/manga_tile_centers_adjusted.dat",
+		"/Users/albireo/Documents/MaNGA/Survey/MaNGA_targets_ran_tiles.dat",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/MaNGA_observing_nights.par",
+		"/Users/albireo/.ipython/profile_default/ipython_config.py",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/ebosstiles.dat",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/pyProjections/ccmUnred.py",
+		"/Users/albireo/Downloads/com.cordlessdog.Stay.plist",
+		"/Users/albireo/Idl/boss/products/Linux/idlutils/v5_5_7/pro/dust/wcs_getval.pro",
+		"/Users/albireo/.matplotlib/matplotlibrc",
+		"/Users/albireo/.ipython/profile_default/startup/README",
+		"/Users/albireo/.unison/AirExtHD.prf",
+		"/Users/albireo/.unison/ExtHDEmular.prf",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/pyProjections/MaNGA_Project.sublime-project",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/PyProjections/calendar.py",
+		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/User/SublimeLinter.sublime-settings",
+		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/User/Python.sublime-settings",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/PyProjections/MaNGA_Projections.py",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/PyProjections/__init__.py",
+		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/Theme - Soda/Soda Dark.sublime-theme",
+		"/Users/albireo/Documents/MaNGA/Projections/tile_first.pro",
+		"/Users/albireo/Documents/MaNGA/Projections/retile.pro",
+		"/Users/albireo/Documents/MaNGA/Projections/calendar.pro",
+		"/Users/albireo/.cshrc",
+		"/Users/albireo/.idl/idl.pro",
+		"/Users/albireo/Documents/MaNGA/Projections/Projections.sublime-project",
+		"/Volumes/AlbireoOSX/Software/IDL 7.0.4 Mac/IDL.7.0.license.dat",
+		"/Applications/exelis/license/license.dat",
+		"/Applications/exelis/license/license.dat.bak",
+		"/Users/albireo/Downloads/license (1).dat",
+		"/Users/albireo/Downloads/license.dat",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Projections/MaNGA_Tiles.dat",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Projections/createMaNGATiles.py",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Projections/compute_airmass.pro",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Projections/ebosstiles.dat",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Misc/projections/ngc4yr.dat",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/MaNGA_observing_nights.par",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/MaNGA.par",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/calendar.pro",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/ebosstiles.dat",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/createMaNGATiles.py",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/MaNGA_Tiles.dat",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/MaNGA_targets_ran_tiles.dat",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/sample2npy.py",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/tile_first.pro",
+		"/Volumes/Untitled 1/etc/network/interfaces",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/plan_ha.pro",
+		"/Volumes/Pegasus/pegasus/renbin/boss/products/Linux/idlutils/v5_5_7/pro/dust/dust_getval.pro",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/compute_extinction.pro",
+		"/Users/albireo/Downloads/Arrow - 01x09 - Year's End.LOL.English.C.updated.Addic7ed.com.srt",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Misc/projections/plt.pro",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Misc/projections/filltimes.pro",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/createMaNGAObsNights.py",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/retile.pro",
+		"/Volumes/Pegasus/Documents/MaNGA/Survey/projections/boss_observing_nights.par",
+		"/Volumes/Pegasus/Documents/MaNGA/Survey/projections/calendar.pro",
+		"/Volumes/Pegasus/Documents/MaNGA/Survey/projections/compute_extinction.pro",
+		"/Volumes/Pegasus/Documents/MaNGA/Survey/projections/ebosstiles.dat",
+		"/Volumes/Pegasus/Documents/MaNGA/Misc/projections/tile_first.pro",
+		"/Volumes/Pegasus/Documents/MaNGA/Misc/projections/schedule.dat",
+		"/Volumes/Pegasus/Documents/MaNGA/Misc/projections/plan_ha.pro",
+		"/Volumes/Pegasus/.idl/idl.pro",
+		"/Users/albireo/Documents/MaNGA/Survey/plateStats.py",
+		"/Volumes/Pegasus/Documents/MaNGA/Survey/MaNGA_targets_ran_tiles.dat",
+		"/Volumes/Pegasus/Documents/MaNGA/Misc/projections/calendar.pro",
+		"/Users/albireo/Downloads/DA14.py",
+		"/Volumes/Pegasus/Documents/MaNGA/Misc/projections/peter.dat",
+		"/Volumes/Pegasus/Documents/MaNGA/Misc/projections/plt.pro",
+		"/Volumes/Pegasus/Documents/MaNGA/Misc/projections/TAI2UTC.pro",
+		"/Volumes/Pegasus/Documents/MaNGA/Survey/projections/plan_ha.pro",
+		"/Volumes/Pegasus/Documents/MaNGA/Misc/projections/plantemp.pro",
+		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/SublimeLinter/SublimeLinter.sublime-settings",
+		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/User/JSON.sublime-settings",
+		"/Volumes/AlbireoOSX/Documents/PhD/@Archive/INT_Jun_2011/Staralt/Staralt.py",
+		"/Users/albireo/Documents/MaNGA/Survey/sample2npy.py",
+		"/Users/albireo/Documents/MaNGA/Survey/plotsSurvey.py",
+		"/Users/albireo/Documents/MaNGA/Survey/MaNGA_targets_nsa_ran_tiles_0.67.dat",
+		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/SublimeCodeIntel/Default (OSX).sublime-keymap",
+		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/User/Default (OSX).sublime-keymap",
+		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/FileSystem Autocompletion/README.md",
+		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/Default/Default (OSX).sublime-keymap"
+	],
+	"find":
+	{
+		"height": 40.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"2884",
+			"2163",
+			"C",
+			" || ",
+			"=",
+			"calInstance.array.lstBegin",
+			"calInstance.array.lstEnd",
+			"index",
+			"zenith_ha",
+			"zenith_avoid",
+			"apo_lat",
+			"0.56",
+			"obs.array[index].",
+			"cond3",
+			"line",
+			"minimap",
+			"line",
+			"print",
+			"STRUCT1 ",
+			"slice",
+			"sche",
+			"airma",
+			"calInstance.",
+			"galPlane",
+			"surveystruct.ngcfraction_times",
+			"ngctime",
+			"sgctime",
+			"index2",
+			"index1",
+			"surveystruct.scheduled_times",
+			"surveystruct.sgcfraction_times",
+			"[::-1]",
+			"STRUCT1 ",
+			"tile_fi",
+			"mini",
+			"fill",
+			"8.0",
+			"	",
+			"res",
+			"complete",
+			"-2016",
+			"-2014",
+			"-2013",
+			"-2012",
+			"long",
+			"0.02",
+			"fiber",
+			"auto_complete",
+			"auto ",
+			"d:",
+			"ctrl+x",
+			"ctrl+f",
+			"ps",
+			"already ",
+			"run",
+			"instance",
+			"basenam",
+			"log",
+			"'DEFAULT'",
+			"'General'",
+			"createLists",
+			"perfect",
+			"_ext",
+			"display",
+			"ds9",
+			"isinstance",
+			"copy",
+			"new"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"2872",
+			"2154",
+			"D",
+			"''' || '''",
+			"'''",
+			"lstHours.LST0",
+			"lstHours.LSTf",
+			"indexTile",
+			"zenithHA",
+			"zenithAvoid",
+			"apoLat",
+			"self.moonPhaseThreshold",
+			"",
+			"validTimes",
+			"calInstance.array.",
+			"galPlaneIdx",
+			"survey.ngcFractionTimes",
+			"ngcTime",
+			"sgcTime",
+			"galPlane[1]",
+			"galPlane[0]",
+			"survey.scheduledTimes",
+			"survey.sgcFractionTimes",
+			"",
+			"8.2",
+			" ",
+			"-2014",
+			"-2016",
+			"-2015",
+			"-2014",
+			"'General'",
+			"'DEFAULT'",
+			"'Defaults'",
+			"SortedList",
+			"ext"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "pipeline.py",
+					"settings":
+					{
+						"buffer_size": 21816,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1475,
+								1475
+							]
+						],
+						"settings":
+						{
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"gjslint_ignore":
+							[
+								110.0
+							],
+							"gjslint_options":
+							[
+							],
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"evil": true,
+								"regexdash": true,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501",
+								"E701"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"sublimelinter": true,
+							"sublimelinter_delay": 2.0,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": false,
+							"sublimelinter_mark_style": "outline",
+							"sublimelinter_notes": false,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": false,
+							"sublimelinter_syntax_map":
+							{
+								"C++": "c",
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 15.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "PMAP.sublime-project",
+					"settings":
+					{
+						"buffer_size": 73,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								73,
+								73
+							]
+						],
+						"settings":
+						{
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"gjslint_ignore":
+							[
+								110.0
+							],
+							"gjslint_options":
+							[
+							],
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"evil": true,
+								"regexdash": true,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501",
+								"E701"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"sublimelinter": true,
+							"sublimelinter_delay": 2.0,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": false,
+							"sublimelinter_mark_style": "outline",
+							"sublimelinter_notes": false,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": false,
+							"sublimelinter_syntax_map":
+							{
+								"C++": "c",
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"syntax": "Packages/JavaScript/JSON.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 40.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 144.0
+	},
+	"replace":
+	{
+		"height": 72.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"sur",
+				"pyProjections/survey.py"
+			],
+			[
+				"",
+				"pyProjections/fillTimes.py"
+			],
+			[
+				"plott",
+				"plotter.py"
+			],
+			[
+				"calen",
+				"pyProjections/calendar.py"
+			],
+			[
+				"crea",
+				"createCalFile.py"
+			],
+			[
+				"tiles",
+				"MaNGA_Tiles.dat"
+			],
+			[
+				"cr",
+				"createCalFile.py"
+			],
+			[
+				"cre",
+				"createCalFile.py"
+			],
+			[
+				"ini",
+				"pyProjections/__init__.py"
+			],
+			[
+				"boss",
+				"boss_observing_nights.par"
+			],
+			[
+				"man",
+				"MaNGA_Nights.dat"
+			],
+			[
+				"fill",
+				"pyProjections/fillTimes_eBoss.py"
+			],
+			[
+				"plot",
+				"plotter.py"
+			],
+			[
+				"ca",
+				"pyProjections/calendar.py"
+			],
+			[
+				"retil",
+				"pyProjections/retile.py"
+			],
+			[
+				"air",
+				"pyProjections/computeAirmass.py"
+			],
+			[
+				"surv",
+				"pyProjections/survey.py"
+			],
+			[
+				"cale",
+				"pyProjections/calendar.py"
+			],
+			[
+				"tile",
+				"pyProjections/tiles.py"
+			],
+			[
+				"airm",
+				"pyProjections/computeAirmass.py"
+			],
+			[
+				"til",
+				"pyProjections/tiles.py"
+			],
+			[
+				"yil",
+				"pyProjections/tiles.py"
+			],
+			[
+				"in",
+				"pyProjections/__init__.py"
+			],
+			[
+				"cal",
+				"pyProjections/calendar.py"
+			],
+			[
+				"i",
+				"pyProjections/__init__.py"
+			],
+			[
+				"reti",
+				"retile.pro"
+			],
+			[
+				"ret",
+				"retile.pro"
+			],
+			[
+				"sort",
+				"sortedList.py"
+			],
+			[
+				"ore",
+				"isisLib/core.py"
+			],
+			[
+				"bias",
+				"biasHelpers.py"
+			],
+			[
+				"he",
+				"isisLib/helpers.py"
+			],
+			[
+				"logg",
+				"isisLib/logger.py"
+			],
+			[
+				"help",
+				"isisLib/helpers.py"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 220.0,
+	"status_bar_visible": true
+}
