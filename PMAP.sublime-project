@@ -2,7 +2,12 @@
 	"folders":
 	[
 		{
-			"path": "/Users/albireo/Documents/PMAP"
+			"path": "/Users/albireo/Documents/PMAP",
+            "file_exclude_patterns": [".*"]
 		}
-	]
+	],
+    "settings":
+    {
+        "tab_size": 4
+    }
 }

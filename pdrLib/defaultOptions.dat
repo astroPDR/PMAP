@@ -1,0 +1,145 @@
+
+# This is a sample configuration file for the PMAP pipeline.
+# Please, consult the manual for more information about the options presented here.
+# This file follows Python's ConfigParser format. Consult
+# http://docs.python.org/2/library/configparser.html for more information.
+# Notice that the options in this configuration file are case-sensitive.
+
+[Images]
+
+fuvImage =                              ; Path of the FUV image
+hiImage  =                              ; Path of the HI image
+FUVscale =                              ; To convert input map from CPS to flux units
+HIscale  =                              ; To convert input map into column density cm-2
+
+[Logging options]
+
+outputDir      =   ./                               ; The output directory where output files will be created
+root           =   PMAP                             ; The root for the filenames of the output files
+log            =   True                             ; Should we create an output log?
+logFile        =   %(root)s.log                     ; The output file where the info will be saved
+data_uv        =   %(root)s_Patchtest_UVdata.csv    ; UV flux measurements stored here
+hi_logsbase    =   %(root)s_PDR_SEout               ; Root of HI log files
+uv_log         =   %(root)s_PDR_Flux.log            ; Log file for uv flux measurements
+data_hi        =   %(root)s_Patches_HI.csv          ; Filename of HI patch measurements
+data_full      =   %(root)s_Full.csv                ; Filename containing all input values before n is calculated
+data_results   =   %(root)s_Results.csv             ; Filename with the PDR method results
+densities_ds9  =   %(root)s_NTot.reg                ; DS9 region file with nTot per patch
+
+
+[Physical properties]
+
+distance    =                      ; Distance in Mpc
+ext         =                      ; Extinction (mag)
+pa          =                      ; Position angle (degrees)
+incl        =                      ; Inclination (degrees)
+c_RA        =                      ; Galaxy center RA [hh mm ss]
+c_DEC       =                      ; Galaxy center DEC [dd mm ss]
+R25         =                      ; R_25 (kpc)
+
+
+[FUV]
+
+fuvMaskFile     =   Default         ; The name of the mask file produced by CLFind
+#                                     Use Default for a name based on the FUV image
+#                                     filename
+
+fuvInteractive  =   False           ; Makes the program prompt for the necessary
+#                                     values. Overrides the remaining options in this
+#                                     section
+
+fuvBackground   =                   ; The background level of the images. IMPORTANT.
+#                                     Leave blank for an automatic estimation.
+
+fuvSigma        =   6               ; Number of times the background level needed for
+#                                     a pixel to be considered emission
+
+fuvhLevel       =                   ; Highest level. Leave blank for an automatic
+#                                     estimation.
+
+fuvnLevels      =                   ; Number of levels computed. Leave blank for an
+#                                     automatic estimation.
+
+fuvMinPixels    =   20              ; Minimum number of pixels for a regions to be
+#                                     accepted
+
+checkFUV        =   True            ; Checks the FUV mask to reject invalid regions
+
+
+[FUV Rejection]  ; This section is superfluous if checkFUV=False.
+
+minDistance        =   500             ; The minimum distance (in parsecs) between
+#                                        regions. If two peaks are closer than this
+#                                        distance they will be tested.
+
+scale              =                   ; Parsecs per pixel. If present, overrides the
+#                                        WCS information.
+
+joinRegions        =   False           ; If True, when two regions are adjacent, the
+#                                        weakest region will be appended instead of
+#                                        removed.
+
+fluxContrast       =   True             ; If False, no tests based on the flux will be
+#                                         carried out. If True, the correction will
+#                                         always be applied. If numeric value, the
+#                                         correction will be applied only if
+#                                         flux(region1)/flux(region2) <= value
+
+peakContrast       =   True            ; Idem for the peak value
+
+alwaysRemoveClose  =   True            ; If True, the close but not adjacent regions
+#                                        are always removed regardless fluxContrast or
+#                                        peakContrast
+
+fuvMaskFileRej     =   Default         ; The name of the new mask after the FUV rejection
+
+
+[FUV Fluxes]
+
+contrast        =   0.5             ; FUV flux local minimum threshold wrt inital ring average
+subpix          =   0.1             ; Subpixel fraction for flux measurement (1/fraction subpixels)
+maxrad          =   60              ; Maximum aperture for flux measurement in arcsec;
+fluxerror       =   0.3             ; Estimated relative flux error
+
+
+[HI]
+
+hiMaskFile     =   Default          ; The name of the mask file produced by CLFind
+#                                     Use Default for a name based on the FUV image
+#                                     filename
+
+hiInteractive  =   True             ; Makes the program prompt for the necessary
+#                                     values. Overrides the remaining options in this
+#                                     section
+
+hiBackground   =   10               ; The background level of the images
+
+hiSigma        =   3                ; Number of times the background level needed for
+#                                     a pixel to be considered emission
+
+hihLevel       =                    ; Highest level. Leave blank for an automatic
+#                                     estimation.
+
+hinLevels      =   20               ; Number of levels computed. Leave blank for an
+#                                     automatic estimation.
+
+hiMinPixels    =   15               ; Minimum number of pixels for a regions to be
+#                                     accepted
+
+
+[Dust-to-gas ratio]
+# Uncomment the appropriate options depending on the dusttype measurement.
+
+dusttype      =   slope
+slope         =                           ; Power law slope
+offset        =                           ; Power law axis intercept
+slopeerror    =   0.01                    ; Relative error (NB: absolute error in 'map')
+
+# dusttype    =   map
+# mapname     =                           ; Filename of dust map containing 12+log(O/H)
+# maperror    =                           ; Map with corresponding errors
+# solar       =   8.69                    ; 12+log(O/H) solar value (for map conversion)
+
+# dusttype    =   const
+# dustval     =                           ; DTG constant value
+# dusterr     =   0.1                     ; Relative error

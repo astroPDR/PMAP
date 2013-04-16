@@ -1,0 +1,10 @@
+[Error]
+errorOpts : fuvImage, hiImage, FUVscale, HIscale, distance, ext, pa, incl, c_RA, c_DEC, R25
+
+[Warning]
+warningOpts : fuvBackground, fuvhLevel, fuvnLevels, hihLevel
+
+[Dust]
+slope = slope, offset
+map =   mapname, maperror
+const = dustval

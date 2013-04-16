@@ -3,80 +3,90 @@
 """
 calcBackground.py
 
-Created by José Ramón Sánchez-Gallego on 2011-02-17.
-Copyright (c) 2011. All rights reserved.
+Created by José Sánchez-Gallego on 2013-04-15.
+Copyright (c) 2013. All rights reserved.
+
+This routine calculates the background level of an image using the
+following process:
+a) A temporary background level of the image is calculated by removing
+   all pixels above 3-sigma and then calculating the mean value.
+b) CLFind is run on the image using this background noise and generic
+   values for the contour levels.
+c) Using the mask generated with CLFind, the residual image is calculated.
+d) Steps a) is repeated and the background level determined that way is
+   returned.
 
 """
 
-from plotDS9 import plotDS9
-import sys, ds9
+import sys
+from clfind2d import clfind2d
 import pyfits as pf
 import numpy as np
+import os
+
 
 def calcBack(data, sigma=3.):
+
     # print
     # print "  #       Mean          Std           Dif."
-    tmpData = np.array(data)
-    mean = np.mean(tmpData); std = np.std(tmpData)
+
+    tmpData = data.flatten()[np.isfinite(data.flatten())]
+
+    mean = np.mean(tmpData)
+    std = np.std(tmpData)
     step = 0
     while step < 1000:
-        oldMean = mean; oldStd = std
+        oldMean = mean
+        oldStd = std
         minValue = oldMean - sigma * oldStd
         maxValue = oldMean + sigma * oldStd
         tmpData = tmpData[np.where(tmpData >= minValue)]
         tmpData = tmpData[np.where(tmpData <= maxValue)]
-        mean = np.mean(tmpData); std = np.std(tmpData)
+        mean = np.mean(tmpData)
+        std = np.std(tmpData)
         dif = np.abs(((mean-oldMean)/oldMean)*100.0)
-        # print '%3d   %11.4E   %11.4E   %11.4E' % (step+1, mean, std, dif)
         if dif < 0.02: return mean
-        step += 1 
+        step += 1
     return mean
 
 
-def calcBackground(image, fancyPrint):
-    
+def calcBackground(image, logger, verbose=True):
+
     import tempfile
 
-    fancyPrint('', newLine=True)
-    
-    sys.stdout.write('Displaying image and background region ... ')
+    print
+    print 'Automatic estimation of the background level'
+
+    imageData = pf.open(image)
+
+    tmpBackgroundLevel = calcBack(imageData[0].data)
+    print 'Step 1) Background level = %.4E' % tmpBackgroundLevel
+
+    sys.stdout.write('Step 2) Running CLFind to obtain mask ... ')
     sys.stdout.flush()
-    
-    d = ds9.ds9()
-    d.set('frame delete all')
-    plotDS9(image, frame=1)
-    
-    xSize,ySize = map(int,d.get('fits size').split())
 
-    fileTmpReg = tempfile.NamedTemporaryFile()
-    print >>fileTmpReg, 'image; box %d %d %d %d # color = green' % (xSize/2, ySize/2, xSize/30, ySize/30)
-    fileTmpReg.flush()
+    if verbose is True:
+        print
 
-    d.set('regions system image')
-    d.set('regions format ds9')
-    d.set('regions load ' + fileTmpReg.name)
-    
-    fileTmpReg.close()
+    tmpMask = tempfile.NamedTemporaryFile(dir='./', delete=False)
+    tmpLevels = np.linspace(10.0 * tmpBackgroundLevel, np.max(imageData[0].data), 20)
 
-    print 'Done'
-    
-    raw_input('Select the region which will be used to estimate the background ... ')
-    
-    d.set('regions select all')
-    regionOut = d.get('regions')
-    pos0 = regionOut.find('box(') + 4
-    xCenter, yCenter, xSize, ySize = map(float, regionOut[pos0:].split(',')[0:-1])
-    x0 = xCenter - xSize/2.; xf = xCenter + xSize/2.
-    y0 = yCenter - ySize/2.; yf = yCenter + ySize/2.
-    
-    # sys.stdout.write('Calculating background level ... ')
-    # sys.stdout.flush()
-    data = pf.getdata(image)
-    print data.shape
-    dataBack = data[y0-1:yf-1,x0-1:xf-1]
-    backLevel = calcBack(dataBack)
-    # print '%11.5e' % backLevel
-    
-    fancyPrint('')
-    
+    clfind2d(image, tmpMask.name, tmpLevels, log=False, nPixMin=20, verbose=verbose)
+
+    if verbose is False:
+        print 'done'
+
+    print 'Step 3) Calculating residuals'
+    dataMask = pf.getdata(tmpMask.name)
+    mask = np.where(dataMask > 0)
+    imageData[0].data[mask] = np.nan
+
+    backLevel = calcBack(imageData[0].data)
+    print 'Step 4) Background level of the residuals = %.4E' % backLevel
+
+    if os.path.exists(tmpMask.name):
+        os.remove(tmpMask.name)
+
+    del imageData, dataMask
+
     return backLevel
