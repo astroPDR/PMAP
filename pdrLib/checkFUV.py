@@ -83,11 +83,11 @@ def checkFUV(options, logger):
                 if options['joinRegions']:
                     regions.joinRegions(maxRegion, minRegion)
                     logger.write('Adjacent regions %d and %d joined. Flux contrast=%.1f' %
-                                 (maxRegion, minRegion, contrast))
+                                 (maxRegion, minRegion, contrast), doPrint=False)
                 else:
                     regions.deleteReg(minRegion)
                     logger.write('Adjacent regions %d deleted. Flux contrast=%.1f' %
-                                 (minRegion, contrast))
+                                 (minRegion, contrast), doPrint=False)
                 adjacentRegions = regions.getAdjacentRegs()
                 continue
 
@@ -99,11 +99,11 @@ def checkFUV(options, logger):
                 if options['joinRegions']:
                     regions.joinRegions(maxRegion, minRegion)
                     logger.write('Adjacent regions %d and %d joined. Peak contrast=%.1f' %
-                                 (maxRegion,  minRegion, contrast))
+                                 (maxRegion,  minRegion, contrast), doPrint=False)
                 else:
                     regions.deleteReg(minRegion)
                     logger.write('Adjacent regions %d deleted. Peak contrast=%.1f' %
-                                 (minRegion, contrast))
+                                 (minRegion, contrast), doPrint=False)
                 adjacentRegions = regions.getAdjacentRegs()
                 continue
 
@@ -146,7 +146,7 @@ def checkFUV(options, logger):
             minRegion = pair[np.argmin([fluxA, fluxB])]
             regions.deleteReg(minRegion)
             closeRegions = regions.getCloseRegs(minNumPixels, adjacent=False)
-            logger.write('Close region %d removed' % minRegion)
+            logger.write('Close region %d removed' % minRegion, doPrint=False)
             continue
 
         if options['fluxContrast'] is not False:
@@ -156,7 +156,8 @@ def checkFUV(options, logger):
             if (options['fluxContrast'] is True) or (contrast > options['fluxContrast']):
                 regions.deleteReg(minRegion)
                 closeRegions = regions.getCloseRegs(minNumPixels, adjacent=False)
-                logger.write('Close region %s removed. Flux contrast=%.1f' % (minRegion, contrast))
+                logger.write('Close region %s removed. Flux contrast=%.1f' %
+                             (minRegion, contrast), doPrint=False)
                 continue
 
         if options['peakContrast'] is not False:
@@ -166,7 +167,8 @@ def checkFUV(options, logger):
             if (options['peakContrast'] is True) or (contrast > options['peakContrast']):
                 regions.deleteReg(minRegion)
                 closeRegions = regions.getCloseRegs(minNumPixels, adjacent=False)
-                logger.write('Close region %d removed. Peak contrast=%.1f' % (minRegion, contrast))
+                logger.write('Close region %d removed. Peak contrast=%.1f' %
+                             (minRegion, contrast), doPrint=False)
                 continue
 
         del closeRegions[0]
