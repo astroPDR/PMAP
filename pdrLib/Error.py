@@ -14,10 +14,42 @@ import sys
 import colorama as cm
 
 
-def raiseError(text, logger):
+def raiseError(*args):
 
-    logger.write(cm.Fore.RED + '[ERROR]: ' + cm.Style.RESET_ALL +
-                 text, newLine=True)
+    if len(args) == 1:
+        text = args[0]
+        logger = None
+    else:
+        text = args[0]
+        logger = args[1]
+
+    if logger is not None:
+        logger.write(cm.Fore.RED + '[ERROR]: ' + cm.Style.RESET_ALL +
+                     text, newLine=True)
+    else:
+        print
+        print cm.Fore.RED + '[ERROR]: ' + cm.Style.RESET_ALL + text
+
     sys.exit()
+
+    return
+
+
+def raiseWarning(*args, **kargs):
+
+    if len(args) == 1:
+        text = args[0]
+        logger = None
+    else:
+        text = args[0]
+        logger = args[1]
+
+    doLog = kargs['doLog'] if 'doLog' in kargs else True
+
+    if logger is not None:
+        logger.write(cm.Fore.YELLOW + '[Warning]: ' + cm.Style.RESET_ALL +
+                     text, newLine=True, doLog=doLog)
+    else:
+        print cm.Fore.YELLOW + '[Warning]: ' + cm.Style.RESET_ALL + text
 
     return

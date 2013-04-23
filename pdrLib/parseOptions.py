@@ -16,6 +16,8 @@ import ConfigParser
 import warnings
 import colorama as cm
 import sys
+from Error import raiseWarning
+
 
 class ConfigOptions(object):
 
@@ -107,8 +109,8 @@ class ConfigOptions(object):
                 self.OptionsError('Option %s is mandatory' % _field, exit=False)
                 _exitAtTheEnd = True
             elif self.options[_field] is None and _field in _warning and self.verbose is True:
-                warnings.warn(cm.Fore.YELLOW + '[WARNING]: ' + cm.Style.RESET_ALL +
-                              'Option %s is not defined. ' % _field +
+                # warnings.warn(cm.Fore.YELLOW + '[WARNING]: ' + cm.Style.RESET_ALL +
+                raiseWarning('Option %s is not defined. ' % _field +
                               'This won\'t stop the pipeline but may or may not be a problem.')
 
         if _exitAtTheEnd is True:

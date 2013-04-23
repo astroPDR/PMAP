@@ -20,30 +20,7 @@ import pdrLib as pdr
 import numpy as np
 import sys             # For sys.argv, os.path.splitext and os.path.exist
 import os
-import colorama as cm
 
-
-""" Create FUV catalog """
-def createFUVcatalog(configOpts):
-    # Calls the createCatalog routine for the FUV image using the filenames and masks stored
-    # in the configOpts dictionary
-    print 'Creating FUV catalogs ... '
-    fuvImage = configOpts['fuvImage']
-    fuvMaskFileRej = configOpts['fuvMaskFileRej']
-    output = os.path.splitext(fuvImage)[0] + '.vot'
-    ds9RegsFile = os.path.splitext(fuvImage)[0] + '.reg'
-    peaksFile = os.path.splitext(fuvImage)[0] + '_Peaks.dat'
-    if (os.path.exists(peaksFile)):
-      print '... FUV catalog file {0} exists already. Continuing.'.format(peaksFile)
-    else:
-      if False in map(os.path.exists, [fuvImage, fuvMaskFileRej]):
-        print 'Error: Either the image or the mask does not exist\n'
-        sys.exit()
-      pdr.createCatalog(fuvImage, fuvMaskFileRej, output, ds9RegsFile, peaksFile=peaksFile)
-
-    #
-    #  Output: UV coordinate list called fuvImage + '_Peaks.dat', region file and votable
-    return 0
 
 """ Extract HI Regions """
 def extractHI(configOpts):
@@ -463,7 +440,6 @@ def main(configFile, createConfig=False, verbose=True, overwrite=False):
 
     return
 
-    createFUVcatalog(configOpts)
     #Todo: call reject regions on _Peaks.dat if desired
 
     extractHI(configOpts)
@@ -493,6 +469,8 @@ if __name__ == '__main__':
     """
     Reads command line arguments
     """
+
+    print
 
     from optparse import OptionParser
 

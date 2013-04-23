@@ -4,6 +4,150 @@
 		"selected_items":
 		[
 			[
+				"fuv",
+				"fuvMaskFileRej"
+			],
+			[
+				"Sa",
+				"Sánchez-Gallego"
+			],
+			[
+				"data",
+				"dataMask"
+			],
+			[
+				"check",
+				"checkFUV"
+			],
+			[
+				"tmp",
+				"tmpMask"
+			],
+			[
+				"image",
+				"imageData"
+			],
+			[
+				"calc",
+				"calcBack"
+			],
+			[
+				"mask",
+				"maskFile"
+			],
+			[
+				"lo",
+				"logText  (variable)"
+			],
+			[
+				"file",
+				"fileOut"
+			],
+			[
+				"cl",
+				"clfind2d"
+			],
+			[
+				"raise",
+				"raiseError"
+			],
+			[
+				"config",
+				"configOpts"
+			],
+			[
+				"log",
+				"logger"
+			],
+			[
+				"back",
+				"backLevel"
+			],
+			[
+				"do",
+				"doCLFindFUV"
+			],
+			[
+				"rais",
+				"raiseError"
+			],
+			[
+				"conf",
+				"configOpts"
+			],
+			[
+				"NGC0925_",
+				"NGC0925_HI_RO_THINGS.fits	File"
+			],
+			[
+				"N",
+				"NGC0925_FUV_NGS.fits.clf	File"
+			],
+			[
+				"NGC",
+				"NGC0925_FUV_NGS.fits	File"
+			],
+			[
+				"ex",
+				"exit"
+			],
+			[
+				"text",
+				"textToPrint"
+			],
+			[
+				"textTo",
+				"textToPrint"
+			],
+			[
+				"write",
+				"writeLog"
+			],
+			[
+				"wri",
+				"writeLog"
+			],
+			[
+				"_sect",
+				"_section"
+			],
+			[
+				"def",
+				"defaultOpts  (variable)"
+			],
+			[
+				"Op",
+				"OptionsError"
+			],
+			[
+				"War",
+				"OptionsWarning"
+			],
+			[
+				"defa",
+				"defaultOptions"
+			],
+			[
+				"confg",
+				"configOpts"
+			],
+			[
+				"configOp",
+				"configOptionsInstance"
+			],
+			[
+				"crea",
+				"createConfig"
+			],
+			[
+				"sampl",
+				"sampleFile"
+			],
+			[
+				"conFig",
+				"configFile"
+			],
+			[
 				"air",
 				"airmassTmp"
 			],
@@ -370,168 +514,24 @@
 			[
 				"alpha",
 				"alphaRed"
-			],
-			[
-				"_d",
-				"_dustDir"
-			],
-			[
-				"gete",
-				"getenv  (function)"
-			],
-			[
-				"_gL",
-				"_gLat"
-			],
-			[
-				"ra",
-				"raDec"
-			],
-			[
-				"ex",
-				"exec_lines"
-			],
-			[
-				"Moon",
-				"MoonRise"
-			],
-			[
-				"Moo",
-				"MoonRise"
-			],
-			[
-				"auto",
-				"autoreload"
-			],
-			[
-				"cl",
-				"calInstance  (variable)"
-			],
-			[
-				"is",
-				"isinstance"
-			],
-			[
-				"cal",
-				"calInstance"
-			],
-			[
-				"r",
-				"rThreshold"
-			],
-			[
-				"exp",
-				"expTime"
-			],
-			[
-				"night",
-				"nightObsTime"
-			],
-			[
-				"ni",
-				"nightObsTime"
-			],
-			[
-				"Mo",
-				"MornTwi"
-			],
-			[
-				"py",
-				"pyPr"
-			],
-			[
-				"sched",
-				"scheduled_times"
-			],
-			[
-				"surve",
-				"survey_begin"
-			],
-			[
-				"the",
-				"thresholds"
-			],
-			[
-				"tileDa",
-				"tileDataRASorted"
-			],
-			[
-				"dis",
-				"distances"
-			],
-			[
-				"MAN",
-				"MANGAID"
-			],
-			[
-				"save",
-				"saveData"
-			],
-			[
-				"saved",
-				"savedData"
-			],
-			[
-				"sa",
-				"savedData"
-			],
-			[
-				"M",
-				"MANGAID"
-			],
-			[
-				"html",
-				"htmlDistances"
-			],
-			[
-				"url",
-				"urlData"
-			],
-			[
-				"get",
-				"getZIndepDist"
-			],
-			[
-				"MaN",
-				"MaNGA_observing_nights.par	File"
-			],
-			[
-				"ti",
-				"tileID"
-			],
-			[
-				"til",
-				"tileID"
-			],
-			[
-				"bo",
-				"bossObsNights"
-			],
-			[
-				"gals",
-				"galsGT125"
-			],
-			[
-				"galsGT",
-				"galsGT125"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "pipeline.py",
+			"file": "PMAP.py",
 			"settings":
 			{
-				"buffer_size": 21816,
+				"buffer_size": 24914,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "PMAP.sublime-project",
+			"file": "pdrLib/getRegions.py",
 			"settings":
 			{
-				"buffer_size": 73,
+				"buffer_size": 11656,
 				"line_ending": "Unix"
 			}
 		}
@@ -539,9 +539,21 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 375.0,
+		"height": 93.0,
 		"selected_items":
 		[
+			[
+				"upgr",
+				"Package Control: Upgrade/Overwrite All Packages"
+			],
+			[
+				"upg",
+				"Package Control: Upgrade/Overwrite All Packages"
+			],
+			[
+				"dupl",
+				"File: Duplicate"
+			],
 			[
 				"edit",
 				"Project: Edit"
@@ -551,20 +563,12 @@
 				"Project: Add Folder"
 			],
 			[
-				"upgr",
-				"Package Control: Upgrade/Overwrite All Packages"
-			],
-			[
 				"up",
 				"Package Control: Upgrade/Overwrite All Packages"
 			],
 			[
 				"sett",
 				"Preferences: Settings - Default"
-			],
-			[
-				"upg",
-				"Package Control: Upgrade/Overwrite All Packages"
 			],
 			[
 				"lint",
@@ -667,7 +671,7 @@
 				"Package Control: Install Package"
 			]
 		],
-		"width": 507.0
+		"width": 588.0
 	},
 	"console":
 	{
@@ -684,12 +688,43 @@
 	},
 	"file_history":
 	[
-		"/Users/albireo/Documents/PMAP/pdrLib/clfind2d.pro",
+		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/User/Default (OSX).sublime-keymap",
+		"/Users/albireo/Documents/PDR/NGC0925/NGC0925.log",
+		"/Users/albireo/Documents/PDR/NGC0925/NGC0925.config",
+		"/Users/albireo/Documents/PMAP/pdrLib/parseOptions.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/fancyPrint.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/checkFUV.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/defaultOptions.dat",
+		"/Users/albireo/Documents/PMAP/pdrLib/mandatoryOptions.dat",
+		"/Users/albireo/Documents/PMAP/pdrLib/pdrLib.py",
+		"/Users/albireo/Downloads/pdrLib.py.swp",
+		"/Users/albireo/Documents/PMAP/pipeline.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/header.cb",
+		"/Users/albireo/Documents/PMAP/pdrLib/Error.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/calcBackground.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/calcBackground.py.bak",
+		"/Users/albireo/Documents/PDR/NGC0925/PMAP.log",
+		"/Users/albireo/Documents/PDR/NGC0925_PhD/NGC0925_Input.dat",
+		"/Users/albireo/Documents/PMAP/pdrLib/clfind2d.py",
+		"/Users/albireo/Documents/PMAP/__init__.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/clfind2dIDL.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/plotDS9.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/deprecated.py",
+		"/Users/albireo/Documents/MaNGA/SurveySimulations/pyProjections/logger.py",
+		"/Users/albireo/Documents/PDR/NGC0925/NGC0925.config.bak",
+		"/Users/albireo/.unison/AirExtHD.prf",
+		"/Users/albireo/Documents/PMAP/pdrLib/__init__.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/getRegions.py",
+		"/Users/albireo/Documents/MaNGA/SurveySimulations/pyProjections/Options.py",
+		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/MaNGA_Projections.py",
+		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
 		"/Users/albireo/Documents/PMAP/PMAP.sublime-project",
+		"/Users/albireo/Documents/PhD/PDR/PMAP_Current/pipeline.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/extractFromCoords.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/clfind2d.pro",
 		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/pyProjections/tileFirst.py",
 		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/addStripes.py",
 		"/Users/albireo/Documents/MaNGA/Kyle_Projections/retile.pro",
-		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
 		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/pyProjections/calendar.py",
 		"/Users/albireo/Downloads/nightlyB.txt",
 		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/pyProjections/survey.py",
@@ -742,7 +777,6 @@
 		"/Users/albireo/Idl/boss/products/Linux/idlutils/v5_5_7/pro/dust/wcs_getval.pro",
 		"/Users/albireo/.matplotlib/matplotlibrc",
 		"/Users/albireo/.ipython/profile_default/startup/README",
-		"/Users/albireo/.unison/AirExtHD.prf",
 		"/Users/albireo/.unison/ExtHDEmular.prf",
 		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/pyProjections/MaNGA_Project.sublime-project",
 		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/PyProjections/calendar.py",
@@ -781,37 +815,7 @@
 		"/Volumes/Pegasus/pegasus/renbin/boss/products/Linux/idlutils/v5_5_7/pro/dust/dust_getval.pro",
 		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/compute_extinction.pro",
 		"/Users/albireo/Downloads/Arrow - 01x09 - Year's End.LOL.English.C.updated.Addic7ed.com.srt",
-		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Misc/projections/plt.pro",
-		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Misc/projections/filltimes.pro",
-		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/createMaNGAObsNights.py",
-		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/retile.pro",
-		"/Volumes/Pegasus/Documents/MaNGA/Survey/projections/boss_observing_nights.par",
-		"/Volumes/Pegasus/Documents/MaNGA/Survey/projections/calendar.pro",
-		"/Volumes/Pegasus/Documents/MaNGA/Survey/projections/compute_extinction.pro",
-		"/Volumes/Pegasus/Documents/MaNGA/Survey/projections/ebosstiles.dat",
-		"/Volumes/Pegasus/Documents/MaNGA/Misc/projections/tile_first.pro",
-		"/Volumes/Pegasus/Documents/MaNGA/Misc/projections/schedule.dat",
-		"/Volumes/Pegasus/Documents/MaNGA/Misc/projections/plan_ha.pro",
-		"/Volumes/Pegasus/.idl/idl.pro",
-		"/Users/albireo/Documents/MaNGA/Survey/plateStats.py",
-		"/Volumes/Pegasus/Documents/MaNGA/Survey/MaNGA_targets_ran_tiles.dat",
-		"/Volumes/Pegasus/Documents/MaNGA/Misc/projections/calendar.pro",
-		"/Users/albireo/Downloads/DA14.py",
-		"/Volumes/Pegasus/Documents/MaNGA/Misc/projections/peter.dat",
-		"/Volumes/Pegasus/Documents/MaNGA/Misc/projections/plt.pro",
-		"/Volumes/Pegasus/Documents/MaNGA/Misc/projections/TAI2UTC.pro",
-		"/Volumes/Pegasus/Documents/MaNGA/Survey/projections/plan_ha.pro",
-		"/Volumes/Pegasus/Documents/MaNGA/Misc/projections/plantemp.pro",
-		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/SublimeLinter/SublimeLinter.sublime-settings",
-		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/User/JSON.sublime-settings",
-		"/Volumes/AlbireoOSX/Documents/PhD/@Archive/INT_Jun_2011/Staralt/Staralt.py",
-		"/Users/albireo/Documents/MaNGA/Survey/sample2npy.py",
-		"/Users/albireo/Documents/MaNGA/Survey/plotsSurvey.py",
-		"/Users/albireo/Documents/MaNGA/Survey/MaNGA_targets_nsa_ran_tiles_0.67.dat",
-		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/SublimeCodeIntel/Default (OSX).sublime-keymap",
-		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/User/Default (OSX).sublime-keymap",
-		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/FileSystem Autocompletion/README.md",
-		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/Default/Default (OSX).sublime-keymap"
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Misc/projections/plt.pro"
 	],
 	"find":
 	{
@@ -829,6 +833,14 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"calcParameters",
+			"calcBac",
+			";",
+			"#",
+			"parse",
+			"write",
+			"resultcsv",
+			"pyregion",
 			"2884",
 			"2163",
 			"C",
@@ -904,6 +916,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"#;",
 			"2872",
 			"2154",
 			"D",
@@ -954,18 +967,18 @@
 			[
 				{
 					"buffer": 0,
-					"file": "pipeline.py",
+					"file": "PMAP.py",
 					"settings":
 					{
-						"buffer_size": 21816,
+						"buffer_size": 24914,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1475,
-								1475
+								20513,
+								20513
 							]
 						],
 						"settings":
@@ -1106,26 +1119,26 @@
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 0.0,
-						"translation.y": 15.0,
+						"translation.x": 2.0,
+						"translation.y": 9191.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "PMAP.sublime-project",
+					"file": "pdrLib/getRegions.py",
 					"settings":
 					{
-						"buffer_size": 73,
+						"buffer_size": 11656,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								73,
-								73
+								5622,
+								5622
 							]
 						],
 						"settings":
@@ -1262,10 +1275,12 @@
 								"Ruby on Rails": "ruby"
 							},
 							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/JavaScript/JSON.tmLanguage"
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 3913.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1319,12 +1334,108 @@
 		"selected_items":
 		[
 			[
-				"sur",
-				"pyProjections/survey.py"
+				"pdr",
+				"pdrLib/pdrLib.py"
+			],
+			[
+				"mand",
+				"pdrLib/mandatoryOptions.dat"
 			],
 			[
 				"",
-				"pyProjections/fillTimes.py"
+				"pdrLib/header.cb"
+			],
+			[
+				"de",
+				"pdrLib/defaultOptions.dat"
+			],
+			[
+				"err",
+				"pdrLib/Error.py"
+			],
+			[
+				"check",
+				"pdrLib/checkFUV.py"
+			],
+			[
+				"defa",
+				"pdrLib/defaultOptions.dat"
+			],
+			[
+				"calc",
+				"pdrLib/calcBackground.py"
+			],
+			[
+				"back",
+				"pdrLib/calcBackground.py"
+			],
+			[
+				"fanc",
+				"pdrLib/fancyPrint.py"
+			],
+			[
+				"parse",
+				"pdrLib/parseOptions.py"
+			],
+			[
+				"init",
+				"pdrLib/__init__.py"
+			],
+			[
+				"cld",
+				"pdrLib/clfind2d.py"
+			],
+			[
+				"plot",
+				"pdrLib/plotDS9.py"
+			],
+			[
+				"cac",
+				"pdrLib/calcBackground.py"
+			],
+			[
+				"clfin",
+				"pdrLib/clfind2dIDL.py"
+			],
+			[
+				"def",
+				"pdrLib/defaultOptions.dat"
+			],
+			[
+				"depe",
+				"pdrLib/deprecated.py"
+			],
+			[
+				"getr",
+				"pdrLib/getRegions.py"
+			],
+			[
+				"getre",
+				"pdrLib/getRegions.py"
+			],
+			[
+				"p",
+				"pipeline.py"
+			],
+			[
+				"pip",
+				"pipeline.py"
+			],
+			[
+				"extrac",
+				"pdrLib/extractFromCoords.py"
+			],
+			[
+				"get",
+				"pdrLib/getRegions.py"
+			],
+			[
+				"pdrl",
+				"pdrLib/pdrLib.py"
+			],
+			[
+				"sur",
+				"pyProjections/survey.py"
 			],
 			[
 				"plott",
@@ -1365,10 +1476,6 @@
 			[
 				"fill",
 				"pyProjections/fillTimes_eBoss.py"
-			],
-			[
-				"plot",
-				"plotter.py"
 			],
 			[
 				"ca",
@@ -1464,7 +1571,7 @@
 	"show_minimap": true,
 	"show_open_files": false,
 	"show_tabs": true,
-	"side_bar_visible": true,
+	"side_bar_visible": false,
 	"side_bar_width": 220.0,
 	"status_bar_visible": true
 }
