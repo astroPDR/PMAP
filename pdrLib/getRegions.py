@@ -21,11 +21,12 @@ images.
 
 import os
 import numpy as np
-import pyfits as pf
-from calcBackground import calcBackground
 from Error import raiseError
+from impPyFits import *
+from calcBackground import calcBackground
 from clfind2d import clfind2d
 from checkFUV import checkFUV
+from createCatalog import createCatalog
 
 
 def checkCLFindOptions(root, configOpts):
@@ -133,8 +134,7 @@ def getRegions(configOpts, logger):
                                 returnOpt=False)
 
     if doCLFindFUV is False:
-        logger.write('FUV mask not created. Using previously generated mask %s.' % configOpts['fuvMaskFile'],
-                     newLine=True)
+        logger.write('FUV mask not created. Using previously generated mask %s.' % configOpts['fuvMaskFile'])
 
     else:
 
@@ -185,7 +185,7 @@ def getRegions(configOpts, logger):
             configOpts['fuvMaskFileRej'] = os.path.splitext(configOpts['fuvImage'])[0] + '_RejMsk.fits'
 
         doRejection = True
-        if os.path.exists(configOpts['fuvMaskFileRej']):
+        if os.path.exists(configOpts['fuvMaskFileRej']) and doCLFindFUV is False:
             if configOpts['overwrite'] is False:
                 doRejection = getYN('\nFound %s. Redo FUV rejection? [y/N] ' %
                                     configOpts['fuvMaskFileRej'], returnOpt=False)
@@ -197,7 +197,28 @@ def getRegions(configOpts, logger):
                          newLine=True)
         else:
             logger.write('Not doing FUV rejection. Using image %s' %
-                         configOpts['fuvMaskFileRej'], newLine=True)
+                         configOpts['fuvMaskFileRej'])
+
+    #####################################################################
+    ######################  FUV regions catalogue #######################
+
+    logger.write('Creating FUV catalogs ... ', newLine=True)
+
+    rejMask = configOpts['fuvMaskFileRej']
+    votRegsFile = os.path.splitext(rejMask)[0] + '.vot'
+    ds9RegsFile = os.path.splitext(rejMask)[0] + '.reg'
+    peaksFile = os.path.splitext(rejMask)[0] + '_Peaks.dat'
+
+    if False not in map(os.path.exists, [votRegsFile, ds9RegsFile, peaksFile]) and \
+            configOpts['overwrite'] is False:
+        logger.write('FUV catalogues already exist.', newLine=True)
+        if os.path.exists(votRegsFile):
+            logger.write('VOTable catalogue: %s' % votRegsFile)
+        logger.write('DS9 catalogue: %s' % ds9RegsFile)
+        logger.write('Peaks file: %s' % peaksFile)
+    else:
+        createCatalog(fuvImage, rejMask, votRegsFile, ds9RegsFile, logger,
+                      peaksFile=peaksFile, ellipse=False, plot=configOpts['plotDS9'])
 
     return
 

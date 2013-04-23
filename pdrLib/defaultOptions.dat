@@ -18,6 +18,7 @@ outputDir      =   ./                               ; The output directory where
 root           =   PMAP                             ; The root for the filenames of the output files
 log            =   True                             ; Should we create an output log?
 logFile        =   %(root)s.log                     ; The output file where the info will be saved
+plotDS9        =   True                             ; Plots the regions in DS9 (requieres pyds9)
 data_uv        =   %(root)s_Patchtest_UVdata.csv    ; UV flux measurements stored here
 hi_logsbase    =   %(root)s_PDR_SEout               ; Root of HI log files
 uv_log         =   %(root)s_PDR_Flux.log            ; Log file for uv flux measurements

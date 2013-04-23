@@ -224,7 +224,7 @@ def clfind2d(file, mask, levels, log=True, nPixMin=20, verbose=True):
     tEnd = clock()
     interval = (tEnd - tStart)/60.0
     printLog('%.1f minutes elapsed\n' % interval, logFile, verbose=verbose)
-    printLog('\n', logFile, verbose=verbose)
+    # printLog('\n', logFile, verbose=verbose)
 
     return
 
