@@ -183,9 +183,9 @@ def getHI(configOpts, fluxtable):
           #hifile.close()
       #End of try/except
 
-      print
+        print
 
-      return hidata
+        return hidata
 
 """ RHO_HI & RGAL & G0 """
 #Calculate rho_HI by combining UV and HI data. Also calculate Rgal in the same loop.
