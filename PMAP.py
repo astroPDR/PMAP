@@ -42,13 +42,13 @@ def extractHI(configOpts):
     # Skip the extraction if the first file already exists
     #  !!hardcoded in extractRegions.py; hardcoded 001
     if os.path.exists('{0}_Regions/{0}_Reg001.fits'.format(output)):
-      print "... extracted regions exist - skipping this step."
+        print "... extracted regions exist - skipping this step."
     else:
-      if False in map(os.path.exists, [hiImage, hiMaskFile]):
-        print 'Error: Either the image or the mask does not exist\n'
-        sys.exit()
-      print 'Warning: hardcoded HI region size of 20 pixels'
-      pdr.extractFromCoords(hiImage, ds9RegsFile, output, imageDS9 = fuvImage, size=20, mosaic=False, mosaicBack=0)
+        if False in map(os.path.exists, [hiImage, hiMaskFile]):
+            print 'Error: Either the image or the mask does not exist\n'
+            sys.exit()
+        print 'Warning: hardcoded HI region size of 20 pixels'
+        pdr.extractFromCoords(hiImage, ds9RegsFile, output, imageDS9 = fuvImage, size=20, mosaic=False, mosaicBack=0)
     print
 
     #  Output: HI postage stamps and masks named as {output}_Regions/{output}_Msk###.fits
@@ -65,36 +65,36 @@ def getflux(configOpts):
     coords_uv = os.path.splitext(configOpts['fuvImage'])[0] + '_Peaks.dat' #as defined earlier
 
     try:
-      dummy = file(data_uv, 'r')
-      print "... fluxes read from file {0} instead.".format(data_uv)
-      columns = np.dtype([('PDRID', 'int',), ('RA', '|S14'), ('DEC', '|S14'), ('aperture', 'float'), ('mean_at_r', 'float'), ('bgflux', 'float'), ('cumulflux', 'float'), ('netflux', 'float'), ('sflux', 'float')])
-      fluxtable = pdr.read_array(data_uv, columns)
-      print "  {0} records read".format(np.size(fluxtable.PDRID))
+        dummy = file(data_uv, 'r')
+        print "... fluxes read from file {0} instead.".format(data_uv)
+        columns = np.dtype([('PDRID', 'int',), ('RA', '|S14'), ('DEC', '|S14'), ('aperture', 'float'), ('mean_at_r', 'float'), ('bgflux', 'float'), ('cumulflux', 'float'), ('netflux', 'float'), ('sflux', 'float')])
+        fluxtable = pdr.read_array(data_uv, columns)
+        print "  {0} records read".format(np.size(fluxtable.PDRID))
     except:
-      #file does not exist, so we calculate. Force recalculation by removing the file.
-      #Variables in: uvheader, uvimage, uvcoords
-      #Variable out: fluxtable (includes uvcoords afterwards)
-      #	fluxtable labels: PDRID, RA, DEC, aperture, mean_at_r, bgflux, cumulflux, netflux, sflux
-      print "No previous flux measurements."
-      uvcoords = pdr.read_coords(coords_uv)
-      print "Flux will be measured at {0} positions on image {1} ...".format(len(uvcoords), configOpts['fuvImage'])
-      print "Fluxes will be scaled by a factor {0}".format(configOpts['FUVscale'])
-      #This scaling is useful since clumpfind doesn't seem to work properly with ~1e-15 values.
-      fluxtable = pdr.fuv_flux(configOpts['fuvImage'], uvheader, uvcoords, configOpts, verbose = True)
-      print "... done"
+        #file does not exist, so we calculate. Force recalculation by removing the file.
+        #Variables in: uvheader, uvimage, uvcoords
+        #Variable out: fluxtable (includes uvcoords afterwards)
+        #	fluxtable labels: PDRID, RA, DEC, aperture, mean_at_r, bgflux, cumulflux, netflux, sflux
+        print "No previous flux measurements."
+        uvcoords = pdr.read_coords(coords_uv)
+        print "Flux will be measured at {0} positions on image {1} ...".format(len(uvcoords), configOpts['fuvImage'])
+        print "Fluxes will be scaled by a factor {0}".format(configOpts['FUVscale'])
+        #This scaling is useful since clumpfind doesn't seem to work properly with ~1e-15 values.
+        fluxtable = pdr.fuv_flux(configOpts['fuvImage'], uvheader, uvcoords, configOpts, verbose = True)
+        print "... done"
 
-      #print fluxtable.RA, fluxtable.RA[0] #here fluxtable.RA[0] is simply a string
+        #print fluxtable.RA, fluxtable.RA[0] #here fluxtable.RA[0] is simply a string
 
-      #Write: UV fluxes
-      fluxfile = fancyPrint(writeLog=True, logFile=data_uv, verbose=True)
-      print "Flux info:"
-      #print "#PDRID, aperture (arcsec), mean at r (units/arcsec^2), bg flux, cumul. flux, net flux"
-      fluxfile.write("#PDRID, RA, DEC, aperture (arcsec), mean at r (units/pixel), bg flux, cumul. flux, net flux, sigma net flux\n")
-      for n in range(len(fluxtable)):
-        #fedora bug: changed PDRID:>3 to PDRID:3g
-        #print "{0.PDRID:3g}, {1.aperture:5.2f}, {1.mean_at_r:7.5e}, {1.bgflux:7.5e}, {1.cumulflux:7.5e}, {1.netflux:7.5e}".format(uvcoords[n], fluxtable[n])
-        fluxfile.write("{0.PDRID:3g}, {0.RA}, {0.DEC}, {1.aperture:7.5e}, {1.mean_at_r:7.5e}, {1.bgflux:7.5e}, {1.cumulflux:7.5e}, {1.netflux:7.5e}, {1.sflux:7.5e}\n".format(uvcoords[n], fluxtable[n]))
-      #fluxfile.close()
+        #Write: UV fluxes
+        fluxfile = fancyPrint(writeLog=True, logFile=data_uv, verbose=True)
+        print "Flux info:"
+        #print "#PDRID, aperture (arcsec), mean at r (units/arcsec^2), bg flux, cumul. flux, net flux"
+        fluxfile.write("#PDRID, RA, DEC, aperture (arcsec), mean at r (units/pixel), bg flux, cumul. flux, net flux, sigma net flux\n")
+        for n in range(len(fluxtable)):
+            #fedora bug: changed PDRID:>3 to PDRID:3g
+            #print "{0.PDRID:3g}, {1.aperture:5.2f}, {1.mean_at_r:7.5e}, {1.bgflux:7.5e}, {1.cumulflux:7.5e}, {1.netflux:7.5e}".format(uvcoords[n], fluxtable[n])
+            fluxfile.write("{0.PDRID:3g}, {0.RA}, {0.DEC}, {1.aperture:7.5e}, {1.mean_at_r:7.5e}, {1.bgflux:7.5e}, {1.cumulflux:7.5e}, {1.netflux:7.5e}, {1.sflux:7.5e}\n".format(uvcoords[n], fluxtable[n]))
+          #fluxfile.close()
 
     print
     #print "Exiting here."
@@ -113,79 +113,79 @@ def getHI(configOpts, fluxtable):
     hi_baselist = "{0}_Regions/{0}_Reg".format(os.path.splitext(hiImage)[0])
     hi_logsbase = "{0}_Regions/{1}".format(os.path.splitext(hiImage)[0], configOpts['hi_logsbase'])
     try:
-      dummy = file(data_hi, 'r')
-      print "... HI patch data read from file {0}".format(data_hi)
-      #Read: HI data (if already there); note that if the read fails, patches will be re-measured also
-      columns = np.dtype([('PDRID', 'int',), ('RA', '|S14'), ('DEC', '|S14'), ('NHI', 'float'), ('sNHI', 'float')])
-      hidata = pdr.read_array(data_hi, columns)
-      print "  {0} records read".format(np.size(hidata))
-      #Very simple and incomplete check for enough data:
-      if (np.size(np.unique(hidata.PDRID)) != np.size(np.unique(fluxtable.PDRID))):
-        print "Fatal error: number of UV and HI PDRIDs do not match. Try regenerating the HI files."
-        exit(0)
+        dummy = file(data_hi, 'r')
+        print "... HI patch data read from file {0}".format(data_hi)
+        #Read: HI data (if already there); note that if the read fails, patches will be re-measured also
+        columns = np.dtype([('PDRID', 'int',), ('RA', '|S14'), ('DEC', '|S14'), ('NHI', 'float'), ('sNHI', 'float')])
+        hidata = pdr.read_array(data_hi, columns)
+        print "  {0} records read".format(np.size(hidata))
+        #Very simple and incomplete check for enough data:
+        if (np.size(np.unique(hidata.PDRID)) != np.size(np.unique(fluxtable.PDRID))):
+            print "Fatal error: number of UV and HI PDRIDs do not match. Try regenerating the HI files."
+            exit(0)
     except:
-      #File does not exist, so process HI postage stamp regions.
-      #Must have regions with names matching the PDRIDs
-      scale = configOpts['HIscale'] # 2.896e19 for NGC 628 (m?)Jy/beam to cm-2
-      hi_bg = configOpts['hiBackground']
-      print "Using map scaling of {0} cm-2".format(scale)
-      hiresults = [[] for dummy in xrange(5)] #PDRID, ra, dec, NHI, sNHI
-      #Warning: up to 999 files
-      for i in range(np.size(fluxtable.PDRID)):
-        fitsfile = hi_baselist + "{0:03d}.fits".format(int(fluxtable.PDRID[i]))
-        print "Calling SExtractor with file {0}".format(fitsfile)
+        #File does not exist, so process HI postage stamp regions.
+        #Must have regions with names matching the PDRIDs
+        scale = configOpts['HIscale'] # 2.896e19 for NGC 628 (m?)Jy/beam to cm-2
+        hi_bg = configOpts['hiBackground']
+        print "Using map scaling of {0} cm-2".format(scale)
+        hiresults = [[] for dummy in xrange(5)] #PDRID, ra, dec, NHI, sNHI
+        #Warning: up to 999 files
+        for i in range(np.size(fluxtable.PDRID)):
+            fitsfile = hi_baselist + "{0:03d}.fits".format(int(fluxtable.PDRID[i]))
+            print "Calling SExtractor with file {0}".format(fitsfile)
 
-        catfile = pdr.call_SEx(fitsfile)
-        if catfile==1:
-          print "Fatal error: SExtractor call failed."
-          exit(0)
-        else:
-          logfile = hi_logsbase + "{0:03}.txt".format(int(fluxtable.PDRID[i]))
-          patches = pdr.read_secat(catfile, fitsfile, logfile, wcs=True)
-          #Patches are not background-subtracted, that will happen now:
-
-          for n in range(len(patches[0])):
-            if patches[2][n] > (hi_bg*2.):
-              #subtract the background and ignore patches that are fainter than hi_bg
-              hiresults[0].append(fluxtable.PDRID[i])
-              hiresults[1].append(patches[0][n])
-              hiresults[2].append(patches[1][n])
-              hiresults[3].append((patches[2][n]-hi_bg)*scale)
-              hiresults[4].append(hi_bg * scale * 0.5) #fix sN_HI to half the background value
+            catfile = pdr.call_SEx(fitsfile)
+            if catfile==1:
+                print "Fatal error: SExtractor call failed."
+                exit(0)
             else:
-              print "Patch too faint: ", patches[2][n]
+                logfile = hi_logsbase + "{0:03}.txt".format(int(fluxtable.PDRID[i]))
+                patches = pdr.read_secat(catfile, fitsfile, logfile, wcs=True)
+                #Patches are not background-subtracted, that will happen now:
 
-          if not np.size(np.where(hiresults[0] == fluxtable.PDRID[i])):
-            print "No suitable patches were found for PDRID ", fluxtable.PDRID[i], "; creating empty entry."
-            #With SExtractor, this is unlikely since it does not pick up the faintest patches
-            hiresults[0].append(fluxtable.PDRID[i])
-            hiresults[1].append(0)
-            hiresults[2].append(0)
-            hiresults[3].append(0)
-            hiresults[4].append(0)
+                for n in range(len(patches[0])):
+                    if patches[2][n] > (hi_bg*2.):
+                      #subtract the background and ignore patches that are fainter than hi_bg
+                        hiresults[0].append(fluxtable.PDRID[i])
+                        hiresults[1].append(patches[0][n])
+                        hiresults[2].append(patches[1][n])
+                        hiresults[3].append((patches[2][n]-hi_bg)*scale)
+                        hiresults[4].append(hi_bg * scale * 0.5) #fix sN_HI to half the background value
+                    else:
+                        print "Patch too faint: ", patches[2][n]
 
-      #End for
+                if not np.size(np.where(hiresults[0] == fluxtable.PDRID[i])):
+                    print "No suitable patches were found for PDRID ", fluxtable.PDRID[i], "; creating empty entry."
+                    #With SExtractor, this is unlikely since it does not pick up the faintest patches
+                    hiresults[0].append(fluxtable.PDRID[i])
+                    hiresults[1].append(0)
+                    hiresults[2].append(0)
+                    hiresults[3].append(0)
+                    hiresults[4].append(0)
 
-      #Finally, convert the results into a rec array and save the results
-      labels = 'PDRID, RA, DEC, NHI, sNHI'
-      hidata = pdr.records(hiresults, labels)
-      #Write: HI patches
-      hifile = fancyPrint(writeLog=True, logFile=data_hi, verbose=True)
-      print "HI patches:"
-      #print "#PDRID, RA, DEC, NHI, sNHI"
-      hifile.write("#PDRID, RA, DEC, NHI, sNHI\n")
-      for n in range(len(hidata)):
-        #print type(hidata[n].NHI)
-        #Apparently python 2.6 needs explicit conversion from numpy.float32, so workaround
-        #fedora bug: changed PDRID:>3 to PDRID:3g
-        #print "{0.PDRID:3g}, {0.RA:14s}, {0.DEC:14s}, {1:7.5g}, {2:7.5g}".format(hidata[n], float(hidata[n].NHI), float(hidata[n].sNHI))
-        hifile.write("{0.PDRID:3g}, {0.RA:14s}, {0.DEC:14s}, {1:7.5g}, {2:7.5g}\n".format(hidata[n], float(hidata[n].NHI), float(hidata[n].sNHI)))
-      #hifile.close()
-    #End of try/except
+        #End for
 
-    print
+        #Finally, convert the results into a rec array and save the results
+        labels = 'PDRID, RA, DEC, NHI, sNHI'
+        hidata = pdr.records(hiresults, labels)
+        #Write: HI patches
+        hifile = fancyPrint(writeLog=True, logFile=data_hi, verbose=True)
+        print "HI patches:"
+        #print "#PDRID, RA, DEC, NHI, sNHI"
+        hifile.write("#PDRID, RA, DEC, NHI, sNHI\n")
+        for n in range(len(hidata)):
+            #print type(hidata[n].NHI)
+            #Apparently python 2.6 needs explicit conversion from numpy.float32, so workaround
+            #fedora bug: changed PDRID:>3 to PDRID:3g
+            #print "{0.PDRID:3g}, {0.RA:14s}, {0.DEC:14s}, {1:7.5g}, {2:7.5g}".format(hidata[n], float(hidata[n].NHI), float(hidata[n].sNHI))
+            hifile.write("{0.PDRID:3g}, {0.RA:14s}, {0.DEC:14s}, {1:7.5g}, {2:7.5g}\n".format(hidata[n], float(hidata[n].NHI), float(hidata[n].sNHI)))
+          #hifile.close()
+      #End of try/except
 
-    return hidata
+      print
+
+      return hidata
 
 """ RHO_HI & RGAL & G0 """
 #Calculate rho_HI by combining UV and HI data. Also calculate Rgal in the same loop.
@@ -208,11 +208,11 @@ def getRhoRG(configOpts, fluxtable, hidata, uvheader):
 
     print "Calculating Rho_HI, Rgal, G0"
     for i in range(np.size(fluxtable.PDRID)):
-      Rgal.append(pdr.separation(fluxtable.RA[i], fluxtable.DEC[i], c_RA, c_DEC, pa, incl, dist*1e-3, uvheader)) #dist passed in kpc so Rgal will be in kpc
-      while (n < np.size(hidata.PDRID)) and (hidata.PDRID[n] == fluxtable.PDRID[i]):
-        rhoHI.append(pdr.separation(fluxtable.RA[i], fluxtable.DEC[i], hidata.RA[n], hidata.DEC[n], pa, incl, dist, uvheader)) #dist in pc
-        srho.append(srho_fixed)
-        n += 1
+        Rgal.append(pdr.separation(fluxtable.RA[i], fluxtable.DEC[i], c_RA, c_DEC, pa, incl, dist*1e-3, uvheader)) #dist passed in kpc so Rgal will be in kpc
+        while (n < np.size(hidata.PDRID)) and (hidata.PDRID[n] == fluxtable.PDRID[i]):
+            rhoHI.append(pdr.separation(fluxtable.RA[i], fluxtable.DEC[i], hidata.RA[n], hidata.DEC[n], pa, incl, dist, uvheader)) #dist in pc
+            srho.append(srho_fixed)
+            n += 1
 
     #Variables in: fluxtable.netflux, fluxtable.mean_at_r, dist, pix_size, ext, and rho_HI
     #variable out: G0, contr
@@ -221,9 +221,9 @@ def getRhoRG(configOpts, fluxtable, hidata, uvheader):
     G0 = []
     contr = [] #source contrast
     for i in range(np.size(hidata.PDRID)):
-      uv_idx = np.where(fluxtable.PDRID == hidata.PDRID[i]) #one match expected only
-      G0.append(pdr.Gnaught(fluxtable.netflux[uv_idx], dist, rhoHI[i], ext))
-      contr.append(pdr.contrast(fluxtable.netflux[uv_idx], fluxtable.mean_at_r[uv_idx], rhoHI[i], dist))
+        uv_idx = np.where(fluxtable.PDRID == hidata.PDRID[i]) #one match expected only
+        G0.append(pdr.Gnaught(fluxtable.netflux[uv_idx], dist, rhoHI[i], ext))
+        contr.append(pdr.contrast(fluxtable.netflux[uv_idx], fluxtable.mean_at_r[uv_idx], rhoHI[i], dist))
 
     print
     #Now we have rhoHI, srho and G0 for each hidata.PDRID
@@ -251,21 +251,21 @@ def dusttogas(configOpts, fluxtable, hidata, Rgal):
 
     dd0 = []; sdd0 = []
     for i in range(np.size(hidata.PDRID)):
-      uv_idx = np.where(fluxtable.PDRID == hidata.PDRID[i])[0][0]
-      #one match expected only -- but uv_idx is an array. So take [0][0], otherwise there will be issues using it
-      #print uv_idx, fluxtable.RA[0], fluxtable.RA[uv_idx]#, fluxtable.RA[uv_idx[0]]
-      #hack: fluxtable.RA[uv_idx] yields [' hh mm ss '] instead of plain string, which causes problems here. Hence [0]
-      #dust routine expects D_gal(kpc) but ignored anyway?
-      param_array = [[fluxtable.RA[uv_idx], fluxtable.DEC[uv_idx]], [c_RA, c_DEC], dustmodel, [pa, incl, dist*1e-3, Rgal[uv_idx]], uvheader]
+        uv_idx = np.where(fluxtable.PDRID == hidata.PDRID[i])[0][0]
+        #one match expected only -- but uv_idx is an array. So take [0][0], otherwise there will be issues using it
+        #print uv_idx, fluxtable.RA[0], fluxtable.RA[uv_idx]#, fluxtable.RA[uv_idx[0]]
+        #hack: fluxtable.RA[uv_idx] yields [' hh mm ss '] instead of plain string, which causes problems here. Hence [0]
+        #dust routine expects D_gal(kpc) but ignored anyway?
+        param_array = [[fluxtable.RA[uv_idx], fluxtable.DEC[uv_idx]], [c_RA, c_DEC], dustmodel, [pa, incl, dist*1e-3, Rgal[uv_idx]], uvheader]
 
-      #print param_array
-      d, s = pdr.determine_dust(dusttype, param_array) #! should separate dust model from calculating R
-      if (s == 0.):
-        print "Warning: using hardcoded values for sdd0." #Can add options of const or relative + value
-        s = 0.1
+        #print param_array
+        d, s = pdr.determine_dust(dusttype, param_array) #! should separate dust model from calculating R
+        if (s == 0.):
+            print "Warning: using hardcoded values for sdd0." #Can add options of const or relative + value
+            s = 0.1
 
-      dd0.append(d)
-      sdd0.append(s) #all errors are absolute
+        dd0.append(d)
+        sdd0.append(s) #all errors are absolute
 
     print "Warning: using hardcoded 8.69 solar value and assuming 12+log(O/H) input for dust map"
     print
@@ -287,27 +287,27 @@ def collate(configOpts, fluxtable, hidata, dd0, sdd0, rhoHI, srho, G0, contr):
     sntot = np.zeros(np.size(hidata.PDRID))
       #Add ntot and sntot for later
     with open(data_full, 'w') as fullfile: #no close file needed this way
-      for i in range(np.size(hidata.PDRID)):
-    #There can be no duplicate PDRIDs in fluxtable or this will yield incorrect results
-        #for legibility:
-        uv_idx = np.where(fluxtable.PDRID == hidata.PDRID[i])[0][0] #expect only one value - problem if there are more HI PDRIDs than UV PDRIDs
-        #hack: 'g' does not take [number] so have to convert again with [0]. Need to 'fix' fluxtable. Same problem with G0
-        #print "{0:>3}, {1:12s}, {2:12s}, {3:8g}, {4:6g}, {5:.3f}, {6:f}, {7:.3f}, {8:.3f}, {9:g}, {10:.3g}, {11:g}".format(hidata.PDRID[i], fluxtable.RA[uv_idx], fluxtable.DEC[uv_idx], hidata.NHI[i], hidata.sNHI[i], dd0[i], sdd0[i], rhoHI[i], srho[i], fluxtable.netflux[uv_idx], fluxtable.sflux[uv_idx], fluxtable.mean_at_r[uv_idx])
+        for i in range(np.size(hidata.PDRID)):
+      #There can be no duplicate PDRIDs in fluxtable or this will yield incorrect results
+          #for legibility:
+          uv_idx = np.where(fluxtable.PDRID == hidata.PDRID[i])[0][0] #expect only one value - problem if there are more HI PDRIDs than UV PDRIDs
+          #hack: 'g' does not take [number] so have to convert again with [0]. Need to 'fix' fluxtable. Same problem with G0
+          #print "{0:>3}, {1:12s}, {2:12s}, {3:8g}, {4:6g}, {5:.3f}, {6:f}, {7:.3f}, {8:.3f}, {9:g}, {10:.3g}, {11:g}".format(hidata.PDRID[i], fluxtable.RA[uv_idx], fluxtable.DEC[uv_idx], hidata.NHI[i], hidata.sNHI[i], dd0[i], sdd0[i], rhoHI[i], srho[i], fluxtable.netflux[uv_idx], fluxtable.sflux[uv_idx], fluxtable.mean_at_r[uv_idx])
 
-        #Patch RAs, DECs not written here
-        #fullfile.write("{0:>3}, {1:12s}, {2:12s}, {3:8g}, {4:6g}, {5:.3f}, {6:f}, {7:.3f}, {8:.3f}, {9:g}, {10:.3g}, {11:g}\n".format(hidata.PDRID[i], fluxtable.RA[uv_idx], fluxtable.DEC[uv_idx], hidata.NHI[i], hidata.sNHI[i], dd0[i], sdd0[i], rhoHI[i], srho[i], fluxtable.netflux[uv_idx], fluxtable.sflux[uv_idx], fluxtable.mean_at_r[uv_idx]))
-        #Fedora bug: need to type cast the variables
-        fullfile.write("{0:>3}, {1:12s}, {2:12s}, {3:8g}, {4:6g}, {5:.3f}, {6:f}, {7:.3f}, {8:.3f}, {9:g}, {10:.3g}, {11:g}\n".format(
-              int(hidata.PDRID[i]),
-              fluxtable.RA[uv_idx], fluxtable.DEC[uv_idx],
-              hidata.NHI[i], hidata.sNHI[i],
-              dd0[i], sdd0[i], rhoHI[i], srho[i],
-              fluxtable.netflux[uv_idx], fluxtable.sflux[uv_idx],
-              fluxtable.mean_at_r[uv_idx]))
+          #Patch RAs, DECs not written here
+          #fullfile.write("{0:>3}, {1:12s}, {2:12s}, {3:8g}, {4:6g}, {5:.3f}, {6:f}, {7:.3f}, {8:.3f}, {9:g}, {10:.3g}, {11:g}\n".format(hidata.PDRID[i], fluxtable.RA[uv_idx], fluxtable.DEC[uv_idx], hidata.NHI[i], hidata.sNHI[i], dd0[i], sdd0[i], rhoHI[i], srho[i], fluxtable.netflux[uv_idx], fluxtable.sflux[uv_idx], fluxtable.mean_at_r[uv_idx]))
+          #Fedora bug: need to type cast the variables
+          fullfile.write("{0:>3}, {1:12s}, {2:12s}, {3:8g}, {4:6g}, {5:.3f}, {6:f}, {7:.3f}, {8:.3f}, {9:g}, {10:.3g}, {11:g}\n".format(
+                int(hidata.PDRID[i]),
+                fluxtable.RA[uv_idx], fluxtable.DEC[uv_idx],
+                hidata.NHI[i], hidata.sNHI[i],
+                dd0[i], sdd0[i], rhoHI[i], srho[i],
+                fluxtable.netflux[uv_idx], fluxtable.sflux[uv_idx],
+                fluxtable.mean_at_r[uv_idx]))
 
-        for m, n in enumerate((hidata.PDRID[i], fluxtable.RA[uv_idx], fluxtable.DEC[uv_idx], hidata.RA[i], hidata.DEC[i], Rgal[uv_idx], hidata.NHI[i], hidata.sNHI[i], dd0[i], sdd0[i], rhoHI[i], srho[i], fluxtable.netflux[uv_idx], fluxtable.sflux[uv_idx], fluxtable.mean_at_r[uv_idx], fluxtable.aperture[uv_idx], G0[i], contr[i], ntot[i], sntot[i])):
-            #print m, n
-          data[m].append(n)
+          for m, n in enumerate((hidata.PDRID[i], fluxtable.RA[uv_idx], fluxtable.DEC[uv_idx], hidata.RA[i], hidata.DEC[i], Rgal[uv_idx], hidata.NHI[i], hidata.sNHI[i], dd0[i], sdd0[i], rhoHI[i], srho[i], fluxtable.netflux[uv_idx], fluxtable.sflux[uv_idx], fluxtable.mean_at_r[uv_idx], fluxtable.aperture[uv_idx], G0[i], contr[i], ntot[i], sntot[i])):
+              #print m, n
+              data[m].append(n)
 
     labels = 'PDRID, RA, DEC, pRA, pDEC, Rgal, NHI, sNHI, dd0, sdd0, rhoHI, srho, flux, sflux, mean_at_r, aperture, G0, contr, ntot, sntot'
     data = pdr.records(data, labels) #transform into rec.array
