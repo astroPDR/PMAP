@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # encoding: utf-8
 #
-# Usage: pipeline.py [configfile]
+# Usage: PMAP.py [configfile]
 # This is the main pipeline script aiming to provide a one-stop PDR method solution.
 # Several steps will be skipped if certain files already exist from previous runs.
 # A quick plot is produced with the results.
@@ -14,6 +14,8 @@
 #
 #     New edit: 2013-04-13 by José R. Sánchez-Gallego
 #         -- General clean-up and optimisation
+#
+#     2013-04-26 update logging to use fancyPrint << not tested
 
 # import pdb  # debugger
 import pdrLib as pdr
@@ -84,15 +86,15 @@ def getflux(configOpts):
       #print fluxtable.RA, fluxtable.RA[0] #here fluxtable.RA[0] is simply a string
 
       #Write: UV fluxes
-      fluxfile = open(data_uv, 'w')
+      fluxfile = fancyPrint(writeLog=True, logFile=data_uv, verbose=True)
       print "Flux info:"
-      print "#PDRID, aperture (arcsec), mean at r (units/arcsec^2), bg flux, cumul. flux, net flux"
+      #print "#PDRID, aperture (arcsec), mean at r (units/arcsec^2), bg flux, cumul. flux, net flux"
       fluxfile.write("#PDRID, RA, DEC, aperture (arcsec), mean at r (units/pixel), bg flux, cumul. flux, net flux, sigma net flux\n")
       for n in range(len(fluxtable)):
         #fedora bug: changed PDRID:>3 to PDRID:3g
-        print "{0.PDRID:3g}, {1.aperture:5.2f}, {1.mean_at_r:7.5e}, {1.bgflux:7.5e}, {1.cumulflux:7.5e}, {1.netflux:7.5e}".format(uvcoords[n], fluxtable[n])
+        #print "{0.PDRID:3g}, {1.aperture:5.2f}, {1.mean_at_r:7.5e}, {1.bgflux:7.5e}, {1.cumulflux:7.5e}, {1.netflux:7.5e}".format(uvcoords[n], fluxtable[n])
         fluxfile.write("{0.PDRID:3g}, {0.RA}, {0.DEC}, {1.aperture:7.5e}, {1.mean_at_r:7.5e}, {1.bgflux:7.5e}, {1.cumulflux:7.5e}, {1.netflux:7.5e}, {1.sflux:7.5e}\n".format(uvcoords[n], fluxtable[n]))
-      fluxfile.close()
+      #fluxfile.close()
 
     print
     #print "Exiting here."
@@ -168,17 +170,17 @@ def getHI(configOpts, fluxtable):
       labels = 'PDRID, RA, DEC, NHI, sNHI'
       hidata = pdr.records(hiresults, labels)
       #Write: HI patches
-      hifile = open(data_hi, 'w')
+      hifile = fancyPrint(writeLog=True, logFile=data_hi, verbose=True)
       print "HI patches:"
-      print "#PDRID, RA, DEC, NHI, sNHI"
+      #print "#PDRID, RA, DEC, NHI, sNHI"
       hifile.write("#PDRID, RA, DEC, NHI, sNHI\n")
       for n in range(len(hidata)):
         #print type(hidata[n].NHI)
         #Apparently python 2.6 needs explicit conversion from numpy.float32, so workaround
         #fedora bug: changed PDRID:>3 to PDRID:3g
-        print "{0.PDRID:3g}, {0.RA:14s}, {0.DEC:14s}, {1:7.5g}, {2:7.5g}".format(hidata[n], float(hidata[n].NHI), float(hidata[n].sNHI))
+        #print "{0.PDRID:3g}, {0.RA:14s}, {0.DEC:14s}, {1:7.5g}, {2:7.5g}".format(hidata[n], float(hidata[n].NHI), float(hidata[n].sNHI))
         hifile.write("{0.PDRID:3g}, {0.RA:14s}, {0.DEC:14s}, {1:7.5g}, {2:7.5g}\n".format(hidata[n], float(hidata[n].NHI), float(hidata[n].sNHI)))
-      hifile.close()
+      #hifile.close()
     #End of try/except
 
     print
@@ -358,11 +360,11 @@ def filter(data):
 def dump(configOpts, data):
     #For now, we will output n and coordinates
     #'Loose variables' coming in from earlier in the pipeline: G0 ###and Rgal
-    resultcsv = open(configOpts['data_results'], 'w')
+    resultcsv = fancyPrint(writeLog=True, logfile=configOpts['data_results'], verbose=True)
     R25 = configOpts['R25']
     print "Results: RA, DEC, Rgal, ntot, sntot, sntot/ntot (%)"
     for i in range(np.size(data.ntot)):
-        print "{0:12s}, {1:12s}, {2:7.2f}, {3:5.1e}, {4:5.1e}, {5:3.0f}".format(data.RA[i], data.DEC[i], data.Rgal[i], data.ntot[i], data.sntot[i], data.sntot[i] / data.ntot[i] *100)
+        #print "{0:12s}, {1:12s}, {2:7.2f}, {3:5.1e}, {4:5.1e}, {5:3.0f}".format(data.RA[i], data.DEC[i], data.Rgal[i], data.ntot[i], data.sntot[i], data.sntot[i] / data.ntot[i] *100)
 
         #Here we also print a csv for my plotting routines
         #The PDRID is last for compatibility reasons.
