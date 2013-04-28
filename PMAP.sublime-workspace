@@ -4,112 +4,16 @@
 		"selected_items":
 		[
 			[
-				"fits",
-				"fitsTableCat"
-			],
-			[
-				"vo",
-				"voModule"
-			],
-			[
-				"fit",
-				"fitsTableCat"
-			],
-			[
-				"rai",
-				"raiseWarning  (function)"
-			],
-			[
-				"ds",
-				"ds9XYFile"
-			],
-			[
-				"rais",
-				"raiseWarning"
-			],
-			[
-				"ra",
-				"raiseWarning  (function)"
-			],
-			[
-				"ell",
-				"ellipseAxisWCS"
-			],
-			[
-				"ellip",
-				"ellipseFit"
-			],
-			[
-				"skyC",
-				"skyCoordsPeak"
-			],
-			[
-				"pea",
-				"peaksPix"
-			],
-			[
-				"peak",
-				"peaksPix"
-			],
-			[
-				"radii",
-				"radiiSky"
-			],
-			[
-				"reg",
-				"regions"
-			],
-			[
-				"arcsec",
-				"arcsecs"
-			],
-			[
-				"arc",
-				"arcsecs"
-			],
-			[
-				"ELL",
-				"ELL_ERROR"
-			],
-			[
-				"SEM",
-				"SEMIAX2_PIX"
-			],
-			[
-				"YEL",
-				"Y_ELLIPSE"
-			],
-			[
-				"data",
-				"datatype"
-			],
-			[
-				"field",
-				"fieldsVO"
-			],
-			[
-				"RAD",
-				"RADIUS_SKY"
-			],
-			[
-				"deg",
-				"degrees"
-			],
-			[
-				"fiel",
-				"fieldsVO"
-			],
-			[
-				"imp",
-				"impVO"
-			],
-			[
 				"fuv",
 				"fuvMaskFileRej"
 			],
 			[
 				"Sa",
 				"Sánchez-Gallego"
+			],
+			[
+				"data",
+				"dataMask"
 			],
 			[
 				"check",
@@ -162,6 +66,10 @@
 			[
 				"do",
 				"doCLFindFUV"
+			],
+			[
+				"rais",
+				"raiseError"
 			],
 			[
 				"conf",
@@ -514,6 +422,98 @@
 			[
 				"sid",
 				"sidTime"
+			],
+			[
+				"set",
+				"setTime"
+			],
+			[
+				"end",
+				"endObs"
+			],
+			[
+				"begi",
+				"beginObs"
+			],
+			[
+				"inde",
+				"indexTile"
+			],
+			[
+				"ind",
+				"indices"
+			],
+			[
+				"num",
+				"numReqPlates"
+			],
+			[
+				"galp",
+				"galPlaneIdx"
+			],
+			[
+				"su",
+				"survey"
+			],
+			[
+				"ha",
+				"haArray"
+			],
+			[
+				"ix",
+				"idxThreshold"
+			],
+			[
+				"rms_",
+				"rms_rSN"
+			],
+			[
+				"sort",
+				"sortRankPlates"
+			],
+			[
+				"rank",
+				"rankPlates"
+			],
+			[
+				"rec",
+				"recarray"
+			],
+			[
+				"_lst",
+				"_lstBegin"
+			],
+			[
+				"_ls",
+				"_lstEnd  (variable)"
+			],
+			[
+				"_l",
+				"_lstEnd  (variable)"
+			],
+			[
+				"sc",
+				"scheduledTimes"
+			],
+			[
+				"ai",
+				"airmassTmp"
+			],
+			[
+				"al",
+				"alphaRed  (variable)"
+			],
+			[
+				"ca",
+				"calendarFile"
+			],
+			[
+				"cale",
+				"calendarFile"
+			],
+			[
+				"alpha",
+				"alphaRed"
 			]
 		]
 	},
@@ -523,7 +523,7 @@
 			"file": "PMAP.py",
 			"settings":
 			{
-				"buffer_size": 23895,
+				"buffer_size": 24914,
 				"line_ending": "Unix"
 			}
 		},
@@ -531,39 +531,7 @@
 			"file": "pdrLib/getRegions.py",
 			"settings":
 			{
-				"buffer_size": 12685,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "pdrLib/createCatalog.py",
-			"settings":
-			{
-				"buffer_size": 17114,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "pdrLib/impVO.py",
-			"settings":
-			{
-				"buffer_size": 243,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "pdrLib/fancyPrint.py",
-			"settings":
-			{
-				"buffer_size": 1739,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "pdrLib/defaultOptions.dat",
-			"settings":
-			{
-				"buffer_size": 7169,
+				"buffer_size": 11656,
 				"line_ending": "Unix"
 			}
 		}
@@ -577,14 +545,6 @@
 			[
 				"upgr",
 				"Package Control: Upgrade/Overwrite All Packages"
-			],
-			[
-				"high",
-				"BracketHighlighter: Toggle High Visibility Mode"
-			],
-			[
-				"hig",
-				"BracketHighlighter: Toggle Global Enable"
 			],
 			[
 				"upg",
@@ -728,35 +688,24 @@
 	},
 	"file_history":
 	[
-		"/Users/albireo/Documents/MaNGA/Simulations/LST_Distributions/nightlyH.txt",
-		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/BracketHighlighter/bh_core.sublime-settings",
-		"/Users/albireo/Documents/PMAP/pdrLib/Error.py",
-		"/Users/albireo/Documents/PMAP/pdrLib/fitellipse.py",
-		"/Users/albireo/Documents/PMAP/pdrLib/impVO.py",
-		"/Users/albireo/Documents/PMAP/pdrLib/defaultOptions.dat",
-		"/Users/albireo/Documents/PDR/NGC0925/NGC0925.config",
-		"/Users/albireo/Documents/PDR/NGC0925/NGC0925_FUV_NGS_RejMsk_WCS.reg",
-		"/Users/albireo/Documents/PhD/PDR/PMAP_Current/pdrLib/createCatalog.py",
-		"/Users/albireo/Documents/PDR/NGC0925/NGC0925_FUV_NGS_RejMskWCS.reg",
-		"/Users/albireo/Documents/PDR/NGC0925/NGC0925_FUV_NGS_RejMsk_XY.reg",
-		"/Users/albireo/Documents/PMAP/pdrLib/parseOptions.py",
-		"/Users/albireo/Documents/PMAP/atpy/votable.py",
-		"/Users/albireo/Documents/PMAP/pdrLib/fancyPrint.py",
-		"/Users/albireo/Documents/PMAP/pdrLib/impPyfits.py",
-		"/Users/albireo/Documents/PMAP/pdrLib/impPyWCS.py",
-		"/Users/albireo/Documents/PMAP/pdrLib/clfind2d.py",
 		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/User/Default (OSX).sublime-keymap",
 		"/Users/albireo/Documents/PDR/NGC0925/NGC0925.log",
+		"/Users/albireo/Documents/PDR/NGC0925/NGC0925.config",
+		"/Users/albireo/Documents/PMAP/pdrLib/parseOptions.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/fancyPrint.py",
 		"/Users/albireo/Documents/PMAP/pdrLib/checkFUV.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/defaultOptions.dat",
 		"/Users/albireo/Documents/PMAP/pdrLib/mandatoryOptions.dat",
 		"/Users/albireo/Documents/PMAP/pdrLib/pdrLib.py",
 		"/Users/albireo/Downloads/pdrLib.py.swp",
 		"/Users/albireo/Documents/PMAP/pipeline.py",
 		"/Users/albireo/Documents/PMAP/pdrLib/header.cb",
+		"/Users/albireo/Documents/PMAP/pdrLib/Error.py",
 		"/Users/albireo/Documents/PMAP/pdrLib/calcBackground.py",
 		"/Users/albireo/Documents/PMAP/pdrLib/calcBackground.py.bak",
 		"/Users/albireo/Documents/PDR/NGC0925/PMAP.log",
 		"/Users/albireo/Documents/PDR/NGC0925_PhD/NGC0925_Input.dat",
+		"/Users/albireo/Documents/PMAP/pdrLib/clfind2d.py",
 		"/Users/albireo/Documents/PMAP/__init__.py",
 		"/Users/albireo/Documents/PMAP/pdrLib/clfind2dIDL.py",
 		"/Users/albireo/Documents/PMAP/pdrLib/plotDS9.py",
@@ -855,7 +804,18 @@
 		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/MaNGA_observing_nights.par",
 		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/MaNGA.par",
 		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/calendar.pro",
-		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/ebosstiles.dat"
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/ebosstiles.dat",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/createMaNGATiles.py",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/MaNGA_Tiles.dat",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/MaNGA_targets_ran_tiles.dat",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/sample2npy.py",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/tile_first.pro",
+		"/Volumes/Untitled 1/etc/network/interfaces",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/plan_ha.pro",
+		"/Volumes/Pegasus/pegasus/renbin/boss/products/Linux/idlutils/v5_5_7/pro/dust/dust_getval.pro",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/compute_extinction.pro",
+		"/Users/albireo/Downloads/Arrow - 01x09 - Year's End.LOL.English.C.updated.Addic7ed.com.srt",
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Misc/projections/plt.pro"
 	],
 	"find":
 	{
@@ -873,15 +833,6 @@
 		"case_sensitive": true,
 		"find_history":
 		[
-			"'arcsec'",
-			"'degrees'",
-			"'counts'",
-			"'pixels'",
-			"Column(",
-			"float",
-			"datatype",
-			"Field(votable, ",
-			"output",
 			"calcParameters",
 			"calcBac",
 			";",
@@ -965,15 +916,6 @@
 		"regex": false,
 		"replace_history":
 		[
-			"'arcsec'",
-			"'deg'",
-			"'CPS'",
-			"'pix'",
-			"pf.Column(",
-			"E",
-			"format",
-			"Column(",
-			"Column(name=",
 			"#;",
 			"2872",
 			"2154",
@@ -1020,7 +962,7 @@
 	"groups":
 	[
 		{
-			"selected": 5,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -1028,20 +970,19 @@
 					"file": "PMAP.py",
 					"settings":
 					{
-						"buffer_size": 23895,
+						"buffer_size": 24914,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								21813,
-								21813
+								20513,
+								20513
 							]
 						],
 						"settings":
 						{
-							"BracketHighlighterBusy": false,
 							"annotations":
 							[
 								"TODO",
@@ -1178,8 +1119,8 @@
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 0.0,
-						"translation.y": 9456.0,
+						"translation.x": 2.0,
+						"translation.y": 9191.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1189,20 +1130,19 @@
 					"file": "pdrLib/getRegions.py",
 					"settings":
 					{
-						"buffer_size": 12685,
+						"buffer_size": 11656,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2249,
-								2249
+								5622,
+								5622
 							]
 						],
 						"settings":
 						{
-							"BracketHighlighterBusy": false,
 							"annotations":
 							[
 								"TODO",
@@ -1340,648 +1280,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1471.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "pdrLib/createCatalog.py",
-					"settings":
-					{
-						"buffer_size": 17114,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								369,
-								369
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"annotations":
-							[
-								"TODO",
-								"README",
-								"FIXME"
-							],
-							"bh_regions":
-							[
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close"
-							],
-							"csslint_options":
-							{
-								"adjoining-classes": "warning",
-								"box-model": true,
-								"box-sizing": "warning",
-								"compatible-vendor-prefixes": "warning",
-								"display-property-grouping": true,
-								"duplicate-background-images": "warning",
-								"duplicate-properties": true,
-								"empty-rules": true,
-								"errors": true,
-								"fallback-colors": "warning",
-								"floats": "warning",
-								"font-faces": "warning",
-								"font-sizes": "warning",
-								"gradients": "warning",
-								"ids": "warning",
-								"import": "warning",
-								"important": "warning",
-								"known-properties": true,
-								"outline-none": "warning",
-								"overqualified-elements": "warning",
-								"qualified-headings": "warning",
-								"regex-selectors": "warning",
-								"rules-count": "warning",
-								"shorthand": "warning",
-								"star-property-hack": "warning",
-								"text-indent": "warning",
-								"underscore-property-hack": "warning",
-								"unique-headings": "warning",
-								"universal-selector": "warning",
-								"vendor-prefix": true,
-								"zero-units": "warning"
-							},
-							"gjslint_ignore":
-							[
-								110.0
-							],
-							"gjslint_options":
-							[
-							],
-							"javascript_linter": "jshint",
-							"jshint_options":
-							{
-								"browser": true,
-								"evil": true,
-								"regexdash": true,
-								"sub": true,
-								"trailing": true,
-								"wsh": true
-							},
-							"pep8": true,
-							"pep8_ignore":
-							[
-								"E501",
-								"E701"
-							],
-							"perl_linter": "perlcritic",
-							"pyflakes_ignore":
-							[
-							],
-							"pyflakes_ignore_import_*": true,
-							"spell_check": true,
-							"sublimelinter": true,
-							"sublimelinter_delay": 2.0,
-							"sublimelinter_disable":
-							[
-							],
-							"sublimelinter_executable_map":
-							{
-							},
-							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": false,
-							"sublimelinter_mark_style": "outline",
-							"sublimelinter_notes": false,
-							"sublimelinter_objj_check_ascii": false,
-							"sublimelinter_popup_errors_on_save": false,
-							"sublimelinter_syntax_map":
-							{
-								"C++": "c",
-								"Python Django": "python",
-								"Ruby on Rails": "ruby"
-							},
-							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "pdrLib/impVO.py",
-					"settings":
-					{
-						"buffer_size": 243,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								243,
-								243
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"annotations":
-							[
-								"TODO",
-								"README",
-								"FIXME"
-							],
-							"bh_regions":
-							[
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close"
-							],
-							"csslint_options":
-							{
-								"adjoining-classes": "warning",
-								"box-model": true,
-								"box-sizing": "warning",
-								"compatible-vendor-prefixes": "warning",
-								"display-property-grouping": true,
-								"duplicate-background-images": "warning",
-								"duplicate-properties": true,
-								"empty-rules": true,
-								"errors": true,
-								"fallback-colors": "warning",
-								"floats": "warning",
-								"font-faces": "warning",
-								"font-sizes": "warning",
-								"gradients": "warning",
-								"ids": "warning",
-								"import": "warning",
-								"important": "warning",
-								"known-properties": true,
-								"outline-none": "warning",
-								"overqualified-elements": "warning",
-								"qualified-headings": "warning",
-								"regex-selectors": "warning",
-								"rules-count": "warning",
-								"shorthand": "warning",
-								"star-property-hack": "warning",
-								"text-indent": "warning",
-								"underscore-property-hack": "warning",
-								"unique-headings": "warning",
-								"universal-selector": "warning",
-								"vendor-prefix": true,
-								"zero-units": "warning"
-							},
-							"gjslint_ignore":
-							[
-								110.0
-							],
-							"gjslint_options":
-							[
-							],
-							"javascript_linter": "jshint",
-							"jshint_options":
-							{
-								"browser": true,
-								"evil": true,
-								"regexdash": true,
-								"sub": true,
-								"trailing": true,
-								"wsh": true
-							},
-							"pep8": true,
-							"pep8_ignore":
-							[
-								"E501",
-								"E701"
-							],
-							"perl_linter": "perlcritic",
-							"pyflakes_ignore":
-							[
-							],
-							"pyflakes_ignore_import_*": true,
-							"sublimelinter": true,
-							"sublimelinter_delay": 2.0,
-							"sublimelinter_disable":
-							[
-							],
-							"sublimelinter_executable_map":
-							{
-							},
-							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": false,
-							"sublimelinter_mark_style": "outline",
-							"sublimelinter_notes": false,
-							"sublimelinter_objj_check_ascii": false,
-							"sublimelinter_popup_errors_on_save": false,
-							"sublimelinter_syntax_map":
-							{
-								"C++": "c",
-								"Python Django": "python",
-								"Ruby on Rails": "ruby"
-							},
-							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/Python/Python.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "pdrLib/fancyPrint.py",
-					"settings":
-					{
-						"buffer_size": 1739,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								350,
-								350
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"annotations":
-							[
-								"TODO",
-								"README",
-								"FIXME"
-							],
-							"bh_regions":
-							[
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close"
-							],
-							"csslint_options":
-							{
-								"adjoining-classes": "warning",
-								"box-model": true,
-								"box-sizing": "warning",
-								"compatible-vendor-prefixes": "warning",
-								"display-property-grouping": true,
-								"duplicate-background-images": "warning",
-								"duplicate-properties": true,
-								"empty-rules": true,
-								"errors": true,
-								"fallback-colors": "warning",
-								"floats": "warning",
-								"font-faces": "warning",
-								"font-sizes": "warning",
-								"gradients": "warning",
-								"ids": "warning",
-								"import": "warning",
-								"important": "warning",
-								"known-properties": true,
-								"outline-none": "warning",
-								"overqualified-elements": "warning",
-								"qualified-headings": "warning",
-								"regex-selectors": "warning",
-								"rules-count": "warning",
-								"shorthand": "warning",
-								"star-property-hack": "warning",
-								"text-indent": "warning",
-								"underscore-property-hack": "warning",
-								"unique-headings": "warning",
-								"universal-selector": "warning",
-								"vendor-prefix": true,
-								"zero-units": "warning"
-							},
-							"gjslint_ignore":
-							[
-								110.0
-							],
-							"gjslint_options":
-							[
-							],
-							"javascript_linter": "jshint",
-							"jshint_options":
-							{
-								"browser": true,
-								"evil": true,
-								"regexdash": true,
-								"sub": true,
-								"trailing": true,
-								"wsh": true
-							},
-							"pep8": true,
-							"pep8_ignore":
-							[
-								"E501",
-								"E701"
-							],
-							"perl_linter": "perlcritic",
-							"pyflakes_ignore":
-							[
-							],
-							"pyflakes_ignore_import_*": true,
-							"sublimelinter": true,
-							"sublimelinter_delay": 2.0,
-							"sublimelinter_disable":
-							[
-							],
-							"sublimelinter_executable_map":
-							{
-							},
-							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": false,
-							"sublimelinter_mark_style": "outline",
-							"sublimelinter_notes": false,
-							"sublimelinter_objj_check_ascii": false,
-							"sublimelinter_popup_errors_on_save": false,
-							"sublimelinter_syntax_map":
-							{
-								"C++": "c",
-								"Python Django": "python",
-								"Ruby on Rails": "ruby"
-							},
-							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 40.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "pdrLib/defaultOptions.dat",
-					"settings":
-					{
-						"buffer_size": 7169,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"annotations":
-							[
-								"TODO",
-								"README",
-								"FIXME"
-							],
-							"bh_regions":
-							[
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close"
-							],
-							"csslint_options":
-							{
-								"adjoining-classes": "warning",
-								"box-model": true,
-								"box-sizing": "warning",
-								"compatible-vendor-prefixes": "warning",
-								"display-property-grouping": true,
-								"duplicate-background-images": "warning",
-								"duplicate-properties": true,
-								"empty-rules": true,
-								"errors": true,
-								"fallback-colors": "warning",
-								"floats": "warning",
-								"font-faces": "warning",
-								"font-sizes": "warning",
-								"gradients": "warning",
-								"ids": "warning",
-								"import": "warning",
-								"important": "warning",
-								"known-properties": true,
-								"outline-none": "warning",
-								"overqualified-elements": "warning",
-								"qualified-headings": "warning",
-								"regex-selectors": "warning",
-								"rules-count": "warning",
-								"shorthand": "warning",
-								"star-property-hack": "warning",
-								"text-indent": "warning",
-								"underscore-property-hack": "warning",
-								"unique-headings": "warning",
-								"universal-selector": "warning",
-								"vendor-prefix": true,
-								"zero-units": "warning"
-							},
-							"gjslint_ignore":
-							[
-								110.0
-							],
-							"gjslint_options":
-							[
-							],
-							"javascript_linter": "jshint",
-							"jshint_options":
-							{
-								"browser": true,
-								"evil": true,
-								"regexdash": true,
-								"sub": true,
-								"trailing": true,
-								"wsh": true
-							},
-							"pep8": true,
-							"pep8_ignore":
-							[
-								"E501",
-								"E701"
-							],
-							"perl_linter": "perlcritic",
-							"pyflakes_ignore":
-							[
-							],
-							"pyflakes_ignore_import_*": true,
-							"sublimelinter": true,
-							"sublimelinter_delay": 2.0,
-							"sublimelinter_disable":
-							[
-							],
-							"sublimelinter_executable_map":
-							{
-							},
-							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": false,
-							"sublimelinter_mark_style": "outline",
-							"sublimelinter_notes": false,
-							"sublimelinter_objj_check_ascii": false,
-							"sublimelinter_popup_errors_on_save": false,
-							"sublimelinter_syntax_map":
-							{
-								"C++": "c",
-								"Python Django": "python",
-								"Ruby on Rails": "ruby"
-							},
-							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 3913.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -2035,66 +1334,6 @@
 		"selected_items":
 		[
 			[
-				"def",
-				"pdrLib/defaultOptions.dat"
-			],
-			[
-				"fanc",
-				"pdrLib/fancyPrint.py"
-			],
-			[
-				"err",
-				"pdrLib/Error.py"
-			],
-			[
-				"vo",
-				"pdrLib/impVO.py"
-			],
-			[
-				"parse",
-				"pdrLib/parseOptions.py"
-			],
-			[
-				"impvo",
-				"pdrLib/impVO.py"
-			],
-			[
-				"vot",
-				"atpy/votable.py"
-			],
-			[
-				"fancy",
-				"pdrLib/fancyPrint.py"
-			],
-			[
-				"imp",
-				"pdrLib/impPyfits.py"
-			],
-			[
-				"error",
-				"pdrLib/Error.py"
-			],
-			[
-				"par",
-				"pdrLib/parseOptions.py"
-			],
-			[
-				"op",
-				"pdrLib/parseOptions.py"
-			],
-			[
-				"fitell",
-				"pdrLib/fitellipse.py"
-			],
-			[
-				"creat",
-				"pdrLib/createCatalog.py"
-			],
-			[
-				"clf",
-				"pdrLib/clfind2d.py"
-			],
-			[
 				"pdr",
 				"pdrLib/pdrLib.py"
 			],
@@ -2111,6 +1350,10 @@
 				"pdrLib/defaultOptions.dat"
 			],
 			[
+				"err",
+				"pdrLib/Error.py"
+			],
+			[
 				"check",
 				"pdrLib/checkFUV.py"
 			],
@@ -2125,6 +1368,14 @@
 			[
 				"back",
 				"pdrLib/calcBackground.py"
+			],
+			[
+				"fanc",
+				"pdrLib/fancyPrint.py"
+			],
+			[
+				"parse",
+				"pdrLib/parseOptions.py"
 			],
 			[
 				"init",
@@ -2145,6 +1396,10 @@
 			[
 				"clfin",
 				"pdrLib/clfind2dIDL.py"
+			],
+			[
+				"def",
+				"pdrLib/defaultOptions.dat"
 			],
 			[
 				"depe",
