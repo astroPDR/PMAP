@@ -25,8 +25,7 @@
 #from __future__ import with_statement #Needed for logdump's 'with' use in Python 2.5 only?
 import pdb, sys #debugger
 import numpy as np
-import pyfits as fits #read fits files
-import math as m
+from impPyFits import *
 from string import strip
 from astLib import astCoords, astWCS #astlib.sourceforge.net coordinate conversions & calculations
 from matplotlib import pylab as plt #for flux specifically and plot routines in general
@@ -37,7 +36,7 @@ from sextutils import se_catalog #Ferguson's code to read a SExtractor catalog
 
 
 def read_dust(configOpts):
-  #Read a dust model from an options dictionary. 
+  #Read a dust model from an options dictionary.
   #Depending on the dust model, certain keywords are expected to be present.
   #If it's a map then we read it and return it
   #Additional dust models can be implemented by adding code here and in determine_dust
@@ -55,7 +54,7 @@ def read_dust(configOpts):
     return model_type, [open_image(configOpts['mapname'])[0], open_image(configOpts['mapname'])[1], configOpts['solar'], open_image(configOpts['maperror'])[1]]
     #The error map is assumed to have the same WCS header as the metallicity map
 
-def read_array(filename, dtype, separator=',', comments='#'): 
+def read_array(filename, dtype, separator=',', comments='#'):
   #adapted from the scipy cookbook (to ignore comment lines)
   #Read a file with an arbitrary number of columns.
   #The type of data in each column is arbitrary
@@ -86,7 +85,7 @@ def open_image(filename):
   #the numpy array should be image (raw image)
   #image = maputils.FITSimage(filename)
   #return astWCS.WCS(image.hdr, mode="pyfits"), image
-  image = fits.open(filename)
+  image = pf.open(filename)
   return astWCS.WCS(image[0].header, mode="pyfits"), image[0].data
 
 def logdump(filename, line):
@@ -153,7 +152,7 @@ def separation(ra1, dec1, ra2, dec2, pa, incl, D_gal, wcsheader):
   #Strip: can't have leading or trailing whitespaces
   r1, d1 = astCoords.hms2decimal(strip(ra1), " "), astCoords.dms2decimal(strip(dec1), " ")
   r2, d2 = astCoords.hms2decimal(strip(ra2), " "), astCoords.dms2decimal(strip(dec2), " ")
-  angle = astCoords.calcAngSepDeg(r1, d1, r2, d2) 
+  angle = astCoords.calcAngSepDeg(r1, d1, r2, d2)
   r_raw = D_gal * m.radians(angle)
   #print r_raw, "r_raw"
 
@@ -182,7 +181,7 @@ def separation(ra1, dec1, ra2, dec2, pa, incl, D_gal, wcsheader):
 def contrast(flux_raw, mean_at_r, rho, D_gal):
   #!! mean_at_r is already per arcsec^2 (see generic_flux)
   #arc_to_sterad in arcsec^2 / sterad; integration over 'pi' sterad
-  arc_to_sterad = 42545170300 
+  arc_to_sterad = 42545170300
   fuv_at_HI = flux_raw*(D_gal/rho)**2   #D_gal must be in pc
   bg_level = mean_at_r * arc_to_sterad * m.pi
   #handle cases where mean_at_r = 0 by setting a low contrast (likely to get filtered)
@@ -193,7 +192,7 @@ def contrast(flux_raw, mean_at_r, rho, D_gal):
 
 def errors(n, flux, sF, rho, srho, dd0, sdd0, NHI, sNHI, ext, logfile = False):
   #Formulas described in Heiner et al. 2008a
-  #All errors come in as absolute errors 
+  #All errors come in as absolute errors
   #n = PDRmodel(F, ext, dd0, rho, NHI)
   #Some reworking to minimize number loss and calculation
   N = NHI / 0.78e21
@@ -209,7 +208,7 @@ def errors(n, flux, sF, rho, srho, dd0, sdd0, NHI, sNHI, ext, logfile = False):
   two = 4 * (srho / rho)**2
   three = (-1/(2*dd0) - N*expfrac)**2 * sdd0**2
   four = (-dd0 * expfrac * sN)**2
-  sig_n = n * m.sqrt(one+two+three+four) 
+  sig_n = n * m.sqrt(one+two+three+four)
   if (n == 0.):
     rel_err = 0.
   else:
@@ -232,7 +231,7 @@ def determine_dust(scenario,p):
   def const():
     #Always return the same dd0; the array p is standard but p[2] will contain the constant
     return p[2][0], p[2][1] #value, relative error
-	
+
   def slope():
     #dd0(R) = 10^(a*R + C); a and C are generally negative
     #p: [[RA,DEC],[center_RA,center_DEC], [a, C, err], [pa, incl, D_gal(kpc), Rgal], astWCS header]
@@ -250,7 +249,7 @@ def determine_dust(scenario,p):
     return dd0, sdd0
 
   #def anyfunction(): #easy to implement a custom one with its own parameter array
- 
+
   def map():
     #p: [[RA,DEC],[center_RA,center_DEC], [header, image, solar, err_img], [pa, incl, D_gal(kpc), Rgal], astWCS header]
 
@@ -261,14 +260,14 @@ def determine_dust(scenario,p):
     r, d = astCoords.hms2decimal(strip(p[0][0]), " "), astCoords.dms2decimal(strip(p[0][1]), " ")
     oh = soh = 0
     if p[2][0].coordsAreInImage(r, d):
-      x, y = np.round(p[2][0].wcs2pix(r, d)) 
+      x, y = np.round(p[2][0].wcs2pix(r, d))
       #astLib returns indices for the image array; 1 lower in value than DS9 x, y
     #Assume the image is the first entry in the hdulist
-    #PyFits Handbook p. 16: slow axis first, last axis last, 
-    
+    #PyFits Handbook p. 16: slow axis first, last axis last,
+
     #!At this time we assume a 12+log(O/H) map so the conversion is hardcoded and should be parameters!!:
-      oh =  p[2][1][y,x] 
-      if (m.isnan(oh) or oh==0): 
+      oh =  p[2][1][y,x]
+      if (m.isnan(oh) or oh==0):
         #Even if p[2][0] is in image, this box might not be
         try:
           #If there is no value at this location we will take the highest value within a small box and warn about it (ignore NaNs)
@@ -294,7 +293,7 @@ def determine_dust(scenario,p):
 
     dd0 = 10**(oh - p[2][2])
     sdd0 = dd0 * p[2][2] * soh / 10. #absolute error; all errors absolute to avoid confusion
-    #sdd0 = p[2][2] * soh / 10. #relative error 
+    #sdd0 = p[2][2] * soh / 10. #relative error
     #a value of oh = 0 will result in artificially high n
     return dd0, sdd0
 
@@ -303,7 +302,7 @@ def determine_dust(scenario,p):
   options = {'const': const,
              'slope': slope,
              'map': map}
-  
+
   return options[scenario]()
 
 """ Auxilliary functions """
@@ -316,31 +315,31 @@ def records(table, labels): #generic numpy.rec.array wrapper to label data
     return np.rec.array(table, names=labels)
 
 def generic_flux(filename, coordsPix, maxrad_pix, pix_size = 1.0, contrast = 0.5, fluxerror = 0.3, logfile = False):
-    
+
     from calcFlux import calcFluxMulti
-    
+
     genericFluxResults = [] # The list with the final results to return
-    
+
     # Calls calcFluxMulti an gets the areas and fluxes for each position and aperture
     # from 1 to maxrad_pix
     fluxes = calcFluxMulti(filename, coordsPix, 1, maxrad_pix, step=1)
-    
+
     for pos in range(coordsPix.shape[0]): # iterates over the different positions
-        
+
         fluxlist = []
         avglist = []
         mean_at_r = 0; aperture = 0; bgflux = 0; cumulflux = 0; netflux = 0; sflux = 0
-        
+
         for n in range(maxrad_pix): #iterate over rings of width 1 pixel
-            
+
             r = n + 1
             fluxlist.append([fluxes[pos][5][n], fluxes[pos][6][n]])
             # print fluxlist
             if n > 0:
                 #incremental flux divided by ring surface area
-                ring_avg = (fluxlist[n][1] - fluxlist[n-1][1]) / (fluxlist[n][0] - fluxlist[n-1][0]) 
+                ring_avg = (fluxlist[n][1] - fluxlist[n-1][1]) / (fluxlist[n][0] - fluxlist[n-1][0])
                 avglist.append(ring_avg) #current avglist index will be n-1 since it starts at n=1
-                
+
                 if (logfile):
                     logdump(logfile, "{0:3g} {1:7.2e} {2:8.3e} {3:7.5e}\n".format(r, fluxlist[n][0], fluxlist[n][1], ring_avg))
 
@@ -359,25 +358,25 @@ def generic_flux(filename, coordsPix, maxrad_pix, pix_size = 1.0, contrast = 0.5
                         netflux = cumulflux - bgflux
                         mean_at_r = mean_at_r / (pix_size*pix_size) #!need to report per arcsec^2
                         sflux = fluxerror*netflux #flux error as in config file (fixed relative error)
-                        
+
                         if (logfile):
                           logdump(logfile, "#First local minimum registered\n")
                         #print aperture, r-1
 
         if (not mean_at_r): #we exit leaving all the values at zero
             print "Warning: minimum not found! (pos {0})".format(pos)
-            if (logfile): 
+            if (logfile):
                 logdump(logfile, "#Warning: minimum not found!\n")
 
         genericFluxResults.append([mean_at_r, aperture, bgflux, cumulflux, netflux, sflux])
-    
+
     return genericFluxResults
-    
+
 
 # fuv_flux
 def fuv_flux(imageName, header, coords, configOpts, verbose=False):
   #Wishlist: use qphot to get all the annuli in one go
-  #configOpts used: FUVscale, contrast, maxrad, uv_log 
+  #configOpts used: FUVscale, contrast, maxrad, uv_log
   #Determines the (FUV) flux at a specified coordinate
   #A net flux is calculated based on the a local minimum in ring-averaged flux values per pixel
   #The maximum radius can't be bigger than half the box size (not checked)
@@ -393,24 +392,24 @@ def fuv_flux(imageName, header, coords, configOpts, verbose=False):
   logdump(logfile, "#R(pix) Area (pix) Flux (image units) Flux/pix\n")
 
   #Determine flux for all coordinates
-  
+
   maxrad_pix = int(round(configOpts['maxrad']/pix_size[0])) # Global maximum radius (in pixels)
   coordsPix = np.zeros([len(coords), 2], np.float)
 
-  for p in range(len(coords)): 
+  for p in range(len(coords)):
     #Define circle center and check pixel size
     x, y = np.round(header.wcs2pix(astCoords.hms2decimal(strip(coords[p].RA), " "), astCoords.dms2decimal(strip(coords[p].DEC), " "))) #x, y not integers so int(x) will trunc not round
     #x, y should be rounded values or requesting dummy[y,x] will lead to truncation errors
     logdump(logfile, "#Source {0} at pixel position: {1}, {2}\n".format(coords[p].PDRID, x, y))
     coordsPix[p, :] = [x, y]
- 
-  genericFluxResults =  generic_flux(imageName, coordsPix, maxrad_pix, pix_size[0], 
+
+  genericFluxResults =  generic_flux(imageName, coordsPix, maxrad_pix, pix_size[0],
     configOpts['contrast'], configOpts['fluxerror'], logfile = logfile)
-  
+
   for p in range(len(coords)):
-  
+
     mean_at_r, aperture, bgflux, cumulflux, netflux, sflux = genericFluxResults[p]
-    
+
     #Scale the results -- for generic use set FUVscale to 0
     scale = configOpts['FUVscale'] # Converts from cps to flux units
     mean_at_r *= scale
@@ -418,16 +417,16 @@ def fuv_flux(imageName, header, coords, configOpts, verbose=False):
     cumulflux *= scale
     netflux *= scale
     sflux *= scale
-    
-    #Store the results 
+
+    #Store the results
     if verbose:
       print "local minimum at", mean_at_r, aperture
       print "bgflux", bgflux
       print "cumul flux", cumulflux
       print "net flux", netflux
-    
+
     results.append([coords[p].PDRID, coords[p].RA, coords[p].DEC, aperture, mean_at_r, bgflux, cumulflux, netflux, sflux])
-    
+
   return np.rec.array(results, dtype=columns)
 
 ### HI patches ###
@@ -449,7 +448,7 @@ def call_SEx(fitsfile):
   #If no clumps were found, the .cat file will only contain commented lines
   return "HIclumps.cat" #This file only needs to be hard-coded here and in HIclumps.sex
 
-#Call Fergusons's library to read a SExtractor catalog, 
+#Call Fergusons's library to read a SExtractor catalog,
 #produced previously to select HI patches in an individual candidate PDRs
 def read_secat(catfile, fitsfile, logfile=False, wcs=False):
   patchtable = [[] for dummy in xrange(3)]  #ra, dec, NHI
