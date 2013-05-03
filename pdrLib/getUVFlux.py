@@ -13,7 +13,8 @@ First, try to read the flux file. Otherwise, calculate the fluxes. Output: fluxt
 
 import os
 import numpy as np
-from pdrLib import fuv_flux, open_image, read_array, read_coords
+from pdrLib import fuv_flux, open_image, read_array
+from impAsciiTable import *
 
 
 def getUVFlux(configOpts, logger):
@@ -41,7 +42,8 @@ def getUVFlux(configOpts, logger):
     #Variable out: fluxtable (includes uvcoords afterwards)
     #   fluxtable labels: PDRID, RA, DEC, aperture, mean_at_r, bgflux, cumulflux, netflux, sflux
     logger.write('No previous flux measurements.')
-    uvcoords = read_coords(coords_uv)
+    uvcoords = at.read(coords_uv, delimiter=',')
+
     logger.write('Flux will be measured at {0} positions on image {1} ...'.format(len(uvcoords), configOpts['fuvImage']))
     logger.write('Fluxes will be scaled by a factor {0}'.format(configOpts['FUVscale']))
     #This scaling is useful since clumpfind doesn't seem to work properly with ~1e-15 values.
@@ -55,7 +57,8 @@ def getUVFlux(configOpts, logger):
     fluxfile.write('#PDRID, RA, DEC, aperture (arcsec), mean at r (units/pixel), bg flux, cumul. flux, net flux, sigma net flux\n')
     for n in range(len(fluxtable)):
         #fedora bug: changed PDRID:>3 to PDRID:3g
-        #logger.write('{0.PDRID:3g}, {1.aperture:5.2f}, {1.mean_at_r:7.5e}, {1.bgflux:7.5e}, {1.cumulflux:7.5e}, {1.netflux:7.5e}'.format(uvcoords[n], fluxtable[n])
+        #logger.write('{0.PDRID:3g}, {1.aperture:5.2f}, {1.mean_at_r:7.5e}, {1.bgflux:7.5e}, {1.cumulflux:7.5e}, ' +
+        #             '{1.netflux:7.5e}'.format(uvcoords[n], fluxtable[n])
         fluxfile.write('{0.PDRID:3g}, {0.RA}, {0.DEC}, {1.aperture:7.5e}, {1.mean_at_r:7.5e}, {1.bgflux:7.5e}, ' +
                        '{1.cumulflux:7.5e}, {1.netflux:7.5e}, {1.sflux:7.5e}\n'.format(uvcoords[n], fluxtable[n]))
     fluxfile.close()
