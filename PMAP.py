@@ -395,7 +395,9 @@ def main(configFile, createConfig=False, verbose=True, overwrite=False):
 
     #Todo: call reject regions on _Peaks.dat if desired
 
-    uvheader, fluxtable = pdr.getUVFlux(configOpts)
+    uvheader, fluxtable = pdr.getUVFlux(configOpts, logger)
+
+    return
 
     extractHI(configOpts)
 
