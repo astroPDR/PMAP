@@ -29,7 +29,7 @@ from impPyFits import *
 from impPyWCS import *
 from impVO import *
 
-from Error import raiseWarning
+from Error import raiseWarning, raiseError
 
 
 # Main routine which read the image and mask files, calculates various parameters and
@@ -313,10 +313,10 @@ def createCatalog(image, mask, voTableCat, ds9RegsFile, logger,
                 dec = skyCoordsPeak[nn, 1]
                 raHH, raMM, raSS = dec2dms(ra/15.)
                 decDD, decMM, decSS = dec2dms(dec)
-                row = '%d, %010.2f %010.2f, %02d %02d %05.2f, %+02d %02d %05.2f' % \
+                row = '%d, %.2f %.2f, %02d %02d %05.2f, %+02d %02d %05.2f' % \
                       (nn, xx, yy, raHH, raMM, raSS, decDD, decMM, decSS)
             else:
-                row = '%d, %010.2f %010.2f' % (nn, xx, yy)
+                raiseError('No WCS information. Cannot continue.')
 
             print >>peaksUnit, row
 
