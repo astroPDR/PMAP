@@ -309,7 +309,7 @@ def createCatalog(image, mask, voTableCat, ds9RegsFile, logger,
         logger.write('Saving peak positions ... ', newLine=True)
 
         peaksUnit = open(peaksFile, 'w')
-        print >>peaksUnit, '# PDRIS, XPIXEL, YPIXEL, RA, DEC'
+        print >>peaksUnit, '# PDRID, XPIXEL, YPIXEL, RA, DEC'
         nn = 0
         for yy, xx in peaksPix:
             ra = skyCoordsPeak[nn, 0]
