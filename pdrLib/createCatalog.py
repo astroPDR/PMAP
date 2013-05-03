@@ -316,7 +316,7 @@ def createCatalog(image, mask, voTableCat, ds9RegsFile, logger,
             dec = skyCoordsPeak[nn, 1]
             raHH, raMM, raSS = dec2dms(ra/15.)
             decDD, decMM, decSS = dec2dms(dec)
-            row = '%d, %.2f %.2f, %02d %02d %05.2f, %+02d %02d %05.2f' % \
+            row = '%d, %.2f, %.2f, %02d %02d %05.2f, %+02d %02d %05.2f' % \
                   (nn, xx, yy, raHH, raMM, raSS, decDD, decMM, decSS)
             print >>peaksUnit, row
             nn += 1
