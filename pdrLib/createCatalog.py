@@ -297,6 +297,9 @@ def createCatalog(image, mask, voTableCat, ds9RegsFile, logger,
     # Writes a file with the peak positions
     if peaksFile is not None:
 
+        if wcsMask is None:
+            raiseError('No WCS information. Cannot continue.')
+
         def dec2dms(dd):
             sign = -1. if dd < 0 else 1.  # Remember to deal with negative DEC
             mnt, sec = divmod(abs(dd) * 3600, 60)
@@ -306,20 +309,16 @@ def createCatalog(image, mask, voTableCat, ds9RegsFile, logger,
         logger.write('Saving peak positions ... ', newLine=True)
 
         peaksUnit = open(peaksFile, 'w')
+        print >>peaksUnit, '# PDRIS, XPIXEL, YPIXEL, RA, DEC'
         nn = 0
         for yy, xx in peaksPix:
-            if wcsMask is not None:
-                ra = skyCoordsPeak[nn, 0]
-                dec = skyCoordsPeak[nn, 1]
-                raHH, raMM, raSS = dec2dms(ra/15.)
-                decDD, decMM, decSS = dec2dms(dec)
-                row = '%d, %.2f %.2f, %02d %02d %05.2f, %+02d %02d %05.2f' % \
-                      (nn, xx, yy, raHH, raMM, raSS, decDD, decMM, decSS)
-            else:
-                raiseError('No WCS information. Cannot continue.')
-
+            ra = skyCoordsPeak[nn, 0]
+            dec = skyCoordsPeak[nn, 1]
+            raHH, raMM, raSS = dec2dms(ra/15.)
+            decDD, decMM, decSS = dec2dms(dec)
+            row = '%d, %.2f %.2f, %02d %02d %05.2f, %+02d %02d %05.2f' % \
+                  (nn, xx, yy, raHH, raMM, raSS, decDD, decMM, decSS)
             print >>peaksUnit, row
-
             nn += 1
 
         peaksUnit.close()
