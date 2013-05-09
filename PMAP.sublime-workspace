@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"pea",
+				"peaksUnit"
+			],
+			[
+				"asci",
+				"asciitable"
+			],
+			[
+				"read",
+				"read_coords"
+			],
+			[
 				"fuv",
 				"fuvMaskFileRej"
 			],
@@ -502,18 +514,6 @@
 			[
 				"al",
 				"alphaRed  (variable)"
-			],
-			[
-				"ca",
-				"calendarFile"
-			],
-			[
-				"cale",
-				"calendarFile"
-			],
-			[
-				"alpha",
-				"alphaRed"
 			]
 		]
 	},
@@ -523,15 +523,47 @@
 			"file": "PMAP.py",
 			"settings":
 			{
-				"buffer_size": 24914,
+				"buffer_size": 21868,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "pdrLib/getRegions.py",
+			"file": "pdrLib/getUVFlux.py",
 			"settings":
 			{
-				"buffer_size": 11656,
+				"buffer_size": 2999,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "pdrLib/pdrLib.py",
+			"settings":
+			{
+				"buffer_size": 23098,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "pdrLib/calcFlux.py",
+			"settings":
+			{
+				"buffer_size": 3751,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "pdrLib/defaultOptions.dat",
+			"settings":
+			{
+				"buffer_size": 7169,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "pdrLib/createCatalog.py",
+			"settings":
+			{
+				"buffer_size": 17136,
 				"line_ending": "Unix"
 			}
 		}
@@ -539,9 +571,53 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 93.0,
+		"height": 313.0,
 		"selected_items":
 		[
+			[
+				"pus",
+				"Git: Push"
+			],
+			[
+				"comm",
+				"Git: Commit"
+			],
+			[
+				"add",
+				"Git: Add Current File"
+			],
+			[
+				"qui",
+				"Git: Quick Commit"
+			],
+			[
+				"dupl",
+				"File: Duplicate"
+			],
+			[
+				"quic",
+				"Git: Quick Commit"
+			],
+			[
+				"check",
+				"Git: Checkout Current File"
+			],
+			[
+				"bra",
+				"Git: Change Branch"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"branch",
+				"Git: Change Branch"
+			],
+			[
+				"pull",
+				"Git: Pull Current Branch"
+			],
 			[
 				"upgr",
 				"Package Control: Upgrade/Overwrite All Packages"
@@ -551,16 +627,8 @@
 				"Package Control: Upgrade/Overwrite All Packages"
 			],
 			[
-				"dupl",
-				"File: Duplicate"
-			],
-			[
 				"edit",
 				"Project: Edit"
-			],
-			[
-				"add",
-				"Project: Add Folder"
 			],
 			[
 				"up",
@@ -581,10 +649,6 @@
 			[
 				"remove",
 				"Package Control: Remove Package"
-			],
-			[
-				"inst",
-				"Package Control: Install Package"
 			],
 			[
 				"sideb",
@@ -688,15 +752,38 @@
 	},
 	"file_history":
 	[
+		"/Users/albireo/Documents/GitRepos/phot/.git/config",
+		"/Users/albireo/Downloads/Adobe Acrobat XI Pro 11.0.0 Multilanguage Mac OS X [ChingLiu]/Crack-OSX/install.txt",
+		"/Users/albireo/Documents/PMAP/pdrLib/generic_flux_Jonathan.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/calcFlux.py",
+		"/Users/albireo/Documents/PDR/NGC0925/NGC0925_FUV_NGS_RejMsk_Peaks.dat",
+		"/Users/albireo/Documents/PMAP/.gitignore",
+		"/Users/albireo/Documents/PMAP/pdrLib/createCatalog.py",
+		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/User/Python.sublime-settings",
+		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/User/Base File.sublime-settings",
 		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/User/Default (OSX).sublime-keymap",
-		"/Users/albireo/Documents/PDR/NGC0925/NGC0925.log",
+		"/Users/albireo/Documents/PMAP/pdrLib/impPyFits.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/impAsciiTable.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/getRegions.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/Deprecated/extractRegions.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/__init__.py",
 		"/Users/albireo/Documents/PDR/NGC0925/NGC0925.config",
+		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/BracketHighlighter/bh_core.sublime-settings",
+		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/User/bh_core.sublime-settings",
+		"/Users/albireo/Documents/PMAP/pdrLib/impPyWCS.py",
+		"/Users/albireo/Documents/PMAP/.git/COMMIT_EDITMSG",
+		"/Users/albireo/Documents/PMAP/pdrLib/deprecated.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/extractRegions.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/Regions/Region.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/Regions/RegionSet.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/Regions/__init__.py",
+		"/Users/albireo/Documents/PMAP/pdrLib/pdrLib.py",
+		"/Users/albireo/Documents/PDR/NGC0925/NGC0925.log",
 		"/Users/albireo/Documents/PMAP/pdrLib/parseOptions.py",
 		"/Users/albireo/Documents/PMAP/pdrLib/fancyPrint.py",
 		"/Users/albireo/Documents/PMAP/pdrLib/checkFUV.py",
 		"/Users/albireo/Documents/PMAP/pdrLib/defaultOptions.dat",
 		"/Users/albireo/Documents/PMAP/pdrLib/mandatoryOptions.dat",
-		"/Users/albireo/Documents/PMAP/pdrLib/pdrLib.py",
 		"/Users/albireo/Downloads/pdrLib.py.swp",
 		"/Users/albireo/Documents/PMAP/pipeline.py",
 		"/Users/albireo/Documents/PMAP/pdrLib/header.cb",
@@ -709,12 +796,9 @@
 		"/Users/albireo/Documents/PMAP/__init__.py",
 		"/Users/albireo/Documents/PMAP/pdrLib/clfind2dIDL.py",
 		"/Users/albireo/Documents/PMAP/pdrLib/plotDS9.py",
-		"/Users/albireo/Documents/PMAP/pdrLib/deprecated.py",
 		"/Users/albireo/Documents/MaNGA/SurveySimulations/pyProjections/logger.py",
 		"/Users/albireo/Documents/PDR/NGC0925/NGC0925.config.bak",
 		"/Users/albireo/.unison/AirExtHD.prf",
-		"/Users/albireo/Documents/PMAP/pdrLib/__init__.py",
-		"/Users/albireo/Documents/PMAP/pdrLib/getRegions.py",
 		"/Users/albireo/Documents/MaNGA/SurveySimulations/pyProjections/Options.py",
 		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/MaNGA_Projections.py",
 		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
@@ -781,7 +865,6 @@
 		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/pyProjections/MaNGA_Project.sublime-project",
 		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/PyProjections/calendar.py",
 		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/User/SublimeLinter.sublime-settings",
-		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/User/Python.sublime-settings",
 		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/PyProjections/MaNGA_Projections.py",
 		"/Users/albireo/Documents/MaNGA/MaNGA_Projections/PyProjections/__init__.py",
 		"/Users/albireo/Library/Application Support/Sublime Text 2/Packages/Theme - Soda/Soda Dark.sublime-theme",
@@ -796,26 +879,7 @@
 		"/Applications/exelis/license/license.dat.bak",
 		"/Users/albireo/Downloads/license (1).dat",
 		"/Users/albireo/Downloads/license.dat",
-		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Projections/MaNGA_Tiles.dat",
-		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Projections/createMaNGATiles.py",
-		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Projections/compute_airmass.pro",
-		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Projections/ebosstiles.dat",
-		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Misc/projections/ngc4yr.dat",
-		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/MaNGA_observing_nights.par",
-		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/MaNGA.par",
-		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/calendar.pro",
-		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/ebosstiles.dat",
-		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/createMaNGATiles.py",
-		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/MaNGA_Tiles.dat",
-		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/MaNGA_targets_ran_tiles.dat",
-		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/sample2npy.py",
-		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/tile_first.pro",
-		"/Volumes/Untitled 1/etc/network/interfaces",
-		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/plan_ha.pro",
-		"/Volumes/Pegasus/pegasus/renbin/boss/products/Linux/idlutils/v5_5_7/pro/dust/dust_getval.pro",
-		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Survey/projections/compute_extinction.pro",
-		"/Users/albireo/Downloads/Arrow - 01x09 - Year's End.LOL.English.C.updated.Addic7ed.com.srt",
-		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Misc/projections/plt.pro"
+		"/Volumes/Pegasus/pegasus/jrsg/Documents/MaNGA/Projections/MaNGA_Tiles.dat"
 	],
 	"find":
 	{
@@ -833,6 +897,11 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"logger",
+			"peaks",
+			"fits",
+			"print ",
+			"\"",
 			"calcParameters",
 			"calcBac",
 			";",
@@ -916,6 +985,9 @@
 		"regex": false,
 		"replace_history":
 		[
+			"logger.write",
+			"logger(",
+			"'",
 			"#;",
 			"2872",
 			"2154",
@@ -962,7 +1034,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 3,
 			"sheets":
 			[
 				{
@@ -970,19 +1042,20 @@
 					"file": "PMAP.py",
 					"settings":
 					{
-						"buffer_size": 24914,
+						"buffer_size": 21868,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								20513,
-								20513
+								19171,
+								19171
 							]
 						],
 						"settings":
 						{
+							"BracketHighlighterBusy": false,
 							"annotations":
 							[
 								"TODO",
@@ -991,26 +1064,6 @@
 							],
 							"bh_regions":
 							[
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
@@ -1018,179 +1071,7 @@
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close"
-							],
-							"csslint_options":
-							{
-								"adjoining-classes": "warning",
-								"box-model": true,
-								"box-sizing": "warning",
-								"compatible-vendor-prefixes": "warning",
-								"display-property-grouping": true,
-								"duplicate-background-images": "warning",
-								"duplicate-properties": true,
-								"empty-rules": true,
-								"errors": true,
-								"fallback-colors": "warning",
-								"floats": "warning",
-								"font-faces": "warning",
-								"font-sizes": "warning",
-								"gradients": "warning",
-								"ids": "warning",
-								"import": "warning",
-								"important": "warning",
-								"known-properties": true,
-								"outline-none": "warning",
-								"overqualified-elements": "warning",
-								"qualified-headings": "warning",
-								"regex-selectors": "warning",
-								"rules-count": "warning",
-								"shorthand": "warning",
-								"star-property-hack": "warning",
-								"text-indent": "warning",
-								"underscore-property-hack": "warning",
-								"unique-headings": "warning",
-								"universal-selector": "warning",
-								"vendor-prefix": true,
-								"zero-units": "warning"
-							},
-							"gjslint_ignore":
-							[
-								110.0
-							],
-							"gjslint_options":
-							[
-							],
-							"javascript_linter": "jshint",
-							"jshint_options":
-							{
-								"browser": true,
-								"evil": true,
-								"regexdash": true,
-								"sub": true,
-								"trailing": true,
-								"wsh": true
-							},
-							"pep8": true,
-							"pep8_ignore":
-							[
-								"E501",
-								"E701"
-							],
-							"perl_linter": "perlcritic",
-							"pyflakes_ignore":
-							[
-							],
-							"pyflakes_ignore_import_*": true,
-							"sublimelinter": true,
-							"sublimelinter_delay": 2.0,
-							"sublimelinter_disable":
-							[
-							],
-							"sublimelinter_executable_map":
-							{
-							},
-							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": false,
-							"sublimelinter_mark_style": "outline",
-							"sublimelinter_notes": false,
-							"sublimelinter_objj_check_ascii": false,
-							"sublimelinter_popup_errors_on_save": false,
-							"sublimelinter_syntax_map":
-							{
-								"C++": "c",
-								"Python Django": "python",
-								"Ruby on Rails": "ruby"
-							},
-							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 2.0,
-						"translation.y": 9191.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "pdrLib/getRegions.py",
-					"settings":
-					{
-						"buffer_size": 11656,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								5622,
-								5622
-							]
-						],
-						"settings":
-						{
-							"annotations":
-							[
-								"TODO",
-								"README",
-								"FIXME"
-							],
-							"bh_regions":
-							[
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close"
+								"bh_unmatched_close"
 							],
 							"csslint_options":
 							{
@@ -1280,7 +1161,682 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3913.0,
+						"translation.y": 8091.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "pdrLib/getUVFlux.py",
+					"settings":
+					{
+						"buffer_size": 2999,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								674,
+								674
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"bh_regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close"
+							],
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"gjslint_ignore":
+							[
+								110.0
+							],
+							"gjslint_options":
+							[
+							],
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"evil": true,
+								"regexdash": true,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501",
+								"E701"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"sublimelinter": true,
+							"sublimelinter_delay": 2.0,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": false,
+							"sublimelinter_mark_style": "outline",
+							"sublimelinter_notes": false,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": false,
+							"sublimelinter_syntax_map":
+							{
+								"C++": "c",
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 128.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "pdrLib/pdrLib.py",
+					"settings":
+					{
+						"buffer_size": 23098,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								14192,
+								14205
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"bh_regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close"
+							],
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"gjslint_ignore":
+							[
+								110.0
+							],
+							"gjslint_options":
+							[
+							],
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"evil": true,
+								"regexdash": true,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501",
+								"E701"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"sublimelinter": true,
+							"sublimelinter_delay": 2.0,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": false,
+							"sublimelinter_mark_style": "outline",
+							"sublimelinter_notes": false,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": false,
+							"sublimelinter_syntax_map":
+							{
+								"C++": "c",
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 6637.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "pdrLib/calcFlux.py",
+					"settings":
+					{
+						"buffer_size": 3751,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"bh_regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close"
+							],
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"gjslint_ignore":
+							[
+								110.0
+							],
+							"gjslint_options":
+							[
+							],
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"evil": true,
+								"regexdash": true,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501",
+								"E701"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"sublimelinter": true,
+							"sublimelinter_delay": 2.0,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": false,
+							"sublimelinter_mark_style": "outline",
+							"sublimelinter_notes": false,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": false,
+							"sublimelinter_syntax_map":
+							{
+								"C++": "c",
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1470.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "pdrLib/defaultOptions.dat",
+					"settings":
+					{
+						"buffer_size": 7169,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4874,
+								4888
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"gjslint_ignore":
+							[
+								110.0
+							],
+							"gjslint_options":
+							[
+							],
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"evil": true,
+								"regexdash": true,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501",
+								"E701"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"sublimelinter": true,
+							"sublimelinter_delay": 2.0,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": false,
+							"sublimelinter_mark_style": "outline",
+							"sublimelinter_notes": false,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": false,
+							"sublimelinter_syntax_map":
+							{
+								"C++": "c",
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1164.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "pdrLib/createCatalog.py",
+					"settings":
+					{
+						"buffer_size": 17136,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								14211,
+								14211
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"bh_regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close"
+							],
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"gjslint_ignore":
+							[
+								110.0
+							],
+							"gjslint_options":
+							[
+							],
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"evil": true,
+								"regexdash": true,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501",
+								"E701"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"sublimelinter": true,
+							"sublimelinter_delay": 2.0,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": false,
+							"sublimelinter_mark_style": "outline",
+							"sublimelinter_notes": false,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": false,
+							"sublimelinter_syntax_map":
+							{
+								"C++": "c",
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 6551.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1323,6 +1879,10 @@
 	{
 		"height": 144.0
 	},
+	"output.git":
+	{
+		"height": 144.0
+	},
 	"replace":
 	{
 		"height": 72.0
@@ -1333,6 +1893,42 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"gener",
+				"pdrLib/generic_flux_Jonathan.py"
+			],
+			[
+				"catal",
+				"pdrLib/createCatalog.py"
+			],
+			[
+				"imp",
+				"pdrLib/impPyFits.py"
+			],
+			[
+				"creat",
+				"pdrLib/createCatalog.py"
+			],
+			[
+				"def",
+				"pdrLib/defaultOptions.dat"
+			],
+			[
+				"pdrl",
+				"pdrLib/pdrLib.py"
+			],
+			[
+				"extr",
+				"pdrLib/extractRegions.py"
+			],
+			[
+				"ini",
+				"pdrLib/__init__.py"
+			],
+			[
+				"lib",
+				"pdrLib/pdrLib.py"
+			],
 			[
 				"pdr",
 				"pdrLib/pdrLib.py"
@@ -1398,10 +1994,6 @@
 				"pdrLib/clfind2dIDL.py"
 			],
 			[
-				"def",
-				"pdrLib/defaultOptions.dat"
-			],
-			[
 				"depe",
 				"pdrLib/deprecated.py"
 			],
@@ -1430,10 +2022,6 @@
 				"pdrLib/getRegions.py"
 			],
 			[
-				"pdrl",
-				"pdrLib/pdrLib.py"
-			],
-			[
 				"sur",
 				"pyProjections/survey.py"
 			],
@@ -1460,10 +2048,6 @@
 			[
 				"cre",
 				"createCalFile.py"
-			],
-			[
-				"ini",
-				"pyProjections/__init__.py"
 			],
 			[
 				"boss",
