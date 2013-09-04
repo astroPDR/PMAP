@@ -22,7 +22,7 @@ images.
 import os
 import numpy as np
 from Error import raiseError
-from impPyFits import *
+from . import pf
 from calcBackground import calcBackground
 from clfind2d import clfind2d
 from checkFUV import checkFUV
@@ -53,6 +53,7 @@ def calcParameters(root, configOpts, logger, sigmaSep=3.):
     sigma = configOpts[root + 'Sigma']
 
     if configOpts[root + 'Background'] in [None, 'None', 'N', '', '-1', -1.]:
+        logger.write('Determining FUV background ...', newLine=True)
         background = calcBackground(image, logger, verbose=configOpts['verbose'])
         configOpts[root + 'Background'] = background
     else:
@@ -103,7 +104,8 @@ def getFloat(text, default):
     while type(value) not in [float, int]:
         value = raw_input(text)
         try:
-            if value == '': return default
+            if value == '':
+                return default
             value = float(value)
         except:
             pass
@@ -123,20 +125,23 @@ def getRegions(configOpts, logger):
         raiseError('FUV image does not exist.', logger)
 
     if (configOpts['fuvMaskFile'].lower() == 'default') or (configOpts['fuvMaskFile'] is None):
-        configOpts['fuvMaskFile'] = configOpts['root'] + '_Mask.fits'
+        configOpts['fuvMaskFile'] = os.path.splitext(configOpts['fuvImage'])[0] + '_Mask.fits'
 
     doCLFindFUV = True
     if os.path.exists(configOpts['fuvMaskFile']):
         if configOpts['overwrite'] is True:
             doCLFindFUV = True
         else:
-            doCLFindFUV = getYN('\nFound {0}. Rerun CLFind? [y/N] '.format(configOpts['fuvMaskFile']),
+            doCLFindFUV = getYN('\nFound %s. Rerun CLFind? [y/N] ' % configOpts['fuvMaskFile'],
                                 returnOpt=False)
 
     if doCLFindFUV is False:
-        logger.write('FUV mask not created. Using previously generated mask %s.' % configOpts['fuvMaskFile'])
+        logger.write('FUV mask not created. Using previously generated mask %s.' %
+                     configOpts['fuvMaskFile'])
 
     else:
+
+        configOpts['overwrite'] = True  # From this point on we have to redo everything
 
         if configOpts['fuvInteractive'] is False:
             logger.write('FUV parameters loaded')
@@ -146,13 +151,14 @@ def getRegions(configOpts, logger):
             logger.write('FUV: Running in interactive mode ... ', newLine=True)
 
             data = pf.getdata(fuvImage)
-            logger.write('Image statistics', newLine=True, log=True)
-            logger.write('Max: %9.3e' % np.nanmax(data), log=True)
-            logger.write('Min: %9.3e' % np.nanmin(data), log=True)
-            logger.write('Mean: %9.3e' % np.mean(data), log=True)
-            logger.write('Median: %9.3e' % np.median(data), log=True)
+            logger.write('Image statistics', newLine=True)
+            logger.write('Max: %9.3e' % np.nanmax(data))
+            logger.write('Min: %9.3e' % np.nanmin(data))
+            logger.write('Mean: %9.3e' % np.mean(data))
+            logger.write('Median: %9.3e' % np.median(data))
 
-            configOpts['fuvBackground'] = calcBackground(fuvImage, logger, verbose=configOpts['verbose'])
+            configOpts['fuvBackground'] = calcBackground(fuvImage, logger,
+                                                         verbose=configOpts['verbose'])
             logger.write('Background: %.5e' % configOpts['fuvBackground'],
                          newLine=True)
 
@@ -167,11 +173,12 @@ def getRegions(configOpts, logger):
         resultCheck = checkCLFindOptions('fuv', configOpts)
 
         if resultCheck is False:
-            raiseError('Some of the parameters are incorrect. Please, review the configuration file.',
+            raiseError('Some of the parameters are incorrect. ' +
+                       'Please, review the configuration file.',
                        logger)
 
         clfind2d(fuvImage, configOpts['fuvMaskFile'], configOpts['fuvLevels'],
-                 log=True, nPixMin=configOpts['fuvMinPixels'],
+                 nPixMin=configOpts['fuvMinPixels'],
                  verbose=configOpts['verbose'])
 
         logger.write('CLFind log can be found in %s.log' %
@@ -191,6 +198,7 @@ def getRegions(configOpts, logger):
                                     configOpts['fuvMaskFileRej'], returnOpt=False)
 
         if doRejection is True:
+            configOpts['overwrite'] = True  # From this point on we have to redo everything
             logger.write('FUV rejection', newLine=True)
             checkFUV(configOpts, logger)
             logger.write('New mask saved as %s' % configOpts['fuvMaskFileRej'],
@@ -204,10 +212,17 @@ def getRegions(configOpts, logger):
 
     logger.write('Creating FUV catalogs ... ', newLine=True)
 
-    rejMask = configOpts['fuvMaskFileRej']
-    votRegsFile = os.path.splitext(rejMask)[0] + '.vot'
-    ds9RegsFile = os.path.splitext(rejMask)[0] + '.reg'
-    peaksFile = os.path.splitext(rejMask)[0] + '_Peaks.dat'
+    if configOpts['checkFUV'] is True:
+        fuvMask = configOpts['fuvMaskFileRej']
+    else:
+        fuvMask = configOpts['fuvMaskFile']
+
+    configOpts['finalFUVMask'] = fuvMask  # Saves the final FUV mask to the config
+
+    votRegsFile = os.path.splitext(fuvMask)[0] + '.vot'
+    ds9RegsFile = os.path.splitext(fuvMask)[0] + '.reg'
+    peaksFile = os.path.splitext(fuvMask)[0] + '_Peaks.dat'
+    configOpts['fuvPeaksFile'] = peaksFile
 
     if False not in map(os.path.exists, [votRegsFile, ds9RegsFile, peaksFile]) and \
             configOpts['overwrite'] is False:
@@ -217,8 +232,8 @@ def getRegions(configOpts, logger):
         logger.write('DS9 catalogue: %s' % ds9RegsFile)
         logger.write('Peaks file: %s' % peaksFile)
     else:
-        createCatalog(fuvImage, rejMask, votRegsFile, ds9RegsFile, logger,
-                      peaksFile=peaksFile, ellipse=False, plot=configOpts['plotDS9'])
+        createCatalog(fuvImage, fuvMask, votRegsFile, ds9RegsFile, peaksFile,
+                      logger, ellipse=False)
 
     return
 
@@ -294,7 +309,6 @@ def getRegions(configOpts, logger):
     # fancyPrint('HI mask file: {0}'.format(configOpts['hiMaskFile']), newLine=True, log=True)
     # fancyPrint('Number of clumps: {0}'.format(nClumpsHI), log=True)
     # fancyPrint('Number of clumps rejected: {0}'.format(nClumpsRejHI), log=True)
-
 
     # # #####################################################################
     # # ##########################  HI rejection ###########################

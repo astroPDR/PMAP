@@ -30,7 +30,10 @@ class fancyPrint(object):
 
         return
 
-    def write(self, text, newLine=False, overrideVerbose=False, doLog=True, doPrint=True):
+    def write(self, text, newLine=False, doLog=True, doPrint=None):
+
+        if doPrint is None:
+            doPrint = self.verbose
 
         ansiEscape = re.compile(r'\x1b[^m]*m')
 
@@ -47,11 +50,10 @@ class fancyPrint(object):
             textToPrint = text
             textToLog = ansiEscape.sub('', text)
 
-        if self.verbose is True or overrideVerbose is True:
-            if doPrint is True:
-                sys.stdout.write(textToPrint + '\n')
-                sys.stdout.flush()
-                self.printText += textToPrint + '\n'
+        if doPrint is True:
+            sys.stdout.write(textToPrint + '\n')
+            sys.stdout.flush()
+            self.printText += textToPrint + '\n'
 
         if self.writeLog is True and doLog is True:
             self.unitOut.write(textToLog + '\n')

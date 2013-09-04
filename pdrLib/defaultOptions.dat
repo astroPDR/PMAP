@@ -12,20 +12,20 @@ hiImage  =                              ; Path of the HI image
 FUVscale =                              ; To convert input map from CPS to flux units
 HIscale  =                              ; To convert input map into column density cm-2
 
+
 [Logging options]
 
-outputDir      =   ./                               ; The output directory where output files will be created
-root           =   PMAP                             ; The root for the filenames of the output files
-log            =   True                             ; Should we create an output log?
-logFile        =   %(root)s.log                     ; The output file where the info will be saved
-plotDS9        =   True                             ; Plots the regions in DS9 (requieres pyds9)
-data_uv        =   %(root)s_Patchtest_UVdata.csv    ; UV flux measurements stored here
-hi_logsbase    =   %(root)s_PDR_SEout               ; Root of HI log files
-uv_log         =   %(root)s_PDR_Flux.log            ; Log file for uv flux measurements
-data_hi        =   %(root)s_Patches_HI.csv          ; Filename of HI patch measurements
-data_full      =   %(root)s_Full.csv                ; Filename containing all input values before n is calculated
-data_results   =   %(root)s_Results.csv             ; Filename with the PDR method results
-densities_ds9  =   %(root)s_NTot.reg                ; DS9 region file with nTot per patch
+outputDir                =   ./                               ; The output directory where output files will be created
+root                     =   Default                          ; The root for the filenames of the output files
+log                      =   True                             ; Should we create an output log?
+logFile                  =   %(root)s.log                     ; The output file where the info will be saved
+data_uv                  =   %(root)s_Patchtest_UVdata.csv    ; UV flux measurements stored here
+data_hi                  =   %(root)s_Patches_HI.csv          ; Filename of HI patch measurements
+data_results_unfiltered  =   %(root)s_Resulst_NoFilter.csv    ; Filename to save the results before filtering
+save_unfiltered_vot      =   True                             ; Saves unfiltered results in VOTable format (True / False)
+data_results             =   %(root)s_Results.csv             ; Filename with the PDR method results after filtering
+save_results_vot         =   True                             ; Saves results in VOTable format (True / False)
+# densities_ds9          =   %(root)s_NTot.reg                ; DS9 region file with nTot per patch
 
 
 [Physical properties]
@@ -49,7 +49,7 @@ fuvInteractive  =   False           ; Makes the program prompt for the necessary
 #                                     values. Overrides the remaining options in this
 #                                     section
 
-fuvBackground   =                   ; The background level of the images. IMPORTANT.
+fuvBackground   =                   ; The background level of the image. IMPORTANT.
 #                                     Leave blank for an automatic estimation.
 
 fuvSigma        =   6               ; Number of times the background level needed for
@@ -101,31 +101,19 @@ contrast        =   0.5             ; FUV flux local minimum threshold wrt inita
 subpix          =   0.1             ; Subpixel fraction for flux measurement (1/fraction subpixels)
 maxrad          =   60              ; Maximum aperture for flux measurement in arcsec;
 fluxerror       =   0.3             ; Estimated relative flux error
+refineFlux      =   True            ; Improves the flux measurement
+refineFactor    =   10              ; The factor the grid will be refined to measure the flux
 
 
 [HI]
 
-hiMaskFile     =   Default          ; The name of the mask file produced by CLFind
-#                                     Use Default for a name based on the FUV image
-#                                     filename
+HIRegSize      =   1000             ; The width (in parsecs) of the HI region around
+                                    ; the FUV peak
 
-hiInteractive  =   True             ; Makes the program prompt for the necessary
-#                                     values. Overrides the remaining options in this
-#                                     section
+createHIMosaic =   True             ; Creates a mosiac with all the HI regions
 
-hiBackground   =   10               ; The background level of the images
-
-hiSigma        =   3                ; Number of times the background level needed for
-#                                     a pixel to be considered emission
-
-hihLevel       =                    ; Highest level. Leave blank for an automatic
-#                                     estimation.
-
-hinLevels      =   20               ; Number of levels computed. Leave blank for an
-#                                     automatic estimation.
-
-hiMinPixels    =   15               ; Minimum number of pixels for a regions to be
-#                                     accepted
+hiBackground   =   None             ; The background level of the image. IMPORTANT.
+#                                     Blank or None for an automatic estimation.
 
 
 [Dust-to-gas ratio]

@@ -21,7 +21,7 @@ Modified on 2013-04-16 by José Sánchez-Gallego
 
 import numpy as np
 import os
-import pyfits as pf
+from pdrLib import pf
 import Regions
 from Error import raiseError
 
@@ -178,7 +178,8 @@ def checkFUV(options, logger):
     hdu = pf.PrimaryHDU(regions.DataMask)
     hdu.header = hduMask[0].header
     hduList = pf.HDUList([hdu])
-    if os.path.exists(options['fuvMaskFileRej']): os.remove(options['fuvMaskFileRej'])
+    if os.path.exists(options['fuvMaskFileRej']):
+        os.remove(options['fuvMaskFileRej'])
     hduList.writeto(options['fuvMaskFileRej'], output_verify='ignore')
 
     return

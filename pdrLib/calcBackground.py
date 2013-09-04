@@ -18,9 +18,8 @@ d) Steps a) is repeated and the background level determined that way is
 
 """
 
-import sys
 from clfind2d import clfind2d
-import pyfits as pf
+from . import pf
 import numpy as np
 import os
 
@@ -45,7 +44,8 @@ def calcBack(data, sigma=3.):
         mean = np.mean(tmpData)
         std = np.std(tmpData)
         dif = np.abs(((mean-oldMean)/oldMean)*100.0)
-        if dif < 0.02: return mean
+        if dif < 0.02:
+            return mean
         step += 1
     return mean
 
@@ -54,35 +54,30 @@ def calcBackground(image, logger, verbose=True):
 
     import tempfile
 
-    print
-    print 'Automatic estimation of the background level'
+    logger.write('Automatic estimation of the background level using clfind2d')
 
     imageData = pf.open(image)
+    data = imageData[0].data
+    data[data == 0.0] = np.nan
 
-    tmpBackgroundLevel = calcBack(imageData[0].data)
-    print 'Step 1) Background level = %.4E' % tmpBackgroundLevel
+    tmpBackgroundLevel = calcBack(data)
 
-    sys.stdout.write('Step 2) Running CLFind to obtain mask ... ')
-    sys.stdout.flush()
-
-    if verbose is True:
-        print
+    logger.write('Step 1) Background level = %.4E' % tmpBackgroundLevel, newLine=True, doLog=False)
+    logger.write('Step 2) Running CLFind to obtain mask ... ', newLine=True, doLog=False)
 
     tmpMask = tempfile.NamedTemporaryFile(dir='./', delete=False)
-    tmpLevels = np.linspace(10.0 * tmpBackgroundLevel, np.max(imageData[0].data), 20)
+    tmpLevels = np.linspace(10.0 * tmpBackgroundLevel, np.nanmax(data), 20)
 
-    clfind2d(image, tmpMask.name, tmpLevels, log=False, nPixMin=20, verbose=verbose)
+    clfind2d(image, tmpMask.name, tmpLevels, log=False, nPixMin=20, verbose=verbose, rejectZero=True)
 
-    if verbose is False:
-        print 'done'
+    logger.write('Step 3) Calculating residuals', newLine=True, doLog=False)
 
-    print 'Step 3) Calculating residuals'
     dataMask = pf.getdata(tmpMask.name)
     mask = np.where(dataMask > 0)
     imageData[0].data[mask] = np.nan
 
     backLevel = calcBack(imageData[0].data)
-    print 'Step 4) Background level of the residuals = %.4E' % backLevel
+    logger.write('Step 4) Background level of the residuals = %.4E' % backLevel, newLine=True, doLog=False)
 
     if os.path.exists(tmpMask.name):
         os.remove(tmpMask.name)

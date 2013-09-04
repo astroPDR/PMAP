@@ -9,7 +9,9 @@ Copyright (c) 2013. All rights reserved.
 """
 
 import numpy as np
-import astropy.io.ascii as at
+from scipy.stats.stats import nanmean
+from .. import table
+from .. import at
 
 
 def rebin(aa, shape):
@@ -17,15 +19,17 @@ def rebin(aa, shape):
     Resizes an array to a certain shape
     """
     sh = shape[0], aa.shape[0] // shape[0], shape[1], aa.shape[1] // shape[1]
-    return aa.reshape(sh).mean(-1).mean(1)
+    return nanmean(nanmean(aa.reshape(sh), axis=-1), axis=1)
 
 
-def calcMask(data, xCentre, yCentre, r1, r2=None, refine=False, nRefine=10):
+def calcMask(xCentre, yCentre, shape, r1, r2=None, refine=False, nRefine=10):
     """
-    Returns a mask with the pixels included in the aperture. If r2 is defined,
-    the apertures is annular. If refine, the data is re-meshed by a factor
-    nRefine.
+    Returns a mask with the pixels included in the aperture, as well as a list of the
+    pixels in the original image. If r2 is defined, the apertures is annular.
+    If refine, the data is re-meshed by a factor nRefine.
     """
+
+    edge = 0
 
     if r2 is None:
         rMax = int(r1)
@@ -39,15 +43,25 @@ def calcMask(data, xCentre, yCentre, r1, r2=None, refine=False, nRefine=10):
         step = 1.
 
     # Calculates the coordinate grid
-    ii = yCentre + np.arange(-rMax-2, rMax+2, step)
-    jj = xCentre + np.arange(-rMax-2, rMax+2, step)
+    ii = yCentre + np.arange(-rMax, rMax+1, step)
+    jj = xCentre + np.arange(-rMax, rMax+1, step)
+
+    # Takes care of edges of the image
+    ii[(ii < 0) | (ii > shape[0]-1)] = np.nan
+    jj[(jj < 0) | (jj > shape[1]-1)] = np.nan
+
+    # If it touches the edge of the image and this is not an annular aperture, fails.
+    if True in np.isnan(ii) | np.isnan(jj):
+        edge = 1
+        if r2 is None:
+            return None, None, edge
+
+    # Coords grid
     coords = np.dstack(np.meshgrid(ii, jj)).reshape(-1, 2)
 
     # Calculates distances
-    distances = (coords[:, 0]-yCentre)**2 + (coords[:, 1]-xCentre)**2
-    distances = distances.reshape(ii.size, jj.size)
-
-    mask = np.zeros(distances.shape)
+    distances = ((coords[:, 0]-yCentre)**2 + (coords[:, 1]-xCentre)**2).reshape(ii.shape[0], -1)
+    mask = np.zeros(distances.shape, np.float)
 
     # Determines pixels within aperture and set them to 1.
     if r2 is None:
@@ -55,18 +69,20 @@ def calcMask(data, xCentre, yCentre, r1, r2=None, refine=False, nRefine=10):
     else:
         mask[(distances >= (r1**2)) & (distances <= (r2**2))] = 1
 
-    # From the data, selects the area matching the mask
-    dataChunk = data[np.round(yCentre-1)-rMax-2:np.round(yCentre-1)+rMax+2,
-                     np.round(xCentre-1)-rMax-2:np.round(xCentre-1)+rMax+2]
-
     # Rebins the mask to its original size
-    mask = rebin(mask, dataChunk.shape)
-    # Pixels outside aperture are set to nan
-    mask[mask == 0] = np.nan
+    if step < 1.:
+        mask = rebin(mask, (ii.shape[0] // nRefine, jj.shape[0] // nRefine))
+        ii = yCentre + np.arange(-rMax, rMax+1)
+        jj = xCentre + np.arange(-rMax, rMax+1)
+        coords = np.dstack(np.meshgrid(ii, jj)).reshape(-1, 2)
 
-    del distances, coords, ii, jj
+    # To avoid memory usagem we return only those pixels within the aperture
+    mask = mask.flatten()
+    nonZeroMask = np.where(mask != 0.)
+    mask = mask[nonZeroMask]
+    coords = coords[nonZeroMask]
 
-    return dataChunk, mask
+    return (coords[:, 0].astype(int), coords[:, 1].astype(int)), mask, edge
 
 
 def getRejPixels(origData, nSigma=3., nMaxIter=50):
@@ -120,21 +136,21 @@ def calcSky(data, xCentre, yCentre, annulus, dannulus, refine=False, nRefine=10)
     and dannulus (width of the annulus).
     """
 
-    dataReg, mask = calcMask(data, xCentre, yCentre, annulus,
-                             r2=annulus+dannulus, refine=False)
-    dataAnn = dataReg * mask
-    dataAnn = dataAnn[np.isfinite(dataAnn)]
+    coords, mask, edge = calcMask(xCentre, yCentre, data.shape, annulus,
+                                  r2=annulus+dannulus, refine=False)
+
+    dataAnn = data[coords] * mask
 
     validData, nSrej = getRejPixels(dataAnn)
     nSky = validData.size
 
     mSky, stdDev = calcCentroid(validData)
 
-    del dataReg, dataAnn, validData
+    del dataAnn, validData
 
     # Returns value of sky (per pixel), standard deviation, number of pixels
     # used for the sky estimation and number of pixels rejected
-    return mSky, stdDev, nSky, nSrej
+    return mSky, stdDev, nSky, nSrej, edge
 
 
 def phot(data, centres, apertures, annulus=None, dannulus=None, logFile=None,
@@ -159,10 +175,11 @@ def phot(data, centres, apertures, annulus=None, dannulus=None, logFile=None,
 
     centres = np.array(centres)
     apertures = np.array(apertures)
-    nCentres = centres.shape[0]
+    # nCentres = centres.shape[0]
     nApertures = apertures.size
-    returnFluxes = np.zeros((nApertures * nCentres, 7), dtype=np.float)
-    returnSky = np.zeros((nCentres, 4), dtype=np.float)
+    returnData = []
+    # returnFluxes = np.zeros((nApertures * nCentres, 8), dtype=np.float)
+    # returnSky = np.zeros((nCentres, 5), dtype=np.float)
 
     # If logFile, opens a unit for output
     if logFile is not None:
@@ -182,43 +199,52 @@ def phot(data, centres, apertures, annulus=None, dannulus=None, logFile=None,
             except:
                 raise ValueError('Annulus and/or dannulus are not numeric.')
 
-            mSky, stdDev, nSky, nSrej = calcSky(data, xCentre, yCentre, annulus, dannulus,
-                                                refine=refine, nRefine=nRefine)
+            mSky, stdDev, nSky, nSrej, edgeAnn = calcSky(data, xCentre, yCentre, annulus, dannulus,
+                                                         refine=refine, nRefine=nRefine)
 
         else:
 
-            mSky = stdDev = nSky = nSrej = np.nan
+            mSky = stdDev = nSky = nSrej, edgeAnn = np.nan
 
         sums = np.zeros(nApertures)
         fluxes = np.zeros(nApertures)
         areas = np.zeros(nApertures)
+        edges = np.zeros(nApertures, np.int)
 
         for ii in range(nApertures):
 
-            dataReg, mask = calcMask(data, xCentre, yCentre, apertures[ii], refine=refine, nRefine=nRefine)
-            dataAp = dataReg * mask
-            dataAp = dataAp[np.isfinite(dataAp)]
+            coords, mask, edgeAp = calcMask(xCentre, yCentre, data.shape, apertures[ii],
+                                            refine=refine, nRefine=nRefine)
 
-            sums[ii] = np.sum(dataAp)
+            if edgeAp is 0:
 
-            if refine is None:
-                areas[ii] = dataAp.size
+                dataAp = data[coords] * mask
+
+                sums[ii] = np.sum(dataAp)
+
+                if refine is None:
+                    areas[ii] = dataAp.size
+                else:
+                    areas[ii] = np.pi * apertures[ii]**2
+
+                if mSky is not np.nan:
+                    fluxes[ii] = sums[ii] - areas[ii] * mSky
+                else:
+                    fluxes[ii] = sums[ii]
+
+                del dataAp
+
             else:
-                areas[ii] = np.pi * apertures[ii]**2
 
-            if mSky is not np.nan:
-                fluxes[ii] = sums[ii] - areas[ii] * mSky
-            else:
-                fluxes[ii] = sums[ii]
+                sums[ii] = areas[ii] = fluxes[ii] = np.nan
+                edges[ii] = 1
 
-        returnFluxes[nn*nApertures:(nn+1)*nApertures, :] = np.array([[nn+1]*nApertures,
-                                                                     [xCentre]*nApertures,
-                                                                     [yCentre]*nApertures,
-                                                                     apertures, sums,
-                                                                     areas, fluxes]).T
-        returnSky[nn, :] = (mSky, stdDev, nSky, nSrej)
-
-        del dataReg, dataAp
+        # returnFluxes[nn*nApertures:(nn+1)*nApertures, :] = np.array([[nn+1]*nApertures,
+        #                                                              [xCentre]*nApertures,
+        #                                                              [yCentre]*nApertures,
+        #                                                              apertures, sums,
+        #                                                              areas, fluxes, edges]).T
+        # returnSky[nn, :] = (mSky, stdDev, nSky, nSrej, edgeAnn)
 
         # Outputs the data
         if logFile is not None:
@@ -227,43 +253,61 @@ def phot(data, centres, apertures, annulus=None, dannulus=None, logFile=None,
             print >>unitOut, '# %12.3E %12.3E' % (xCentre, yCentre)
 
             if annulus is not None and dannulus is not None:
-                print >>unitOut, '# %12s %12s %12s %12s' % ('MSKY', 'STDEV', 'NSKY', 'NSREJ')
-                print >>unitOut, '# %12.3E %12.3E %12.3E %12.3E' % (mSky, stdDev, nSky, nSrej)
+                print >>unitOut, '# %12s %12s %12s %12s %12s' % \
+                    ('MSKY', 'STDEV', 'NSKY', 'NSREJ', 'EDGE')
+                print >>unitOut, '# %12.3E %12.3E %12.3E %12.3E %12d' % \
+                    (mSky, stdDev, nSky, nSrej, edgeAnn)
             else:
-                print >>unitOut, '# %12s %12s %12s %12s' % ('MSKY', 'STDEV', 'NSKY', 'NSREJ')
-                print >>unitOut, '# %12s %12s %12s %12s' % ('N/A', 'N/A', 'N/A', 'N/A')
+                print >>unitOut, '# %12s %12s %12s %12s %12s' % \
+                    ('MSKY', 'STDEV', 'NSKY', 'NSREJ', 'EDGE')
+                print >>unitOut, '# %12s %12s %12s %12s %12s' % \
+                    ('N/A', 'N/A', 'N/A', 'N/A', 'N/A')
 
             writer = at.FixedWidth if nn == 0 else at.FixedWidthNoHeader
 
-            at.write([nApertures*[xCentre], nApertures*[yCentre],
-                     apertures, sums, areas, fluxes], unitOut,
-                     Writer=writer, names=['XCENTRE', 'YCENTRE', 'AP', 'SUM', 'AREA', 'FLUX'])
+            at.write(
+                [nApertures*[xCentre], nApertures*[yCentre],
+                 apertures, sums, areas, fluxes, edges],
+                unitOut, Writer=writer,
+                names=['XCENTRE', 'YCENTRE', 'AP', 'SUM', 'AREA', 'FLUX', 'EDGE'])
 
             print >>unitOut
 
+        # Creates the Table that will be included in the output list
+        edges = np.array(edges, np.bool)
+        tmpTable = table.Table([apertures, sums, areas, fluxes, edges],
+                               names=['aperture', 'sum', 'area', 'flux', 'edge'],
+                               meta={'id': nn+1, 'xCentre': xCentre, 'yCentre': yCentre,
+                                     'mSky': mSky, 'stdDev': stdDev, 'nSky': nSky,
+                                     'nSrej': nSrej, 'edgeSky': bool(edgeAnn)})
+        returnData.append(tmpTable)
+        del tmpTable
+
     del data
+    if logFile is not None:
+        unitOut.close()
 
-    return returnFluxes, returnSky
+    return returnData
 
 
-def photTest():
-    """
-    Testing routine
-    """
+# def photTest():
+#     """
+#     Testing routine
+#     """
 
-    print
+#     print
 
-    image = './TestImages/StdImage.fits'
-    centres = np.loadtxt('./TestImages/coordsStd.coo')
-    # centres = np.array([[501, 501]])
-    apertures = np.arange(1, 16)
+#     image = './TestImages/StdImage.fits'
+#     centres = np.loadtxt('./TestImages/coordsStd.coo')
+#     # centres = np.array([[501, 501]])
+#     apertures = np.arange(1, 16)
 
-    phot(image, centres, apertures,
-         annulus=15, dannulus=2, refine=True, nRefine=10,
-         logFile='test.log')
+#     phot(image, centres, apertures,
+#          annulus=15, dannulus=2, refine=True, nRefine=10,
+#          logFile='test.log')
 
-    print
-    return
+#     print
+#     return
 
 
 # if __name__ == '__main__':

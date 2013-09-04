@@ -57,6 +57,11 @@ class ConfigOptions(object):
             if _section == 'Dust-to-gas ratio' and dust is False:
                 continue
 
+            if (fileToParse == self.configFile) and ('logging' in _section.strip().lower()):
+                if _config.has_option(_section, 'root') and \
+                        _config.get(_section, 'root').lower() == 'default':
+                    _config.set(_section, 'root', os.path.splitext(os.path.basename(self.configFile))[0])
+
             for _item, _value in _config.items(_section):
                 try:
                     _optionsDict[_item] = eval(_value)  # If possible, evaluates the data
@@ -101,8 +106,7 @@ class ConfigOptions(object):
             if _field not in self.options.keys() and self.defaultOpts[_field] is not None \
                     and self.verbose is True:
                 self.options[_field] = self.defaultOpts[_field]
-                warnings.warn(cm.Fore.YELLOW + '[WARNING]: ' + cm.Style.RESET_ALL +
-                              'Option %s not present. Using default value \'%s\'.' % (_field,
+                warnings.warn('Option %s not present. Using default value \'%s\'.' % (_field,
                               str(self.defaultOpts[_field])))
 
             if self.options[_field] is None and _field in _error:
@@ -111,7 +115,7 @@ class ConfigOptions(object):
             elif self.options[_field] is None and _field in _warning and self.verbose is True:
                 # warnings.warn(cm.Fore.YELLOW + '[WARNING]: ' + cm.Style.RESET_ALL +
                 raiseWarning('Option %s is not defined. ' % _field +
-                              'This won\'t stop the pipeline but may or may not be a problem.')
+                             'This won\'t stop the pipeline but may or may not be a problem.')
 
         if _exitAtTheEnd is True:
             self.OptionsError('Some mandatory parameters are missing. Exitting now.')

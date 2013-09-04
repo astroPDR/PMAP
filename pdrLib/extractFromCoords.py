@@ -6,205 +6,144 @@ extractFromCoords.py
 Created by José Ramón Sánchez-Gallego on 2011-05-19.
 Copyright (c) 2011. All rights reserved.
 
-This scripts accepts a coordinates file in DS9 format and extracts
-regions from a FITS file.
+Modified 2013-08-28 by José R. Sánchez-Gallego.
+
+This scripts accepts a pyfits HDU and FUV flux table and
+extracts the regions around the FUV peaks.
 
 """
 
-import sys, os
+import os
 import numpy as np
-# import pyregion
-import pywcs, pyfits
-
-def extractFromCoords(image, ds9File, output, imageDS9=None, size=20, mosaic=False, mosaicBack=0):
-
-    sys.stdout.write('Reading DS9 file ... ')
-    sys.stdout.flush()
-
-    try:
-        regions = pyregion.parse(open(ds9File, 'r').read())
-    except:
-        print
-        return
-
-    print 'done'
-
-    sys.stdout.write('Loading image ... ')
-    sys.stdout.flush()
-
-    try:
-        hdu = pyfits.open(image)
-    except:
-        print 'failed'
-        return
-
-    try:
-        wcs = pywcs.WCS(hdu[0].header)
-    except:
-        print 'failed. No WCS for the main image'
-        print
-        return
-
-    if imageDS9 != None:
-        try:
-            wcsDS9 = pywcs.WCS(pyfits.getheader(imageDS9))
-        except:
-            wcsDS9 = None
-
-    print 'done'
+from astropy import coordinates as coord
+from . import pf
+from Error import raiseWarning
 
 
-    sys.stdout.write('Reading coordinates ... ')
-    sys.stdout.flush()
+def extractFromCoords(hduHI, wcsHI, fluxTable, root='HIRegs/HIReg',
+                      extract=False, createMosaic=False, mosaicBack=0,
+                      size=20, overwrite=False, logger=None, clean=False):
 
-    coordsSky = []
-    for region in regions:
-        system = region.coord_format
-        coords = region.coord_list[0:2]
-        if system == 'image':
-            if wcsDS9 == None:
-                print 'failed. No WCS for the reference image.'
-                print
-                return
-            else:
-                coords = wcsDS9.wcs_pix2sky(np.array([coords])-1.,0)[0]
+    # If clean is True, we delete the path before doing anything
+    dirName = os.path.dirname(root)
+    if clean is True:
+        if os.path.exists(dirName):
+            import shutil
+            shutil.rmtree(dirName)
 
-        coordsSky.append(coords)
-
-    coordsSky = np.array(coordsSky)
-    print 'done'
-
-    sys.stdout.write('Saving regions ... ')
-    sys.stdout.flush()
-
-    nRegions = coordsSky.shape[0]
-    nZeros = 3 #int(np.floor(np.log10(nRegions) + 1)) #flexible is nice but code later on is not
-
+    outPutData = {}
+    extractedPaths = {}
     mosaicData = []
-    for ii,coordSky in enumerate(coordsSky):
+    for nn, peak in enumerate(fluxTable):
 
-        coordPix = wcs.wcs_sky2pix(np.array([coordSky]),0)[0] + 1
+        ID = int(peak['PDRID'])
+        RA = peak['RA']
+        Dec = peak['Dec']
+        peakCoords = coord.ICRSCoordinates('%s %s' % (RA, Dec))
+        coordPix = wcsHI.wcs_world2pix(np.array([[peakCoords.ra.degree,
+                                                  peakCoords.dec.degree]]), 0)[0] + 1
 
         iMin = np.int(coordPix[1] - size)
         iMax = np.int(coordPix[1] + size)
         jMin = np.int(coordPix[0] - size)
         jMax = np.int(coordPix[0] + size)
 
-        regionData = hdu[0].data[iMin:iMax, jMin:jMax]
-        hduPrim = pyfits.PrimaryHDU(regionData)
-        newHeader = hdu[0].header.copy()
+        regionData = hduHI[0].data[iMin:iMax, jMin:jMax]
+        outPutData[ID] = regionData
+        if createMosaic is True:
+            mosaicData.append(regionData)
 
-# We need to update the astrometry of the output image
-        if wcs != None:
-            if 'CRPIX1' in newHeader.keys():
-                newHeader['CRPIX1'] = 1 - ((jMin + 1) - hdu[0].header['CRPIX1'])
-                newHeader['CRPIX2'] = 1 - ((iMin + 1) - hdu[0].header['CRPIX2'])
-            elif 'LTV1' in newHeader.keys():
-                newHeader['LTV1'] = 1 - ((jMin + 1) - hdu[0].header['LTV1'])
-                newHeader['LTV2'] = 1 - ((iMin + 1) - hdu[0].header['LTV2'])
+        # If extract is True, we have to save regionData as a new
+        # FITS image
 
-        hduPrim.header = newHeader
-        hduReg = pyfits.HDUList([hduPrim])
+        # First, we check if the image exists and if it must be overwritten
+        if extract is True:
+            path = root + '%04d.fits' % ID
+            if os.path.exists(path):
+                if overwrite is False:
+                    if nn == 0:
+                        raiseWarning('Image %s already exists. Not overwriting.' % path,
+                                     logger, doPrint=True, doLog=True, newLine=False)
+                        raiseWarning('The remaining warning of this type will be hidden.',
+                                     logger, doPrint=True, doLog=False, newLine=False)
+                    else:
+                        raiseWarning('Image %s already exists. Not overwriting.' % path,
+                                     logger, doPrint=False, doLog=True, newLine=False)
+                    extractedPaths[ID] = path
+                    continue
+                else:
+                    os.remove(path)
 
-        outName = '{0}_Regions/{0}_Reg{1}.fits'.format(output, str(ii+1).zfill(nZeros))
-        if os.path.exists(outName): os.remove(outName)
-        if not os.path.exists('{0}_Regions'.format(output)):
-            os.mkdir('{0}_Regions'.format(output))
-        hduReg.writeto(outName, output_verify='ignore')
+            if not os.path.exists(dirName):
+                os.mkdir(dirName)
 
-        del hduPrim
-        del hduReg
+            # Now, we create the new FITS image
+            hduPrim = pf.PrimaryHDU(regionData)
+            newHeader = hduHI[0].header.copy()
 
-        percent = np.int(np.rint((ii) * 100. / nRegions))
-        sys.stdout.write('\rSaving regions ... %d%% ' % percent)
-        sys.stdout.flush()
+            # We need to update the astrometry of the output image
+            if wcsHI is not None:
+                if 'CRPIX1' in newHeader.keys():
+                    newHeader['CRPIX1'] = 1 - ((jMin + 1) - hduHI[0].header['CRPIX1'])
+                    newHeader['CRPIX2'] = 1 - ((iMin + 1) - hduHI[0].header['CRPIX2'])
+                elif 'LTV1' in newHeader.keys():
+                    newHeader['LTV1'] = 1 - ((jMin + 1) - hduHI[0].header['LTV1'])
+                    newHeader['LTV2'] = 1 - ((iMin + 1) - hduHI[0].header['LTV2'])
 
-        if mosaic == True: mosaicData.append(regionData)
+            hduPrim.header = newHeader
+            hduReg = pf.HDUList([hduPrim])
 
-    print '\rSaving regions ... done'
+            hduReg.writeto(path, output_verify='ignore')
+            extractedPaths[ID] = path
 
+            del hduPrim
+            del hduReg
 
-    if mosaic:
+    if createMosaic is True:
 
-        maxSizes = 2.0*size
+        mosaicPath = os.path.dirname(root) + '/Mosaic.fits'
+        if os.path.exists(mosaicPath):
+            if overwrite is False:
+                raiseWarning('Mosaic %s already exists. Not overwriting.' % mosaicPath,
+                             logger, doPrint=True, doLog=True, newLine=False)
+                return outPutData, extractedPaths
+
+        maxSizes = 2.0 * size
+        nRegions = len(fluxTable)
         if nRegions <= 8:
             nCols = 8
             nRows = 1
         else:
             nCols = int(np.sqrt(nRegions)) + 1
-            if nCols**2 >= nRegions:
+            if nCols ** 2 >= nRegions:
                 nRows = nCols
             else:
                 nRows = nCols + 1
 
         def saveMosaic(data, outName):
             extend = 2.
-            frame = np.zeros((maxSizes+4*extend) * np.asarray([nRows, nCols])) + mosaicBack
+            frame = np.zeros((maxSizes + 4 * extend) * np.asarray([nRows, nCols])) + mosaicBack
 
             ii = 1
             jj = 0
-            for nn,regData in enumerate(data):
+            for nn, regData in enumerate(data):
 
-                iiStart = frame.shape[0] - ((maxSizes + 4*extend) * ii) + extend
-                jjStart = ((maxSizes + 4*extend) * jj) + extend
+                iiStart = frame.shape[0] - ((maxSizes + 4 * extend) * ii) + extend
+                jjStart = ((maxSizes + 4 * extend) * jj) + extend
 
-                frame[iiStart:iiStart+maxSizes, jjStart:jjStart+maxSizes] = regData
+                frame[iiStart:iiStart + maxSizes, jjStart:jjStart + maxSizes] = regData
 
                 jj += 1
-                if jj > nCols-1:
+                if jj > nCols - 1:
                     jj = 0
                     ii += 1
 
-            hduMosaic = pyfits.PrimaryHDU(frame)
-            hduListMosaic = pyfits.HDUList([hduMosaic])
-            if os.path.exists(outName): os.remove(outName)
+            hduMosaic = pf.PrimaryHDU(frame)
+            hduListMosaic = pf.HDUList([hduMosaic])
+            if os.path.exists(outName):
+                    os.remove(outName)
             hduListMosaic.writeto(outName, output_verify='ignore')
 
-        sys.stdout.write('Creating and saving mosaics ... ')
-        sys.stdout.flush()
-        saveMosaic(mosaicData, output + '_Mosaic.fits')
-        print 'done'
+        saveMosaic(mosaicData, mosaicPath)
 
-
-    print
-
-    return
-
-
-if __name__ == '__main__':
-
-    from optparse import OptionParser
-
-    parser = OptionParser()
-
-    print
-
-    usage = 'usage: %prog [options] image ds9File output'
-    parser = OptionParser(usage=usage)
-    parser.add_option('-s', '--size', dest='size',
-        help='width, in pixels, of the squared regions to extract', type=int, default=20)
-    parser.add_option('-d', '--ds9', dest='imageDS9',
-            help='image to which the ds9File is referred, if the coordinate system is not fk5',
-            type=str, default=None)
-    parser.add_option('-m', '--mosaic', dest='mosaic', action='store_true', default=False,
-        help='creates a mosaic with the extracted regions')
-
-    (options, args) = parser.parse_args()
-
-    if len(args) <= 1:
-        parser.error('incorrect number of arguments\n')
-    elif len(args) == 2:
-        image = args[0]
-        ds9File = args[1]
-        output = os.path.splitext(image)[0]
-        print 'Assuming Output: {0}\n'.format(output)
-    elif len(args) == 3:
-        image = args[0]
-        ds9File = args[1]
-        output = args[2]
-
-    if False in map(os.path.exists, [image, ds9File]):
-        parser.error('Either the image or the mask does not exist\n')
-
-    extractFromCoords(image, ds9File, output, size=options.size,
-        mosaic=options.mosaic, imageDS9=options.imageDS9)
+    return outPutData, extractedPaths
