@@ -20,6 +20,51 @@
 # import pdb  # debugger
 import pdrLib as pdr
 import os
+import numpy as np
+from pdrLib.Error import raiseError
+
+
+def calcScale(fileName):
+
+    header = pdr.pf.getheader(fileName)
+    wcs = pdr.pw.WCS(header)
+    try:
+        pixSize = np.array([np.abs(wcs.wcs.cd[0, 0]), np.abs(wcs.wcs.cd[1, 1])]) * 3600
+    except:
+        try:
+            pixSize = np.abs(wcs.wcs.cdelt[0:2]) * 3600
+        except:
+            raiseError('Pixel size for image %s cannot be determined. ' +
+                       'Please, specify it in the configuration file' % fileName)
+
+    return pixSize.mean()
+
+
+def savePixScales(configOpts):
+
+    # Calculates the FUV pixel scale
+    if configOpts['FUV_Pix_Scale'] is None:
+        configOpts['FUV_Pix_Scale'] = calcScale(configOpts['fuvImage'])
+    else:
+        if not isinstance(configOpts['FUV_Pix_Scale'], (float, int)):
+            raiseError('FUV pixel scale is not a float.')
+
+    # FUV pixel scale in pc
+    configOpts['FUV_PcPerPixel'] = 2e6 * configOpts['distance'] * \
+        np.tan(np.deg2rad(configOpts['FUV_Pix_Scale'] / 3600. / 2.))
+
+    # Idem for the HI one
+    if configOpts['HI_Pix_Scale'] is None:
+        configOpts['HI_Pix_Scale'] = calcScale(configOpts['hiImage'])
+    else:
+        if not isinstance(configOpts['HI_Pix_Scale'], (float, int)):
+            raiseError('HI pixel scale is not a float.')
+
+    # HI pixel scale in pc
+    configOpts['HI_PcPerPixel'] = 2e6 * configOpts['distance'] * \
+        np.tan(np.deg2rad(configOpts['HI_Pix_Scale'] / 3600. / 2.))
+
+    return
 
 
 ###############################################################################
@@ -27,7 +72,7 @@ import os
 ###############################################################################
 
 def main(configFile, createConfig=False, verbose=True, overwrite=False):
-    """
+    """p
     This main routine sequentially calls all the subroutines needed for the PDR
     method to work.
     """
@@ -65,6 +110,12 @@ def main(configFile, createConfig=False, verbose=True, overwrite=False):
             configOpts['overwrite'] = overwrite
         else:
             pass
+
+    # Calculates the scale of the HI and FUV images, for later use
+    savePixScales(configOpts)
+
+    print configOpts
+    return
 
     # Calls the getRegions routine, which produces the region masks for the FUV and HI images
     pdr.getRegions(configOpts, logger)
