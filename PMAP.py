@@ -114,9 +114,6 @@ def main(configFile, createConfig=False, verbose=True, overwrite=False):
     # Calculates the scale of the HI and FUV images, for later use
     savePixScales(configOpts)
 
-    print configOpts
-    return
-
     # Calls the getRegions routine, which produces the region masks for the FUV and HI images
     pdr.getRegions(configOpts, logger)
 
