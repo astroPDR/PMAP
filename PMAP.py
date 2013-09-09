@@ -17,7 +17,6 @@
 #
 #     2013-04-26 update logging to use fancyPrint << not tested
 
-# import pdb  # debugger
 import pdrLib as pdr
 import os
 import numpy as np
