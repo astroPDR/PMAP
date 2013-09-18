@@ -111,7 +111,7 @@ def getHIFlux(configOpts, fluxFUVTable, logger):
 
     # Creates the results table
     fluxesHI = table.Table(None, names=('PDRID', 'HIID', 'RA', 'Dec', 'NHI', 'sNHI'),
-                           dtype=('i4', 'i4', 'S20', 'S20', 'f8', 'f8'))
+                           dtypes=('i4', 'i4', 'S20', 'S20', 'f8', 'f8'))
 
     logger.write('Copying SExtractor configuration files ...', newLine=True)
     copySExFiles(logger)
@@ -153,14 +153,14 @@ def getHIFlux(configOpts, fluxFUVTable, logger):
                     # Fix sN_HI to half the background value
                     sNHI = hi_bg * scale * 0.5
                     patchCoords = coords.ICRSCoordinates(ra=RA, dec=Dec, unit=(units.degree, units.degree))
-                    RAStr = patchCoords.ra.to_string(unit=units.hour, precision=2)
-                    DecStr = patchCoords.dec.to_string(unit=units.degree, precision=2)
+                    RAStr = patchCoords.ra.format(unit=units.hour, precision=2)
+                    DecStr = patchCoords.dec.format(unit=units.degree, precision=2)
                     fluxesHI.add_row([pdrID, n, RAStr, DecStr, NHI, sNHI])
                 else:
                     raiseWarning('Patch %d for region %d too faint.' % (n, pdrID), logger, newLine=False)
 
     # Write: HI patches
-    at.write(fluxesHI, fluxesHIFile, format='fixed_width', delimiter=' ')
+    at.write(fluxesHI, fluxesHIFile, Writer=at.FixedWidth, delimiter=' ')
 
     # print "HI patches:"
     # # print "#PDRID, RA, DEC, NHI, sNHI"

@@ -65,12 +65,13 @@ def calcSeparation(ra1, dec1, ra2, dec2, pa, incl, D_gal, wcs):
 
     # 1. calculate separation angle between the two coordinates, giving us r_raw
     angle = c1.separation(c2)  # In radians
-    r_raw = D_gal * angle.value
+    r_raw = D_gal * angle.radians
 
     # 2. correct for pa, i by deprojecting radius
     # For this we need x and y coordinates through the wcs header
-    x1, y1 = wcs.wcs_world2pix(np.array([[c1.ra.degree, c1.dec.degree]]), 0)[0]
-    x2, y2 = wcs.wcs_world2pix(np.array([[c2.ra.degree, c2.dec.degree]]), 0)[0]
+
+    x1, y1 = wcs.wcs_world2pix(np.array([[c1.ra.degrees, c1.dec.degrees]]), 0)[0]
+    x2, y2 = wcs.wcs_world2pix(np.array([[c2.ra.degrees, c2.dec.degrees]]), 0)[0]
     e_a = e_angle_rad(x1, y1, x2, y2, pa)  # get the angle
     esqd = 1 - (m.cos(m.radians(incl))) ** 2.  # deproject
     sqrtf = m.sqrt((1 - esqd) / (1 - esqd * m.cos(e_a) ** 2.))

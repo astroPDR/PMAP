@@ -12,7 +12,7 @@ by José Sánchez-Gallego.
 
 """
 
-from . import pf, pw
+from . import pf, pw, at
 import numpy as np
 from calcSeparation import calcSeparation
 from . import Gnaught, contrast, read_dust, determine_dust, PDRmodel, errors
@@ -38,8 +38,9 @@ def getRhoRG(configOpts, fluxFUVTable, hiData, logger):
     except:
         pix_size = np.abs(wcsFUV.wcs.cdelt[0:2]) * 3600
 
-    dataRho = table.Table(None, names=('PDRID', 'HIID', 'rhoHI', 'sRhoHI', 'Rgal', 'G0', 'Contrast'),
-                          dtype=('i4', 'i4', 'f8', 'f8', 'f8', 'f8', 'f8'))
+    dataRho = table.Table(None,
+                          names=('PDRID', 'HIID', 'rhoHI', 'sRhoHI', 'Rgal', 'G0', 'Contrast'),
+                          dtypes=('i4', 'i4', 'f8', 'f8', 'f8', 'f8', 'f8'))
 
     c_RA = configOpts['c_RA']
     c_DEC = configOpts['c_DEC']
@@ -89,7 +90,7 @@ def dustToGas(configOpts, fluxFUVTable, hiData, dataRho, logger):
 
     logger.write('Determining dust-to-gas ratios ...', newLine=True)
 
-    dataDust = dataRho.copy()
+    dataDust = table.Table(dataRho)
 
     header = pf.getheader(configOpts['fuvImage'])
     wcsFUV = pw.WCS(header)
@@ -152,21 +153,25 @@ def collate(configOpts, fluxFUVTable, hiData, dataDust, logger):
 
     logger.write('Compiling all data ... ', newLine=True)
 
-    data = dataDust.copy()
+    data = table.Table(dataDust)
 
     # Adds coordinate columns for both FUV and HI
     coordTable = table.Table(np.zeros((len(data), 4)),
                              names=('FUV_RA', 'FUV_Dec', 'HI_RA', 'HI_Dec'),
-                             dtype=4*['S20'])
+                             dtypes=4*['S20'])
     data.add_columns(coordTable.columns.values(), indexes=[2, 2, 2, 2])
 
-    # Concatenates the data from hiData
-    data = table.join(data, hiData['PDRID', 'HIID', 'NHI', 'sNHI'], keys=('PDRID', 'HIID'))
+    # This is not necessary with astropy v3 because you can directly joint the tables
+    # but for now we'll do it the hard way.
+    nHITable = table.Table(np.zeros((len(data), 2)),
+                           names=('NHI', 'sNHI'),
+                           dtypes=2*['f8'])
+    data.add_columns(nHITable.columns.values())
 
     # Adds columns for the FUV data and NTot
     fuvCols = table.Table(np.zeros((len(data), 6)),
                           names=('aperture', 'mean_at_r', 'netflux', 'sflux', 'NTot', 'sNTot'),
-                          dtype=6*['f8'])
+                          dtypes=6*['f8'])
     data.add_columns(fuvCols.columns.values())
 
     # Now, lets complete the empty fields
@@ -178,6 +183,9 @@ def collate(configOpts, fluxFUVTable, hiData, dataDust, logger):
         row['FUV_Dec'] = fuvRow['Dec']
         row['HI_RA'] = hiRow['RA']
         row['HI_Dec'] = hiRow['Dec']
+
+        row['NHI'] = hiRow['NHI']
+        row['sNHI'] = hiRow['sNHI']
 
         for field in ['aperture', 'mean_at_r', 'netflux', 'sflux']:
             row[field] = fuvRow[field]
@@ -200,11 +208,15 @@ def calculateNTot(configOpts, data, logger):
     dist = configOpts['distance'] * 1e6  # [pc]
 
     for ii in range(len(data)):
+        # print data['flux'][ii], ext, dist, data['dd0'][ii], data['rhoHI'][ii], data['NHI'][ii]
+
         data['NTot'][ii] = PDRmodel(
             data['flux'][ii], ext, dist, data['dd0'][ii], data['rhoHI'][ii], data['NHI'][ii])
+
         data['sNTot'][ii] = errors(
-            data['NTot'][ii], data['flux'][ii], data['sflux'][ii], data['rhoHI'][ii], data['sRhoHI'][ii],
-            data['dd0'][ii], data['sdd0'][ii], data['NHI'][ii], data['sNHI'][ii], ext, logfile=False)
+            data['NTot'][ii], data['flux'][ii], data['sflux'][ii], data['rhoHI'][ii],
+            data['sRhoHI'][ii], data['dd0'][ii], data['sdd0'][ii], data['NHI'][ii],
+            data['sNHI'][ii], ext, logfile=False)
 
     return data
 
@@ -216,7 +228,8 @@ def filterData(data, logger):
     """
 
     logger.write('Filtering results ... ', newLine=True)
-    # Filter values here - a placeholder. Need to filter in justifiable ways before writing results.
+    # Filter values here - a placeholder.
+    # Need to filter in justifiable ways before writing results.
 
     logger.write('Results pre-filtering: %d' % len(data))
 
@@ -224,7 +237,8 @@ def filterData(data, logger):
     filteredData = data[data['rhoHI'] < 500]  # plausibility cut-off
     # filteredData = data[data['RhoHI'] < 1000]
 
-    logger.write('Censoring rho_HI > 500 pc (plausilibity cut-off), remaining %d' % len(filteredData))
+    logger.write('Censoring rho_HI > 500 pc (plausilibity cut-off), ' +
+                 'remaining %d' % len(filteredData))
 
     filteredData = filteredData[filteredData['Contrast'] > 1]
     logger.write('Censoring contrast < 1, remaining %d' % len(filteredData))
@@ -245,7 +259,8 @@ def applyPDRMethod(configOpts, fluxFUVTable, hiData, logger):
 
     dataDust = dustToGas(configOpts, fluxFUVTable, hiData, dataRho, logger)
 
-    # Creates the final table with all the compiled data and two empty columns where NTot and SNTot will go.
+    # Creates the final table with all the compiled data and
+    # two empty columns where NTot and SNTot will go.
     data = collate(configOpts, fluxFUVTable, hiData, dataDust, logger)
 
     # We calculate N(total)
@@ -255,14 +270,14 @@ def applyPDRMethod(configOpts, fluxFUVTable, hiData, logger):
 
     # Saves the data
     logger.write('Saving data ...', newLine=True)
-    data.write(configOpts['data_results_unfiltered'], format='ascii.fixed_width', delimiter=' ')
+    at.write(data, configOpts['data_results_unfiltered'], Writer=at.FixedWidth, delimiter=' ')
     if configOpts['save_unfiltered_vot'] is True:
         fileVOT = os.path.splitext(configOpts['data_results_unfiltered'])[0] + '.vot'
         if os.path.exists(fileVOT):
             os.remove(fileVOT)
         data.write(fileVOT, format='votable')
 
-    filteredData.write(configOpts['data_results'], format='ascii.fixed_width', delimiter=' ')
+    at.write(filteredData, configOpts['data_results'], Writer=at.FixedWidth, delimiter=' ')
     if configOpts['save_results_vot'] is True:
         fileVOT = os.path.splitext(configOpts['data_results'])[0] + '.vot'
         if os.path.exists(fileVOT):

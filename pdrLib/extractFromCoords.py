@@ -40,8 +40,8 @@ def extractFromCoords(hduHI, wcsHI, fluxTable, root='HIRegs/HIReg',
         RA = peak['RA']
         Dec = peak['Dec']
         peakCoords = coord.ICRSCoordinates('%s %s' % (RA, Dec))
-        coordPix = wcsHI.wcs_world2pix(np.array([[peakCoords.ra.degree,
-                                                  peakCoords.dec.degree]]), 0)[0] + 1
+        coordPix = wcsHI.wcs_world2pix(np.array([[peakCoords.ra.degrees,
+                                                  peakCoords.dec.degrees]]), 0)[0] + 1
 
         iMin = np.int(coordPix[1] - size)
         iMax = np.int(coordPix[1] + size)

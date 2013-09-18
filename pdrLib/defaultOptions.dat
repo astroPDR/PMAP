@@ -11,6 +11,10 @@ fuvImage =                              ; Path of the FUV image
 hiImage  =                              ; Path of the HI image
 FUVscale =                              ; To convert input map from CPS to flux units
 HIscale  =                              ; To convert input map into column density cm-2
+FUV_Pix_Scale  =  None                  ; The pixel scale, in arcsec, of the FUV image.
+#                                         If None, it will calculated from the image.
+HI_Pix_Scale   =  None                  ; The pixel scale, in arcsec, of the FUV image.
+#                                         If None, it will calculated from the image.
 
 
 [Logging options]

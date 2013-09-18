@@ -67,7 +67,7 @@ def getUVFlux(configOpts, logger):
     # simply a string
 
     # Write: UV fluxes
-    at.write(fluxTable, data_uv, format='fixed_width', delimiter=' ')
+    at.write(fluxTable, data_uv, Writer=at.FixedWidth, delimiter=' ')
 
     # fluxfile = open(data_uv, 'w')
     # # logger.write('#PDRID, aperture (arcsec), mean at r (units/arcsec^2),

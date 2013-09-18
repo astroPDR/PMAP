@@ -112,6 +112,7 @@ def PDRmodel(flux, ext, D_gal, dd0, rho, NHI):
     # We now expect Dgal in pc, and rho in pc!
                 # Nowhere do we output G0, whereas people want to know. Quick hack to print it here, might return it as a tuple
     # scale NHI; and calculate a number-loss friendly conversion factor
+
     N = NHI * 1e-21 / 0.78
     # As in Heiner et al. 2008a
     conv = 106 * 0.85 * 10 ** (ext / 2.5) / 0.264 * (D_gal / 1e5) ** 2
@@ -207,6 +208,8 @@ def determine_dust(scenario, p):
         # print p[0][0], p[0][1], p[1][0], p[1][1], R
         #dd0 = 0
         # try:
+        # print(float(p[2][0]), p[3][3], float(p[2][1]))
+        # print 10 ** (float(p[2][0]) * p[3][3] + float(p[2][1]))
         dd0 = 10 ** (float(p[2][0]) * p[3][3] + float(p[2][1]))
         # constant relative error read from inputConfig.dat
         sdd0 = p[2][2] * dd0
