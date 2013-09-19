@@ -52,8 +52,13 @@ def createCoord(ra, dec):
             try:
                 cc = coords.ICRSCoordinates('%s %s' % (ra, dec))
             except:
-                raiseError('Coordinate cannot be converted to astropy.coordinates.')
-
+                try:
+                    raH, raM, raS = ra.split()
+                    decD, decM, decS = dec.split()
+                    cc = coords.ICRSCoordinates('%sh%sm%ss %sd%sm%ss' % (raH, raM, raS,
+                                                                         decD, decM, decS))
+                except:
+                    raiseError('Coordinate cannot be converted to astropy.coordinates.')
     return cc
 
 

@@ -38,8 +38,8 @@ distance    =                      ; Distance in Mpc
 ext         =                      ; Extinction (mag)
 pa          =                      ; Position angle (degrees)
 incl        =                      ; Inclination (degrees)
-c_RA        =                      ; Galaxy center RA [hh mm ss]
-c_DEC       =                      ; Galaxy center DEC [dd mm ss]
+c_RA        =                      ; Galaxy center RA [XXhYYmZZ.ZZss or float in degrees]
+c_DEC       =                      ; Galaxy center Dec [XXdYYmZZ.ZZss or float in degrees]
 R25         =                      ; R_25 (kpc)
 
 
@@ -112,7 +112,7 @@ refineFactor    =   10              ; The factor the grid will be refined to mea
 [HI]
 
 HIRegSize      =   1000             ; The width (in parsecs) of the HI region around
-                                    ; the FUV peak
+#                                   ; the FUV peak
 
 createHIMosaic =   True             ; Creates a mosiac with all the HI regions
 
