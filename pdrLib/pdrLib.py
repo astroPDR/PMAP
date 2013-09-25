@@ -98,7 +98,23 @@ def open_image(filename):
     #image = maputils.FITSimage(filename)
     # return astWCS.WCS(image.hdr, mode="pyfits"), image
     image = pf.open(filename)
-    return pw.WCS(image[0].header), image[0].data
+    header = image[0].header
+    if header['NAXIS'] != 2:
+        print 'Attempting to extract image' # Replace with proper log!
+        print 'If this fails, please pre-flatten the image to 2D'
+        slicestring = ''
+        for n in range(3,header['NAXIS']+1):
+            #Remove all keywords related to axes > 2
+            slicestring += '0,'
+            for k in header.keys():
+                if k.find(str(n)) != -1: del header[k]
+        header['NAXIS'] = 2
+        #Select only the RA and DEC axes
+        data = eval('image[0].data['+slicestring+':,:]')
+        #Remember that pyfits axes are read inverted; e.g. STOKES, MOM0, DEC, RA
+    else:
+        data = image[0].data
+    return pw.WCS(header), data
 
 
 def logdump(filename, line):
