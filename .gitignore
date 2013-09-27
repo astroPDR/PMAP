@@ -1,6 +1,4 @@
 *.pyc
 *.sublime-workspace
 *.sublime-project
-pdrLib/Deprecated
 .DS_Store
-*.old

@@ -22,7 +22,7 @@ Usage: clfind2d.py fileIn levels [-l|--nolog] [-o|--out]
 
 
 import numpy as np
-from pdrLib import pf
+import pyfits as pf
 import sys
 import os
 from time import strftime, gmtime, clock
@@ -68,8 +68,7 @@ def defClump(data, levMin, reg, nReg, mask, clumpPeak, nCl):
 
     nNew = 0
 
-    if nReg == 0:
-        return 0
+    if nReg == 0: return 0
 
     nPix2, pix2, nReg2 = defReg(data, levMin, 99999, diagonal=True)
 
@@ -141,7 +140,7 @@ def testBad(data, nPixMin, nCl, clumpPeak, mask):
 
 
 # Main routine
-def clfind2d(file, mask, levels, log=True, nPixMin=20, verbose=True, rejectZero=False):
+def clfind2d(file, mask, levels, log=True, nPixMin=20, verbose=True):
 
 # The final name of the mask
     fileOut = mask
@@ -149,8 +148,7 @@ def clfind2d(file, mask, levels, log=True, nPixMin=20, verbose=True, rejectZero=
 # If log == True, sets the name of the log file
     if log is True:
         logFile = fileOut + '.log'
-        if os.path.exists(logFile):
-            os.remove(logFile)
+        if os.path.exists(logFile): os.remove(logFile)
     else:
         logFile = None
 
@@ -180,8 +178,6 @@ def clfind2d(file, mask, levels, log=True, nPixMin=20, verbose=True, rejectZero=
 
 # Bad pixels are set to -999.9
     data[np.isnan(data)] = -999.9
-    if rejectZero is True:
-        data[data == 0.0] = -999.9
 
 # Adds a top level to the contours list
     levels = np.append(levels, 99999)
@@ -202,8 +198,7 @@ def clfind2d(file, mask, levels, log=True, nPixMin=20, verbose=True, rejectZero=
 
         nPix, reg, nReg = defReg(data, levMin, levMax, diagonal=True)
 
-        printLog('Contour level %f: %i pixels, %i regions, ' % (levels[nWork], nPix, nReg), logFile,
-                 verbose=verbose)
+        printLog('Contour level %f: %i pixels, %i regions, ' % (levels[nWork], nPix, nReg), logFile, verbose=verbose)
 
         nNew = defClump(data, levels[nWork], reg, nReg, mask, clumpPeak, nCl)
 
@@ -218,8 +213,7 @@ def clfind2d(file, mask, levels, log=True, nPixMin=20, verbose=True, rejectZero=
     printLog('================================================================\n', logFile, verbose=verbose)
 
 # Saves the mask
-    if os.path.exists(fileOut):
-        os.remove(fileOut)
+    if os.path.exists(fileOut): os.remove(fileOut)
     hdu = pf.PrimaryHDU(mask)
     hdu.header = header
     hdulist = pf.HDUList([hdu])

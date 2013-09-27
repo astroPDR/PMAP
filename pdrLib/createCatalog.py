@@ -24,27 +24,18 @@ import os
 from fitellipse import fitellipse
 from Regions import *
 import colorama as cm
-from . import pf, pw
 
-try:
-    from astropy.io.votable.tree import VOTableFile, Resource, Table, Field
-    voModule = True
-except:
-    try:
-        from vo.tree import VOTableFile, Resource, Table, Field
-        voModule = True
-    except:
-        voModule = False
+from impPyFits import *
+from impPyWCS import *
+from impVO import *
 
-from Error import raiseWarning
-import warnings
+from Error import raiseWarning, raiseError
 
 
 # Main routine which read the image and mask files, calculates various parameters and
 # creates the VOTable catalogue and the DS9 regions files.
-def createCatalog(image, mask, voTableCat, ds9RegsFile, peaksFile,
-                  logger, ellipse=False, ellMode='linear',
-                  plot=False):
+def createCatalog(image, mask, voTableCat, ds9RegsFile, logger,
+                  peaksFile=None, ellipse=False, ellMode='linear', plot=False):
 
     if voModule is False:
         logger.write(cm.Fore.RED + 'No VO module found. A FITS table will be generated instead.' +
@@ -107,8 +98,6 @@ def createCatalog(image, mask, voTableCat, ds9RegsFile, peaksFile,
     if voModule is True:
         # Creates a VOTable with the data
         logger.write('Creating VOTable ... ')
-
-        warnings.simplefilter('ignore')
 
         if os.path.exists(voTableCat):
             os.remove(voTableCat)
@@ -186,7 +175,6 @@ def createCatalog(image, mask, voTableCat, ds9RegsFile, peaksFile,
 
         votable.to_xml(voTableCat)
         logger.write('VOTable catalogue: %s' % voTableCat)
-        warnings.simplefilter('default')
 
     else:
     # If the vo module is not available, uses PyFits to create a Fits table
@@ -247,8 +235,7 @@ def createCatalog(image, mask, voTableCat, ds9RegsFile, peaksFile,
         thdulist = pf.HDUList([hdu, tbhdu])
 
         fitsTableCat = os.path.splitext(voTableCat)[0] + '_Cat.fits'
-        if os.path.exists(fitsTableCat):
-            os.remove(fitsTableCat)
+        if os.path.exists(fitsTableCat): os.remove(fitsTableCat)
         thdulist.writeto(fitsTableCat)
         logger.write('FITS catalogue: %s' % fitsTableCat)
 
@@ -271,7 +258,6 @@ def createCatalog(image, mask, voTableCat, ds9RegsFile, peaksFile,
         ii += 1
 
     unitRegCentroid.close()
-    logger.write('DS9 catalogue: %s' % ds9XYFile)
 
     # Write RA, Dec instead:
     if wcsMask is not None:
@@ -292,8 +278,6 @@ def createCatalog(image, mask, voTableCat, ds9RegsFile, peaksFile,
 
         unitRegCentroid.close()
 
-    logger.write('DS9 WCS catalogue: %s' % ds9WCSFile)
-
     if ellipse:
         ds9EllFile = os.path.splitext(ds9RegsFile)[0] + '_Ell.reg'
         unitRegEllipse = open(ds9EllFile, 'w')
@@ -309,36 +293,35 @@ def createCatalog(image, mask, voTableCat, ds9RegsFile, peaksFile,
             ii += 1
 
         unitRegEllipse.close()
-        logger.write('DS9 ellipse catalogue: %s' % ds9EllFile)
-
-    # if wcsMask is None:
-    #     raiseError('No WCS information. Cannot continue.')
-
-    def dec2dms(dd):
-        sign = -1. if dd < 0 else 1.  # Remember to deal with negative DEC
-        mnt, sec = divmod(abs(dd) * 3600, 60)
-        deg, mnt = divmod(mnt, 60)
-        return deg * sign, mnt, sec
 
     # Writes a file with the peak positions
-    logger.write('Saving peak positions ... ', newLine=True)
+    if peaksFile is not None:
 
-    peaksUnit = open(peaksFile, 'w')
-    print >>peaksUnit, '# PDRID, XPIXEL, YPIXEL, RA, DEC'
-    nn = 0
-    for yy, xx in peaksPix:
-        regID = regions.idRegions[nn]
-        ra = skyCoordsPeak[nn, 0]
-        dec = skyCoordsPeak[nn, 1]
-        raHH, raMM, raSS = dec2dms(ra/15.)
-        decDD, decMM, decSS = dec2dms(dec)
-        row = '%d, %.2f, %.2f, %02dh%02dm%05.2fs, %+02dd%02dm%05.2fs' % \
-              (regID, xx, yy, raHH, raMM, raSS, decDD, decMM, decSS)
-        print >>peaksUnit, row
-        nn += 1
+        if wcsMask is None:
+            raiseError('No WCS information. Cannot continue.')
 
-    peaksUnit.close()
-    logger.write('FUV peaks catalogue: %s' % peaksFile)
+        def dec2dms(dd):
+            sign = -1. if dd < 0 else 1.  # Remember to deal with negative DEC
+            mnt, sec = divmod(abs(dd) * 3600, 60)
+            deg, mnt = divmod(mnt, 60)
+            return deg * sign, mnt, sec
+
+        logger.write('Saving peak positions ... ', newLine=True)
+
+        peaksUnit = open(peaksFile, 'w')
+        print >>peaksUnit, '# PDRID, XPIXEL, YPIXEL, RA, DEC'
+        nn = 0
+        for yy, xx in peaksPix:
+            ra = skyCoordsPeak[nn, 0]
+            dec = skyCoordsPeak[nn, 1]
+            raHH, raMM, raSS = dec2dms(ra/15.)
+            decDD, decMM, decSS = dec2dms(dec)
+            row = '%d, %.2f, %.2f, %02d %02d %05.2f, %+02d %02d %05.2f' % \
+                  (nn, xx, yy, raHH, raMM, raSS, decDD, decMM, decSS)
+            print >>peaksUnit, row
+            nn += 1
+
+        peaksUnit.close()
 
     if plot:
         logger.write('Plotting regions ... ', newLine=True)

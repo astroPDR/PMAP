@@ -45,12 +45,10 @@ def raiseWarning(*args, **kargs):
         logger = args[1]
 
     doLog = kargs['doLog'] if 'doLog' in kargs else True
-    doPrint = kargs['doPrint'] if 'doPrint' in kargs else True
-    newLine = kargs['newLine'] if 'newLine' in kargs else True
 
     if logger is not None:
         logger.write(cm.Fore.YELLOW + '[Warning]: ' + cm.Style.RESET_ALL +
-                     text, newLine=newLine, doLog=doLog, doPrint=doPrint)
+                     text, newLine=True, doLog=doLog)
     else:
         print cm.Fore.YELLOW + '[Warning]: ' + cm.Style.RESET_ALL + text
 
