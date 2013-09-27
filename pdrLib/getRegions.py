@@ -157,11 +157,7 @@ def getRegions(configOpts, logger):
             logger.write('Mean: %9.3e' % np.mean(data))
             logger.write('Median: %9.3e' % np.median(data))
 
-            configOpts['fuvBackground'] = calcBackground(fuvImage, logger,
-                                                         verbose=configOpts['verbose'])
-            logger.write('Background: %.5e' % configOpts['fuvBackground'],
-                         newLine=True)
-
+            configOpts['fuvBackground'] = getFloat('Background level [-1 for automatic]: ', -1)
             configOpts['fuvSigma'] = getFloat('Sigma [3]: ', 3)
             configOpts['fuvhLevel'] = getFloat('Highest level [-1 for automatic]: ', -1)
             configOpts['fuvnLevels'] = getFloat('Number of levels  [-1 for automatic]: ', -1)

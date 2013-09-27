@@ -156,8 +156,6 @@ if __name__ == '__main__':
     Reads command line arguments
     """
 
-    print
-
     from optparse import OptionParser
 
     usage = 'usage: python %prog configFile [runs pipeline]' + \

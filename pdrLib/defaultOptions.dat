@@ -97,7 +97,7 @@ fuvMaskFile = Default
 
 # Makes the program prompt for the necessary
 # values. Overrides the remaining options in this
-# section [required]
+# section. [required]
 fuvInteractive = False
 
 # The background level of the image.

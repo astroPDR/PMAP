@@ -100,8 +100,18 @@ class ConfigOptions(object):
         _errorOpts.optionxform = str
         _errorOpts.read(self.mandatoryOptions)
 
-        _error = _errorOpts.get('Error', 'errorOpts').replace(' ', '').split(',')
-        _warning = _errorOpts.get('Warning', 'warningOpts').replace(' ', '').split(',')
+        _error = _errorOpts.get('Error', 'errorOpts')
+
+        if _error.lower() == 'none':
+            _error = []
+        else:
+            _error = _error.replace(' ', '').split(',')
+
+        _warning = _errorOpts.get('Warning', 'warningOpts')
+        if _warning.lower() == 'none':
+            _warning = []
+        else:
+            _warning = _warning.replace(' ', '').split(',')
 
         if 'dusttype' not in self.options:
             self.OptionsError('dusttype not defined', exit=False)

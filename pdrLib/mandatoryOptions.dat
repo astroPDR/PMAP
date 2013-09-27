@@ -2,7 +2,7 @@
 errorOpts : fuvImage, hiImage, FUVscale, HIscale, distance, ext, pa, incl, c_RA, c_DEC, R25, HIRegSize
 
 [Warning]
-warningOpts : fuvBackground, fuvhLevel, fuvnLevels, hihLevel
+warningOpts : None
 
 [Dust]
 slope = slope, offset
