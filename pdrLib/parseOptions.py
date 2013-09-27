@@ -299,9 +299,11 @@ class ConfigOptions(object):
         _fileNamesFieldsToChange = ['data_uv', 'data_hi', 'logFile',
                                     'data_results_unfiltered', 'data_results']
 
+        _config.set('Logging options', 'root', _root)
+
         for _fileNameFieldsToChange in _fileNamesFieldsToChange:
             _tmpValue = _config.get('Logging options', _fileNameFieldsToChange)
-            _tmpValue = _tmpValue.replace('Default', '%(root)s')
+            _tmpValue = _tmpValue.replace(_root, '%(root)s')
             _config.set('Logging options', _fileNameFieldsToChange, _tmpValue)
 
         # Pixel scales
