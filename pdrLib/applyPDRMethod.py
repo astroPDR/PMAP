@@ -30,6 +30,10 @@ def getRhoRG(configOpts, fluxFUVTable, hiData, logger):
     contrast)
     """
 
+    #Calculate the distance between the UV source and the HI patches, assuming a simple spherical
+    #geometry (deprojected with p.a. and i). 
+    #In addition to rhoHI we calculate G0 and the source contrast as a consequence of rhoHI.
+
     dist = configOpts['distance']
     header = pf.getheader(configOpts['fuvImage'])
     wcsFUV = pw.WCS(header)
@@ -124,6 +128,7 @@ def dustToGas(configOpts, fluxFUVTable, hiData, dataRho, logger):
 
         # print param_array
         #! should separate dust model from calculating R
+        #Based on the dust model we calculate the inferred dust-to-gas ratio at every coordinate
         d, s = determine_dust(dusttype, param_array)
         if s == 0. and warningIssued is False:
             # Can add options of const or relative + value
@@ -134,9 +139,10 @@ def dustToGas(configOpts, fluxFUVTable, hiData, dataRho, logger):
         dd0.append(d)
         sdd0.append(s)  # all errors are absolute
 
-    raiseWarning(
-        'Warning: using hardcoded 8.69 solar value and assuming 12+log(O/H) input for dust map',
-        logger, newLine=False)
+    #raiseWarning(
+    #    'Warning: using hardcoded 8.69 solar value and assuming 12+log(O/H) input for dust map',
+    #    logger, newLine=False)
+    #JSH: removed this warning because the solar value is set in the configuration file
 
     # Now we have dd0, sdd0 for each hiData.PDRID
     tableDD0 = table.Table([dd0, sdd0], names=('dd0', 'sdd0'))
@@ -200,6 +206,9 @@ def calculateNTot(configOpts, data, logger):
     """
     Final step: Calculate n, sigma_n
     """
+    
+    #Note: due to naming convention this routine is called calculateNTot but
+    #in fact we calculate n, the total hydrogen volume density.
 
     logger.write('Calculating N(total) ...')
 
