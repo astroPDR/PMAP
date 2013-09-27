@@ -38,3 +38,4 @@ from fluxes import *
 from getHIFlux import *
 from applyPDRMethod import applyPDRMethod
 from calcSeparation import calcSeparation
+from calcScale import calcScale

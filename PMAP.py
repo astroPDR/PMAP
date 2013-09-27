@@ -23,27 +23,11 @@ import numpy as np
 from pdrLib.Error import raiseError
 
 
-def calcScale(fileName):
-
-    header = pdr.pf.getheader(fileName)
-    wcs = pdr.pw.WCS(header)
-    try:
-        pixSize = np.array([np.abs(wcs.wcs.cd[0, 0]), np.abs(wcs.wcs.cd[1, 1])]) * 3600
-    except:
-        try:
-            pixSize = np.abs(wcs.wcs.cdelt[0:2]) * 3600
-        except:
-            raiseError('Pixel size for image %s cannot be determined. ' +
-                       'Please, specify it in the configuration file' % fileName)
-
-    return pixSize.mean()
-
-
 def savePixScales(configOpts):
 
     # Calculates the FUV pixel scale
     if configOpts['FUV_Pix_Scale'] is None:
-        configOpts['FUV_Pix_Scale'] = calcScale(configOpts['fuvImage'])
+        configOpts['FUV_Pix_Scale'] = pdr.calcScale(configOpts['fuvImage'])
     else:
         if not isinstance(configOpts['FUV_Pix_Scale'], (float, int)):
             raiseError('FUV pixel scale is not a float.')
@@ -54,7 +38,7 @@ def savePixScales(configOpts):
 
     # Idem for the HI one
     if configOpts['HI_Pix_Scale'] is None:
-        configOpts['HI_Pix_Scale'] = calcScale(configOpts['hiImage'])
+        configOpts['HI_Pix_Scale'] = pdr.calcScale(configOpts['hiImage'])
     else:
         if not isinstance(configOpts['HI_Pix_Scale'], (float, int)):
             raiseError('HI pixel scale is not a float.')
@@ -70,8 +54,9 @@ def savePixScales(configOpts):
 ###                                 MAIN                                    ###
 ###############################################################################
 
-def main(configFile, createConfig=False, verbose=True, overwrite=False):
-    """p
+def main(configFile, createConfig=False, interactiveConfig=False,
+         verbose=True, overwrite=False):
+    """
     This main routine sequentially calls all the subroutines needed for the PDR
     method to work.
     """
@@ -79,6 +64,7 @@ def main(configFile, createConfig=False, verbose=True, overwrite=False):
     # configOptionsInstance is a instance of the class ConfigOptions. For convenience,
     # configOpts allows a quick access to the configOptionsInstance.options dict.
     configOptionsInstance = pdr.ConfigOptions(configFile, createConfig=createConfig,
+                                              interactiveConfig=interactiveConfig,
                                               verbose=verbose)
 
     if createConfig is True:
@@ -137,11 +123,16 @@ if __name__ == '__main__':
     from optparse import OptionParser
 
     usage = 'usage: python %prog configFile [runs pipeline]' + \
-            '\n       python %prog -c configFile [generates a sample config file]'
+            '\n       python %prog -c [configFile] [generates a sample config file]' + \
+            '\n       python %prog -i [configFile] [generates a sample config file interactively]'
 
     parser = OptionParser(usage=usage)
     parser.add_option('-c', '--config', dest='sampleFile',
                       help='generates a default configuration file.',
+                      default=False, action='store_true')
+    parser.add_option('-i', '--configinteractive', dest='interactiveConfig',
+                      help='generates a default configuration file by interactively ' +
+                           'asking the user to input data.',
                       default=False, action='store_true')
     parser.add_option('-q', '--quiet',
                       action='store_false', dest='verbose', default=True,
@@ -153,15 +144,20 @@ if __name__ == '__main__':
 
     (options, args) = parser.parse_args()
 
+    if options.interactiveConfig is True:
+        options.sampleFile = True
+
     if len(args) == 0:
         if options.sampleFile is False:
             parser.error('Incorrect number of arguments')
         else:
-            main('PMAP.dat', createConfig=True, verbose=options.verbose)
+            main('PMAP.dat', createConfig=True, interactiveConfig=options.interactiveConfig,
+                 verbose=options.verbose)
     else:
         configFile = args[0]
         if options.sampleFile is True:
-            main(configFile, createConfig=True, verbose=options.verbose)
+            main(configFile, createConfig=True, interactiveConfig=options.interactiveConfig,
+                 verbose=options.verbose)
         else:
             if os.path.exists(configFile):
                 main(configFile, createConfig=False, verbose=options.verbose,
