@@ -54,12 +54,6 @@ def getHIFlux(configOpts, fluxFUVTable, logger):
         try:
             fluxesHI = at.read(fluxesHIFile, delimiter=' ')
             logger.write('... data read from %s' % fluxesHIFile)
-
-            # Very simple and incomplete check for enough data:
-            # if len(fluxesHI) != len(fluxFUVTable):
-            #     raiseError('Fatal error: number of UV and HI PDRIDs do not match. ' +
-            #                'Try regenerating the HI files.')
-            # else:
             return fluxesHI
         except:
             raiseError('HI data file %s could not be read.' % fluxesHIFile, logger)
@@ -91,7 +85,8 @@ def getHIFlux(configOpts, fluxFUVTable, logger):
     dataHI, extractedPaths = extractFromCoords(hduHI, wcsHI, fluxFUVTable, root='HIRegs/HIReg',
                                                extract=True, createMosaic=createHIMosaic,
                                                size=size, overwrite=True, clean=True,
-                                               logger=logger)
+                                               logger=logger,
+                                               astropyVersion=configOpts['apVersionSimple'])
 
     # Process HI postage stamp regions.
     # Gets the HI background or automatically calculates it
@@ -110,8 +105,12 @@ def getHIFlux(configOpts, fluxFUVTable, logger):
     logger.write('Using map scaling of %.3e cm-2 per map unit' % scale)
 
     # Creates the results table
-    fluxesHI = table.Table(None, names=('PDRID', 'HIID', 'RA', 'Dec', 'NHI', 'sNHI'),
-                           dtypes=('i4', 'i4', 'S20', 'S20', 'f8', 'f8'))
+    if configOpts['apVersionSimple'] == '0.2.4':
+        fluxesHI = table.Table(None, names=('PDRID', 'HIID', 'RA', 'Dec', 'NHI', 'sNHI'),
+                               dtypes=('i4', 'i4', 'S20', 'S20', 'f8', 'f8'))
+    else:
+        fluxesHI = table.Table(None, names=('PDRID', 'HIID', 'RA', 'Dec', 'NHI', 'sNHI'),
+                               dtype=('i4', 'i4', 'S20', 'S20', 'f8', 'f8'))
 
     logger.write('Copying SExtractor configuration files ...', newLine=True)
     copySExFiles(logger)
@@ -138,7 +137,8 @@ def getHIFlux(configOpts, fluxFUVTable, logger):
 
             # If there has not been a detection
             if patches is None:
-                raiseWarning('No suitable patches were found for PDRID %d.' % pdrID, logger, newLine=False)
+                raiseWarning('No suitable patches were found for PDRID %d.' % pdrID, logger,
+                             newLine=False)
                 # With SExtractor, this is unlikely since it does not pick up the faintest patches
                 # fluxesHI.add_row([pdrID, 0, 0, 0, 0])
                 continue
@@ -152,28 +152,22 @@ def getHIFlux(configOpts, fluxFUVTable, logger):
                     NHI = (patches[2][n] - hi_bg) * scale
                     # Fix sN_HI to half the background value
                     sNHI = hi_bg * scale * 0.5
-                    patchCoords = coords.ICRSCoordinates(ra=RA, dec=Dec, unit=(units.degree, units.degree))
-                    RAStr = patchCoords.ra.format(unit=units.hour, precision=2)
-                    DecStr = patchCoords.dec.format(unit=units.degree, precision=2)
+                    patchCoords = coords.ICRSCoordinates(ra=RA, dec=Dec,
+                                                         unit=(units.degree, units.degree))
+
+                    if configOpts['apVersionSimple'] == '0.2.4':
+                        RAStr = patchCoords.ra.format(unit=units.hour, precision=2)
+                        DecStr = patchCoords.dec.format(unit=units.degree, precision=2)
+                    else:
+                        RAStr = patchCoords.ra.to_string(unit=units.hour, precision=2)
+                        DecStr = patchCoords.dec.to_string(unit=units.degree, precision=2)
+
                     fluxesHI.add_row([pdrID, n, RAStr, DecStr, NHI, sNHI])
                 else:
-                    raiseWarning('Patch %d for region %d too faint.' % (n, pdrID), logger, newLine=False)
+                    raiseWarning('Patch %d for region %d too faint.' % (n, pdrID), logger,
+                                 newLine=False)
 
     # Write: HI patches
     at.write(fluxesHI, fluxesHIFile, Writer=at.FixedWidth, delimiter=' ')
-
-    # print "HI patches:"
-    # # print "#PDRID, RA, DEC, NHI, sNHI"
-    # hifile.write("#PDRID, RA, DEC, NHI, sNHI\n")
-    # for n in range(len(hidata)):
-    #     # print type(hidata[n].NHI)
-    #     # Apparently python 2.6 needs explicit conversion from numpy.float32, so workaround
-    #     # fedora bug: changed PDRID:>3 to PDRID:3g
-    #     # print "{0.PDRID:3g}, {0.RA:14s}, {0.DEC:14s}, {1:7.5g},
-    #     # {2:7.5g}".format(hidata[n], float(hidata[n].NHI), float(hidata[n].sNHI))
-    #     hifile.write("{0.PDRID:3g}, {0.RA:14s}, {0.DEC:14s}, {1:7.5g}, {2:7.5g}\n".format(
-    #         hidata[n], float(hidata[n].NHI), float(hidata[n].sNHI)))
-    #   # hifile.close()
-  # End of try/except
 
     return fluxesHI

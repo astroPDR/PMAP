@@ -30,9 +30,9 @@ def getRhoRG(configOpts, fluxFUVTable, hiData, logger):
     contrast)
     """
 
-    #Calculate the distance between the UV source and the HI patches, assuming a simple spherical
-    #geometry (deprojected with p.a. and i). 
-    #In addition to rhoHI we calculate G0 and the source contrast as a consequence of rhoHI.
+    # Calculate the distance between the UV source and the HI patches, assuming a simple spherical
+    # geometry (deprojected with p.a. and i).
+    # In addition to rhoHI we calculate G0 and the source contrast as a consequence of rhoHI.
 
     dist = configOpts['distance']
     header = pf.getheader(configOpts['fuvImage'])
@@ -42,9 +42,14 @@ def getRhoRG(configOpts, fluxFUVTable, hiData, logger):
     except:
         pix_size = np.abs(wcsFUV.wcs.cdelt[0:2]) * 3600
 
-    dataRho = table.Table(None,
-                          names=('PDRID', 'HIID', 'rhoHI', 'sRhoHI', 'Rgal', 'G0', 'Contrast'),
-                          dtypes=('i4', 'i4', 'f8', 'f8', 'f8', 'f8', 'f8'))
+    if configOpts['apVersionSimple'] == '0.2.4':
+        dataRho = table.Table(None,
+                              names=('PDRID', 'HIID', 'rhoHI', 'sRhoHI', 'Rgal', 'G0', 'Contrast'),
+                              dtypes=('i4', 'i4', 'f8', 'f8', 'f8', 'f8', 'f8'))
+    else:
+        dataRho = table.Table(None,
+                              names=('PDRID', 'HIID', 'rhoHI', 'sRhoHI', 'Rgal', 'G0', 'Contrast'),
+                              dtype=('i4', 'i4', 'f8', 'f8', 'f8', 'f8', 'f8'))
 
     c_RA = configOpts['c_RA']
     c_DEC = configOpts['c_DEC']
@@ -64,7 +69,7 @@ def getRhoRG(configOpts, fluxFUVTable, hiData, logger):
         Rgal = calcSeparation(
             fluxFUVTable[ii]['RA'], fluxFUVTable[ii]['Dec'], c_RA, c_DEC,
             pa, incl, dist * 1e-3,  # dist passed in kpc so Rgal will be in kpc
-            wcsFUV)
+            wcsFUV, apVersion=configOpts['apVersionSimple'])
 
         hiPatchesPDR = hiData[hiData['PDRID'] == pdrID]
         for hiRow in hiPatchesPDR:
@@ -72,7 +77,7 @@ def getRhoRG(configOpts, fluxFUVTable, hiData, logger):
             rhoHI = calcSeparation(
                 fluxFUVTable[ii]['RA'], fluxFUVTable[ii]['Dec'],
                 hiRow['RA'], hiRow['Dec'],
-                pa, incl, dist, wcsFUV)  # dist in pc
+                pa, incl, dist, wcsFUV, apVersion=configOpts['apVersionSimple'])  # dist in pc
 
             G0 = Gnaught(fluxFUVTable[ii]['netflux'], dist, rhoHI, ext)
             contr = contrast(fluxFUVTable[ii]['netflux'], fluxFUVTable[ii]['mean_at_r'],
@@ -162,22 +167,40 @@ def collate(configOpts, fluxFUVTable, hiData, dataDust, logger):
     data = table.Table(dataDust)
 
     # Adds coordinate columns for both FUV and HI
-    coordTable = table.Table(np.zeros((len(data), 4)),
-                             names=('FUV_RA', 'FUV_Dec', 'HI_RA', 'HI_Dec'),
-                             dtypes=4*['S20'])
+    if configOpts['apVersionSimple'] == '0.2.4':
+        coordTable = table.Table(np.zeros((len(data), 4)),
+                                 names=('FUV_RA', 'FUV_Dec', 'HI_RA', 'HI_Dec'),
+                                 dtypes=4*['S20'])
+    else:
+        coordTable = table.Table(np.zeros((len(data), 4)),
+                                 names=('FUV_RA', 'FUV_Dec', 'HI_RA', 'HI_Dec'),
+                                 dtype=4*['S20'])
+
     data.add_columns(coordTable.columns.values(), indexes=[2, 2, 2, 2])
 
     # This is not necessary with astropy v3 because you can directly joint the tables
     # but for now we'll do it the hard way.
-    nHITable = table.Table(np.zeros((len(data), 2)),
-                           names=('NHI', 'sNHI'),
-                           dtypes=2*['f8'])
+    if configOpts['apVersionSimple'] == '0.2.4':
+        nHITable = table.Table(np.zeros((len(data), 2)),
+                               names=('NHI', 'sNHI'),
+                               dtypes=2*['f8'])
+    else:
+        nHITable = table.Table(np.zeros((len(data), 2)),
+                               names=('NHI', 'sNHI'),
+                               dtype=2*['f8'])
+
     data.add_columns(nHITable.columns.values())
 
     # Adds columns for the FUV data and NTot
-    fuvCols = table.Table(np.zeros((len(data), 6)),
-                          names=('aperture', 'mean_at_r', 'netflux', 'sflux', 'NTot', 'sNTot'),
-                          dtypes=6*['f8'])
+    if configOpts['apVersionSimple'] == '0.2.4':
+        fuvCols = table.Table(np.zeros((len(data), 6)),
+                              names=('aperture', 'mean_at_r', 'netflux', 'sflux', 'NTot', 'sNTot'),
+                              dtypes=6*['f8'])
+    else:
+        fuvCols = table.Table(np.zeros((len(data), 6)),
+                              names=('aperture', 'mean_at_r', 'netflux', 'sflux', 'NTot', 'sNTot'),
+                              dtype=6*['f8'])
+
     data.add_columns(fuvCols.columns.values())
 
     # Now, lets complete the empty fields
@@ -206,7 +229,7 @@ def calculateNTot(configOpts, data, logger):
     """
     Final step: Calculate n, sigma_n
     """
-    
+
     #Note: due to naming convention this routine is called calculateNTot but
     #in fact we calculate n, the total hydrogen volume density.
 

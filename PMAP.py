@@ -50,11 +50,46 @@ def savePixScales(configOpts):
     return
 
 
+def checkAstropyVersion(configOpts):
+    """
+    Checks the version of astropy installed (if any). Adds two
+    options to configOpts:
+        - apVersion is the real version of astropy from astropy.__version__
+        - apVersionSimple is a simplified version that can be 0.2.4 or 0.3
+            as the syntaxis frequently changes from one to the other.
+    """
+
+    from distutils.version import LooseVersion
+
+    try:
+        import astropy
+        isAstropyInstalled = True
+    except:
+        isAstropyInstalled = False
+
+    if isAstropyInstalled is False:
+        raiseError('Astropy cannot be imported. Please install it and try again.')
+
+    apVersion = astropy.__version__
+    if LooseVersion(apVersion) < LooseVersion('0.2.4'):
+        raiseError('Astropy version is < 0.2.4. PMAP cannot continue until you update.')
+    elif (LooseVersion(apVersion) >= LooseVersion('0.2.4')) and \
+            (LooseVersion(apVersion) < LooseVersion('0.3')):
+        apVersionSimple = '0.2.4'
+    else:
+        apVersionSimple = '0.3'
+
+    configOpts['apVersion'] = apVersion
+    configOpts['apVersionSimple'] = apVersionSimple
+
+    return
+
+
 ###############################################################################
 ###                                 MAIN                                    ###
 ###############################################################################
 
-def main(configFile, createConfig=False, interactiveConfig=False,
+def PMAP(configFile, createConfig=False, interactiveConfig=False,
          verbose=True, overwrite=False):
     """
     This main routine sequentially calls all the subroutines needed for the PDR
@@ -98,6 +133,9 @@ def main(configFile, createConfig=False, interactiveConfig=False,
 
     # Calculates the scale of the HI and FUV images, for later use
     savePixScales(configOpts)
+
+    # Checks astropy version
+    checkAstropyVersion(configOpts)
 
     # Calls the getRegions routine, which produces the region masks for the FUV and HI images
     pdr.getRegions(configOpts, logger)
@@ -151,16 +189,16 @@ if __name__ == '__main__':
         if options.sampleFile is False:
             parser.error('Incorrect number of arguments')
         else:
-            main('PMAP.dat', createConfig=True, interactiveConfig=options.interactiveConfig,
+            PMAP('PMAP.dat', createConfig=True, interactiveConfig=options.interactiveConfig,
                  verbose=options.verbose)
     else:
         configFile = args[0]
         if options.sampleFile is True:
-            main(configFile, createConfig=True, interactiveConfig=options.interactiveConfig,
+            PMAP(configFile, createConfig=True, interactiveConfig=options.interactiveConfig,
                  verbose=options.verbose)
         else:
             if os.path.exists(configFile):
-                main(configFile, createConfig=False, verbose=options.verbose,
+                PMAP(configFile, createConfig=False, verbose=options.verbose,
                      overwrite=options.overwrite)
             else:
                 parser.error('File not found.')
