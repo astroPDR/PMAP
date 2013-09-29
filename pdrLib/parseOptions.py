@@ -317,8 +317,8 @@ class ConfigOptions(object):
             _config.set('Logging options', _fileNameFieldsToChange, _tmpValue)
 
         # Pixel scales
-        _imageNameFields = [['fuvImage', 'FUV_Pixel_Scale'],
-                           ['hiImage', 'HI_Pixel_Scale']]
+        _imageNameFields = [['fuvImage', 'FUV_Pix_Scale'],
+                           ['hiImage', 'HI_Pix_Scale']]
         for _imageNameField, _scaleNameField in _imageNameFields:
             _image = self.requestInput(_imageNameField)
             _config.set('Images', _imageNameField, _image)
