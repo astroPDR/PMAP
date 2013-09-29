@@ -37,10 +37,7 @@ def getRhoRG(configOpts, fluxFUVTable, hiData, logger):
     dist = configOpts['distance']
     header = pf.getheader(configOpts['fuvImage'])
     wcsFUV = pw.WCS(header)
-    try:
-        pix_size = np.array([np.abs(wcsFUV.wcs.cd[0, 0]), np.abs(wcsFUV.wcs.cd[1, 1])]) * 3600
-    except:
-        pix_size = np.abs(wcsFUV.wcs.cdelt[0:2]) * 3600
+    pix_size = configOpts['FUV_Pix_Scale']
 
     if configOpts['apVersionSimple'] == '0.2.4':
         dataRho = table.Table(None,

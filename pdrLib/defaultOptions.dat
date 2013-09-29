@@ -144,10 +144,6 @@ joinRegions = False
 # [required]
 fluxContrast = True
 
-# Parsecs per pixel. If present, overrides the WCS information.
-# Deprecated. Must disappear in the next version.
-scale =
-
 # Idem for the peak value [required]
 peakContrast = True
 

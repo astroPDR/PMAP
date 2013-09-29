@@ -23,7 +23,6 @@ import numpy as np
 import os
 from pdrLib import pf
 import Regions
-from Error import raiseError
 
 
 def calcAngDist(coords1, coords2):
@@ -111,21 +110,7 @@ def checkFUV(options, logger):
 
     logger.write('Getting close regions ... ', newLine=True, doLog=False)
 
-    if options['scale'] is not None:
-        scalePc = options['scale']
-    else:
-        try:
-            try:
-                scaleDeg = np.abs(hduImage[0].header['CD1_1'])
-            except:
-                scaleDeg = np.abs(hduImage[0].header['CDELT1'])
-        except:
-            raiseError('Pixel scale cannot be calculated. Use the scale parameter.')
-
-        try:
-            scalePc = 2.0 * options['distance'] * 1e6 * np.tan(0.5 * scaleDeg * np.pi / 180.)
-        except:
-            raiseError('Distance to the galaxy not defined.')
+    scalePc = options['FUV_PcPerPixel']
 
     minNumPixels = options['minDistance'] / scalePc
 

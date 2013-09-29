@@ -10,7 +10,7 @@ These functions extract the HI data around FUV regions and
 measures the HI flux.
 """
 
-from . import at, pf, pw
+from . import at
 from Error import raiseError, raiseWarning
 from extractFromCoords import extractFromCoords
 import os
@@ -70,16 +70,9 @@ def getHIFlux(configOpts, fluxFUVTable, logger):
         createHIMosaic = configOpts['createHIMosaic']
 
     # We calculate how many pixels are the physical size of the region
-    try:
-        pixSize = np.array([np.abs(wcsHI.wcs.cd[0, 0]),
-                            np.abs(wcsHI.wcs.cd[1, 1])]).mean
-    except:
-        pixSize = np.array(np.abs(wcsHI.wcs.cdelt[0:2])).mean()
-
-    distance = float(configOpts['distance'])
     physSize = float(configOpts['HIRegSize'])
 
-    scalePc = 2 * distance * np.tan(np.deg2rad(pixSize / 2.)) * 1e6
+    scalePc = configOpts['HI_PcPerPixel']
     size = int(np.ceil(physSize / scalePc))
 
     dataHI, extractedPaths = extractFromCoords(hduHI, wcsHI, fluxFUVTable, root='HIRegs/HIReg',
