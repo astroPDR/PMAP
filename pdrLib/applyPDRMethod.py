@@ -54,8 +54,9 @@ def getRhoRG(configOpts, fluxFUVTable, hiData, logger):
     incl = configOpts['incl']
     dist = configOpts['distance'] * 1e6  # in Mpc but we want pc here
     ext = configOpts['ext']
-    # We estimate the error in rho to be of the order of half a pixel size
-    srho_fixed = dist / 3600. * np.pi / 180. * 0.5 * pix_size  # srho in parsec
+
+    # We estimate the error in rho to be of the order of sho_error times the pixel size
+    srho_fixed = dist / 3600. * np.pi / 180. * configOpts['srho_error'] * pix_size  # srho in pc
 
     logger.write('Calculating Rho_HI, Rgal, G0 ...', newLine=True)
 
@@ -135,7 +136,7 @@ def dustToGas(configOpts, fluxFUVTable, hiData, dataRho, logger):
         if s == 0. and warningIssued is False:
             # Can add options of const or relative + value
             raiseWarning('Warning: using hardcoded values for sdd0.', logger, newLine=False)
-            s = 0.1
+            s = configOpts['sdd0_hardcoded']
             warningIssued = True
 
         dd0.append(d)
@@ -250,7 +251,7 @@ def calculateNTot(configOpts, data, logger):
     return data
 
 
-def filterData(data, logger):
+def filterData(data, configOpts, logger):
     """
     FILTER RESULTS
     These filters need to be carefully justified
@@ -263,17 +264,21 @@ def filterData(data, logger):
     logger.write('Results pre-filtering: %d' % len(data))
 
     # Removes HI patches beyond a certain point
-    filteredData = data[data['rhoHI'] < 500]  # plausibility cut-off
+    rho_cutOff = configOpts['rho_cutoff']
+    filteredData = data[data['rhoHI'] < rho_cutOff]  # plausibility cut-off
     # filteredData = data[data['RhoHI'] < 1000]
 
-    logger.write('Censoring rho_HI > 500 pc (plausilibity cut-off), ' +
+    logger.write('Censoring rho_HI > %.1f pc (plausilibity cut-off), ' % rho_cutOff +
                  'remaining %d' % len(filteredData))
 
-    filteredData = filteredData[filteredData['Contrast'] > 1]
-    logger.write('Censoring contrast < 1, remaining %d' % len(filteredData))
+    uvContrast_cutOff = configOpts['uvContrast_cutOff']
+    filteredData = filteredData[filteredData['Contrast'] > uvContrast_cutOff]
+    logger.write('Censoring contrast < %.1f, remaining %d' % (uvContrast_cutOff,
+                                                              len(filteredData)))
 
     # Filter the fake values where no dd0 data available
-    filteredData = filteredData[filteredData['dd0'] > 0.001]
+    dd0_cutOff = configOpts['dd0_cutOff']
+    filteredData = filteredData[filteredData['dd0'] > dd0_cutOff]
     logger.write('Filtering measurements without dd0 values, remaining %d' % len(filteredData))
 
     return filteredData
@@ -295,7 +300,7 @@ def applyPDRMethod(configOpts, fluxFUVTable, hiData, logger):
     # We calculate N(total)
     data = calculateNTot(configOpts, data, logger)
 
-    filteredData = filterData(data, logger)
+    filteredData = filterData(data, configOpts, logger)
 
     # Saves the data
     logger.write('Saving data ...', newLine=True)

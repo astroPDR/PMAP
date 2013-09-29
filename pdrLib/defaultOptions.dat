@@ -191,6 +191,29 @@ createHIMosaic = True
 hiBackground = None
 
 
+[PDR method]
+
+# This section contains hardcoded values for certain aspects of
+# the PDR method. Change only if you know what you are doing.
+
+# Error in rho [in pixels]. Default: half a pixel [required]
+srho_error: 0.5
+
+# Absolute error for sdd0 when it can not be determined [required]
+sdd0_hardcoded = 0.1
+
+# Plausibility cut-off. All regions at a distance from the UV source
+# larger than this will be rejected in data_results (they are still
+# saved in data_results_unfiltered). In parsecs. [required]
+rho_cutoff = 500
+
+# UV contrast cut-off [required]
+uvContrast_cutOff = 1.
+
+# dd0 cut-off [required]
+dd0_cutOff = 0.001
+
+
 [Dust-to-gas ratio]
 # Uncomment the appropriate options depending on the dusttype measurement.
 
