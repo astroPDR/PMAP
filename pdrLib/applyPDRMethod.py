@@ -55,7 +55,7 @@ def getRhoRG(configOpts, fluxFUVTable, hiData, logger):
     dist = configOpts['distance'] * 1e6  # in Mpc but we want pc here
     ext = configOpts['ext']
     # We estimate the error in rho to be of the order of half a pixel size
-    srho_fixed = dist / 3600. * np.pi / 180. * 0.5 * pix_size.mean()  # srho in parsec
+    srho_fixed = dist / 3600. * np.pi / 180. * 0.5 * pix_size  # srho in parsec
 
     logger.write('Calculating Rho_HI, Rgal, G0 ...', newLine=True)
 
