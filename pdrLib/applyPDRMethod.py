@@ -196,7 +196,7 @@ def collate(configOpts, fluxFUVTable, hiData, dataDust, logger):
                               dtypes=6*['f8'])
     else:
         fuvCols = table.Table(np.zeros((len(data), 6)),
-                              names=('aperture', 'mean_at_r', 'netflux', 'sflux', 'NTot', 'sNTot'),
+                              names=('aperture', 'mean_at_r', 'netflux', 'sflux', 'nTot', 'snTot'),
                               dtype=6*['f8'])
 
     data.add_columns(fuvCols.columns.values())
@@ -223,7 +223,7 @@ def collate(configOpts, fluxFUVTable, hiData, dataDust, logger):
     return data
 
 
-def calculateNTot(configOpts, data, logger):
+def calculatenTot(configOpts, data, logger):
     """
     Final step: Calculate n, sigma_n
     """
@@ -231,7 +231,7 @@ def calculateNTot(configOpts, data, logger):
     #Note: due to naming convention this routine is called calculateNTot but
     #in fact we calculate n, the total hydrogen volume density.
 
-    logger.write('Calculating N(total) ...')
+    logger.write('Calculating n(total) ...')
 
     # ext, dist already extracted from configOpts in rho_HI section
     ext = configOpts['ext']
@@ -240,11 +240,11 @@ def calculateNTot(configOpts, data, logger):
     for ii in range(len(data)):
         # print data['flux'][ii], ext, dist, data['dd0'][ii], data['rhoHI'][ii], data['NHI'][ii]
 
-        data['NTot'][ii] = PDRmodel(
+        data['nTot'][ii] = PDRmodel(
             data['flux'][ii], ext, dist, data['dd0'][ii], data['rhoHI'][ii], data['NHI'][ii])
 
-        data['sNTot'][ii] = errors(
-            data['NTot'][ii], data['flux'][ii], data['sflux'][ii], data['rhoHI'][ii],
+        data['snTot'][ii] = errors(
+            data['nTot'][ii], data['flux'][ii], data['sflux'][ii], data['rhoHI'][ii],
             data['sRhoHI'][ii], data['dd0'][ii], data['sdd0'][ii], data['NHI'][ii],
             data['sNHI'][ii], ext, logfile=False)
 
@@ -298,7 +298,7 @@ def applyPDRMethod(configOpts, fluxFUVTable, hiData, logger):
     data = collate(configOpts, fluxFUVTable, hiData, dataDust, logger)
 
     # We calculate N(total)
-    data = calculateNTot(configOpts, data, logger)
+    data = calculatenTot(configOpts, data, logger)
 
     filteredData = filterData(data, configOpts, logger)
 
