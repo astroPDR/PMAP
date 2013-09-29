@@ -12,8 +12,9 @@ First, try to read the flux file. Otherwise, calculate the fluxes. Output: fluxt
 '''
 
 import os
-from .. import at, pf, pw
+from .. import at
 from fluxes import fuv_flux
+from pdrLib import open_image
 
 
 def getUVFlux(configOpts, logger):
@@ -47,8 +48,9 @@ def getUVFlux(configOpts, logger):
     # cumulflux, netflux, sflux
 
     fuvImage = configOpts['fuvImage']
-    hduFUV = pf.open(fuvImage)
-    fuvWCS = pw.WCS(hduFUV[0].header)
+    fuvWCS, dataFUV, hduFUV = open_image(fuvImage)
+    # hduFUV = pf.open(fuvImage)
+    # fuvWCS = pw.WCS(hduFUV[0].header)
     fuvPeaksFile = configOpts['fuvPeaksFile']
 
     logger.write('No previous flux measurements.')
@@ -85,5 +87,7 @@ def getUVFlux(configOpts, logger):
     #                    '{1.cumulflux:7.5e}, {1.netflux:7.5e}, ' +
     #                    '{1.sflux:7.5e}\n'.format(uvcoords[n], fluxTable[n]))
     # fluxfile.close()
+
+    del fuvWCS, dataFUV, hduFUV
 
     return fluxTable
