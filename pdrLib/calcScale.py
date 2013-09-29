@@ -20,14 +20,15 @@ v0.1: 26 Sep 2013 J. Sánchez-Gallego
 
 """
 
-from . import pf, pw, raiseError
+from . import raiseError
 import numpy as np
+from pdrLib import open_image
 
 
 def calcScale(fileName):
 
-    header = pf.getheader(fileName)
-    wcs = pw.WCS(header)
+    wcs, data, hdu = open_image(fileName)
+
     try:
         pixSize = np.array([np.abs(wcs.wcs.cd[0, 0]), np.abs(wcs.wcs.cd[1, 1])]) * 3600
     except:

@@ -22,6 +22,7 @@ from clfind2d import clfind2d
 from . import pf
 import numpy as np
 import os
+from pdrLib import open_image
 
 
 def calcBack(data, sigma=3.):
@@ -56,7 +57,8 @@ def calcBackground(image, logger, verbose=True):
 
     logger.write('Automatic estimation of the background level using clfind2d')
 
-    imageData = pf.open(image)
+    wcsImage, data, imageData = open_image(image)
+    # imageData = pf.open(image)
     data = imageData[0].data
     data[data == 0.0] = np.nan
 
@@ -68,7 +70,8 @@ def calcBackground(image, logger, verbose=True):
     tmpMask = tempfile.NamedTemporaryFile(dir='./', delete=False)
     tmpLevels = np.linspace(10.0 * tmpBackgroundLevel, np.nanmax(data), 20)
 
-    clfind2d(image, tmpMask.name, tmpLevels, log=False, nPixMin=20, verbose=verbose, rejectZero=True)
+    clfind2d(image, tmpMask.name, tmpLevels, log=False, nPixMin=20, verbose=verbose,
+             rejectZero=True)
 
     logger.write('Step 3) Calculating residuals', newLine=True, doLog=False)
 
@@ -77,7 +80,8 @@ def calcBackground(image, logger, verbose=True):
     imageData[0].data[mask] = np.nan
 
     backLevel = calcBack(imageData[0].data)
-    logger.write('Step 4) Background level of the residuals = %.4E' % backLevel, newLine=True, doLog=False)
+    logger.write('Step 4) Background level of the residuals = %.4E' % backLevel, newLine=True,
+                 doLog=False)
 
     if os.path.exists(tmpMask.name):
         os.remove(tmpMask.name)

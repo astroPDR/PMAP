@@ -22,6 +22,7 @@ import glob
 import shutil
 from astropy import coordinates as coords
 from astropy import units
+from pdrLib import open_image
 
 
 def copySExFiles(logger):
@@ -61,8 +62,7 @@ def getHIFlux(configOpts, fluxFUVTable, logger):
     # If the data file does not exist ...
 
     imageHI = configOpts['hiImage']
-    hduHI = pf.open(imageHI)
-    wcsHI = pw.WCS(hduHI[0].header)
+    wcsHI, dataHI, hduHI = open_image(imageHI)
 
     if 'createHIMosaic' not in configOpts:
         createHIMosaic = False

@@ -22,11 +22,12 @@ images.
 import os
 import numpy as np
 from Error import raiseError
-from . import pf
+# from . import pf
 from calcBackground import calcBackground
 from clfind2d import clfind2d
 from checkFUV import checkFUV
 from createCatalog import createCatalog
+from pdrLib import open_image
 
 
 def checkCLFindOptions(root, configOpts):
@@ -63,7 +64,8 @@ def calcParameters(root, configOpts, logger, sigmaSep=3.):
     configOpts[root + 'lLevel'] = lLevel
 
     if configOpts[root + 'hLevel'] in [None, 'None', 'N', '', '-1', -1.]:
-        hLevel = np.nanmax(pf.getdata(image)) - background
+        wcs, data, hdu = open_image(image)
+        hLevel = np.nanmax(data) - background
         configOpts[root + 'hLevel'] = hLevel
 
     hLevel = configOpts[root + 'hLevel']
@@ -150,7 +152,8 @@ def getRegions(configOpts, logger):
 
             logger.write('FUV: Running in interactive mode ... ', newLine=True)
 
-            data = pf.getdata(fuvImage)
+            # data = pf.getdata(fuvImage)
+            wcs, data, hdu = open_image(fuvImage)
             logger.write('Image statistics', newLine=True)
             logger.write('Max: %9.3e' % np.nanmax(data))
             logger.write('Min: %9.3e' % np.nanmin(data))

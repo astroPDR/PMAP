@@ -34,6 +34,7 @@ from string import strip
 # for flux specifically and plot routines in general
 from matplotlib import pylab as plt
 import math as m
+from Error import raiseError
 
 """ Default file operations """
 
@@ -99,22 +100,33 @@ def open_image(filename):
     # return astWCS.WCS(image.hdr, mode="pyfits"), image
     image = pf.open(filename)
     header = image[0].header
+
+    keys = ['CTYPE', 'CDELT', 'CRVAL', 'CRPIX', 'CROTA']
+
     if header['NAXIS'] != 2:
-        print 'Attempting to extract image' # Replace with proper log!
-        print 'If this fails, please pre-flatten the image to 2D'
-        slicestring = ''
-        for n in range(3,header['NAXIS']+1):
-            #Remove all keywords related to axes > 2
-            slicestring += '0,'
-            for k in header.keys():
-                if k.find(str(n)) != -1: del header[k]
-        header['NAXIS'] = 2
-        #Select only the RA and DEC axes
-        data = eval('image[0].data['+slicestring+':,:]')
-        #Remember that pyfits axes are read inverted; e.g. STOKES, MOM0, DEC, RA
+        try:
+            # print 'Attempting to extract image' # Replace with proper log!
+            # print 'If this fails, please pre-flatten the image to 2D'
+            slicestring = ''
+            for n in range(3, header['NAXIS'] + 1):
+                #Remove all keywords related to axes > 2
+                slicestring += '0,'
+                for k in keys:
+                    if k + str(n) in header:
+                        del header[k + str(n)]
+            header['NAXIS'] = 2
+            #Select only the RA and DEC axes
+            data = eval('image[0].data['+slicestring+':,:]')
+            #Remember that pyfits axes are read inverted; e.g. STOKES, MOM0, DEC, RA
+            image[0].header = header
+            image[0].data = data
+        except:
+            raiseError('Trying to flatten image %s to 2-D failed. ' % filename +
+                       'Please, do it manually.')
     else:
         data = image[0].data
-    return pw.WCS(header), data
+
+    return pw.WCS(header), data, image
 
 
 def logdump(filename, line):

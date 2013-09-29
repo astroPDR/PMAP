@@ -22,7 +22,7 @@ Usage: clfind2d.py fileIn levels [-l|--nolog] [-o|--out]
 
 
 import numpy as np
-from pdrLib import pf
+from pdrLib import open_image, pf
 import sys
 import os
 from time import strftime, gmtime, clock
@@ -173,8 +173,10 @@ def clfind2d(file, mask, levels, log=True, nPixMin=20, verbose=True, rejectZero=
     printLog('----------------------------------------------------------------\n', logFile, verbose=verbose)
 
 # Loads the FITS image
-    data = pf.getdata(file)
-    header = pf.getheader(file)
+    wcs, data, hdu = open_image(file)
+    header = hdu[0].header
+    # data = pf.getdata(file)
+    # header = pf.getheader(file)
 
     iSize, jSize = data.shape
 

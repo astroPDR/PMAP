@@ -3,8 +3,9 @@
 import subprocess  # to call SExtractor
 # Ferguson's code to read a SExtractor catalog
 from sextutils import se_catalog
-from . import pf, pw
+# from . import pf, pw
 import numpy as np
+from pdrLib import open_image
 
 # Run SExtractor, extract the results
 # SExtractor requires files default.conv default.nnw pdrSExout.param and HIclumps.sex
@@ -17,7 +18,8 @@ import numpy as np
 
 
 def call_SEx(fitsfile):
-    # The HIclumps.sex config file comes with this software. It does not need to be customized further.
+    # The HIclumps.sex config file comes with this software.
+    # It does not need to be customized further.
     # Output catalog: HIclumps.cat
     err = subprocess.Popen(["sex", fitsfile, '-c',  'HIclumps.sex'], stdout=subprocess.PIPE,
                            stderr=subprocess.PIPE).wait()
@@ -45,8 +47,8 @@ def read_secat(catfile, fitsfile):
         return None
 
     records = len(catalog.alphapeak_j2000)
-    hduImage = pf.open(fitsfile)
-    wcs = pw.WCS(hduImage[0].header)
+    wcs, data, hduImage = open_image(fitsfile)
+
     for n in range(records):
         a, d = catalog.alphapeak_j2000[n], catalog.deltapeak_j2000[n]
         x, y = wcs.wcs_world2pix(np.array([[a, d]]), 0)[0]
@@ -62,4 +64,5 @@ def read_secat(catfile, fitsfile):
         # print "Warning: hardcoding sNHI at 0.1"
         # logdump(logfile, "{} {} {}\n".format(a, d, maxHI))
 
+    del data, hduImage, wcs
     return patchtable  # calling function administrates PDRID
