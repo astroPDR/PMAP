@@ -1,21 +1,28 @@
 #! /usr/bin/env python
 # encoding: utf-8
-#
-# Usage: PMAP.py [configfile]
-# This is the main pipeline script aiming to provide a one-stop PDR method solution.
-# Several steps will be skipped if certain files already exist from previous runs.
-# A quick plot is produced with the results.
-# 2011-08-04: now uses python2.7 because of Pyraf (for flux calculation)
-#
-# JSH 2010-10-28
-#
-#     previous edit: 2011-10-26
-#     last edit: 2012-02-14 -- fedora bug w/ formatting see pdrLib.py also
-#
-#     New edit: 2013-04-13 by José R. Sánchez-Gallego
-#         -- General clean-up and optimisation
-#
-#     2013-04-26 update logging to use fancyPrint << not tested
+"""
+PMAP.py
+
+This file is the main routine for the PMAP pipeline.
+The pipeline can be called using the command
+
+python PMAP.py <configFile>
+
+A new, empty configuration file can be created using
+
+python PMAP.py -c <configFile>
+
+or a new configuration file can be created interactively
+with
+
+python PMAP.py -i <configFile>
+
+In the latter case, the pipeline will prompt for the
+minimum needed values to run the code.
+
+Create by Jonathan Heiner and José Sánchez-Gallego.
+
+"""
 
 import pdrLib as pdr
 import os
