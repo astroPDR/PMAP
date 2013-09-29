@@ -107,16 +107,14 @@ def fuv_flux(imageName, header, coords, configOpts, logger):
     """
 
     results = []  # [[] for dummy in xrange(len(columns))]
-    try:
-        pix_size = np.array([np.abs(header.wcs.cd[0, 0]), np.abs(header.wcs.cd[1, 1])]) * 3600
-    except:
-        pix_size = np.abs(header.wcs.cdelt[0:2]) * 3600
     #pix_area = pix_size[0] * pix_size[1]
+
+    pix_size = configOpts['FUV_Pix_Scale']
 
     # logger.write('Number of coordinates: {0}'.format(len(coords)), newLine=True, doPrint=True)
 
     # Determine flux for all coordinates
-    maxrad_pix = int(round(configOpts['maxrad'] / pix_size[0]))  # Global maximum radius (in pix)
+    maxrad_pix = int(round(configOpts['maxrad'] / pix_size))  # Global maximum radius (in pix)
     coordsPix = np.zeros([len(coords), 2], np.float)
 
     for p in range(len(coords)):
@@ -136,7 +134,7 @@ def fuv_flux(imageName, header, coords, configOpts, logger):
     # logger.write('R (pix) Area (pix) Flux (image units) Flux/pix', doPrint=True)
 
     genericFluxResults = generic_flux(imageName, coordsPix, maxrad_pix, logger,
-                                      pix_size=pix_size[0], contrast=configOpts['contrast'],
+                                      pix_size=pix_size, contrast=configOpts['contrast'],
                                       fluxerror=configOpts['fluxerror'],
                                       refine=configOpts['refineFlux'],
                                       nRefine=configOpts['refineFactor'])
