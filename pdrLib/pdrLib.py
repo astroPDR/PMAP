@@ -181,7 +181,7 @@ def contrast(flux_raw, mean_at_r, rho, D_gal):
 
 
 def errors(n, flux, sF, rho, srho, dd0, sdd0, NHI, sNHI, ext, logfile=False):
-    # Formulas described in Heiner et al. 2008a
+    # Formulas described in Heiner et al. 2008a; updated Heaton09
     # All errors come in as absolute errors
     #n = PDRmodel(F, ext, dd0, rho, NHI)
     # Some reworking to minimize number loss and calculation
@@ -198,7 +198,7 @@ def errors(n, flux, sF, rho, srho, dd0, sdd0, NHI, sNHI, ext, logfile=False):
         # case
         one = 1e6
     two = 4 * (srho / rho) ** 2
-    three = (-1 / (2 * dd0) - N * expfrac) ** 2 * sdd0 ** 2
+    three = (-0.3 / dd0 - N * expfrac) ** 2 * sdd0 ** 2
     four = (-dd0 * expfrac * sN) ** 2
     sig_n = n * m.sqrt(one + two + three + four)
     if (n == 0.):
