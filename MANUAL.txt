@@ -84,6 +84,12 @@ snTot
   Estimated uncertainty in nTot
   
 
+Miscellaneous comments:
+
+- Some intermediate results are saved and will be re-used if the pipeline is run again. Example: FUV source
+  detection is successful, but there is a problem with the HI file, causing the pipeline to crash.
+  After fixing the HI file, the pipeline can be run again and FUV source detection does not have to be repeated.
+  To force recalculation, (re)move the relevant intermediate output file.
   
 
   
