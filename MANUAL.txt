@@ -1,0 +1,89 @@
+PMAP Manual
+
+v1: 2013-11-05: first version
+
+Download the source to a directory of your choosing (currently no install script is provided).
+Assuming the dependencies are met, the pipeline can be run by invoking (PMAP_dir)/PMAP.py directly,
+where PMAP_dir is the directory containing the source.
+
+The minimum science files required are: FUV image & HI image. Optional: Oxygen abundance or metallicity map.
+Certain physical parameters are required in the configuration file per target (see below).
+
+1) Run: (PMAP_dir)/PMAP.py -c configFile
+This creates a configuration file configFile (can be any name). The file contains default values, but
+has to be edited to add: target distance, foreground extinction, position angle, inclination, galaxy central coordinates,
+R25 radius and a dust model (e.g. power law slope in 12+log(O/H) dex per kpc). 
+Additionally, the input file names are needed as well as scaling factors for each file. This allows the use
+of, for example, a GALEX FUV file and a THINGS moment 0 map without pre-processing.
+
+2) Run the pipeline: (PMAP_dir)/PMAP.py configFile
+The pipeline will run and produce .csv and .vot files.
+The main results file is called configFile_Results.csv by default.
+No plotting routines are provided, but the results may be read by, for example, TopCat (the VO Table).
+At this time, the csv file is not technically comma-separated but space-separated, which should not pose
+a problem as long as upon reading the delimiter can be specified.
+Erroneous input parameters are usually easily spotted (if they didn't crash the pipeline already) since the output values
+will be clearly unphysical.
+
+Output values:
+
+PDRID
+  Internal numbering of candidate PDRs
+
+HIID
+  Each unique PDR may have multiple HI patches, numbered in HIID
+  
+rhoHI
+  Separation between the central UV source and the HI patch, cut off at the value specified in the
+  configuration file (500 pc by default)
+
+sRhoHI
+  Estimated error in rhoHI (fixed by default)
+  
+Rgal
+  Galactocentric radius of the PDR in kpc
+  
+G0
+  Incident UV flux G0 calculated at the location of each HI patch (unique for each HIID)
+  
+Contrast
+  Source contrast of G0 / background UV level, estimated from the background level at the first local
+  minimum after the source flux has dropped at least 50% (percentage value configurable)
+
+dd0
+  Dust-to-gas ratio derived from the input dust model
+  
+sdd0
+  Error in dd0
+  
+NHI
+  HI column density at the HI patch location
+  
+sNHI
+  Uncertainty in NHI (fixed; configurable)
+  
+aperture
+  Aperture used to measure the UV flux in arcsec: the first local minimum after the source flux
+  has dropped at least 50% (configurable)
+  
+mean_at_r
+  Mean flux value at the aperture radius used to calculate the source contrast (in UV map input units)
+  
+flux
+  FUV flux (UV map input units). Note that if the input map is in default GALEX counts per second, the
+  configurable conversion factor should convert the map values to standard flux units of
+  erg sec-1 cm-2 Angstrom-1. However, G0 is dimensionless.
+  
+sflux
+  Error in the FUV flux
+  
+nTot
+  Total hydrogen volume density (cm-3)
+  
+snTot
+  Estimated uncertainty in nTot
+  
+
+  
+
+  
