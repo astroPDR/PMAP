@@ -173,6 +173,23 @@ class ConfigOptions(object):
 
         return
 
+    def checkAstroQuery(self):
+        from distutils.version import LooseVersion
+
+        import warnings
+        warnings.simplefilter('ignore')
+        try:
+            # This is only assured to work with astroquery >= 0.2
+            # so we check to make sure that it is installed
+            import astroquery
+            _versionAQ = astroquery.__version__
+            if LooseVersion(_versionAQ) < LooseVersion('0.2'):
+                return 1
+        except:
+            # If there is no astroquery installed at all
+            return 0
+        return 2
+
     def requestInput(self, text, default=None):
         """
         Recursively request an input until an acceptable
@@ -209,32 +226,17 @@ class ConfigOptions(object):
         Otherwise, returns a tuple (distance, pa, incl, c_RA, c_DEC, R25)
         """
 
-        from distutils.version import LooseVersion
-
-        import warnings
-        warnings.simplefilter('ignore')
-        try:
-            # This is only assured to work with astroquery >= 0.2
-            # so we check to make sure that it is installed
-            import astroquery
-            _versionAQ = astroquery.__version__
-            if LooseVersion(_versionAQ) < LooseVersion('0.2'):
-                return 1
-        except:
-            # If there is no astroquery installed at all
-            return 0
-
         from astroquery.simbad import Simbad
 
-        Simbad.add_votable_fields('dim', 'rvel')
+        Simbad.add_votable_fields('dim', 'rv_value')
         try:
             _table = Simbad.query_object(galaxy)
         except:
-            return 2
+            return None
 
         # If no data is found for the galaxy
         if len(_table) == 0:
-            return 2
+            return None
 
         _ra = _table['RA'][0]
         try:
@@ -262,7 +264,7 @@ class ConfigOptions(object):
         if _incl == '':
             _incl = None
 
-        _vrec = _table['RVel_Rvel'][0]
+        _vrec = _table['RV_VALUE'][0]
         if _vrec == '':
             _vrec = None
             _distance = None
@@ -278,6 +280,48 @@ class ConfigOptions(object):
                 _r25Kpc = _distance * np.arctan(np.deg2rad(_majAxis / 2. / 60.)) * 1e3
 
         return (_distance, _pa, _incl, _raHMS, _decDMS, _r25Kpc)
+
+    def _getExtinction(self, ra, dec):
+
+        defFUVext = None
+        if self._useAQ is True:
+            from astroquery.irsa_dust import IrsaDust
+            import StringIO
+
+            # Suppresses stdout to avoid IrsaDust showing the progress of
+            # the download.
+            oldStdout = sys.stdout
+            sys.stdout = StringIO.StringIO()
+
+            try:
+                extTable = IrsaDust.get_extinction_table('{0} {1} Equatorial J2000'.format(
+                    ra, dec))
+
+                defFUVext = np.round(
+                    7.9 * (
+                        extTable[extTable['Filter_name'] == 'CTIO B']['A_SandF'][0] -
+                        extTable[extTable['Filter_name'] == 'CTIO V']['A_SandF'][0]),
+                    3)
+
+            except:
+
+                defFUVext = None
+
+            sys.stdout = oldStdout
+
+            if defFUVext is None:
+                print(cm.Fore.RED + 'astroquery failed. Please, insert a value manually.')
+            else:
+                print('It worked! The estimated value for FUV foreground extinction is')
+                print('7.9 E(B-V) = {0:.3f} [Gil de Paz et al. (2007)]'.format(defFUVext))
+
+        # Now we ask the user the real extinction value to use
+
+        print(cm.Style.RESET_ALL)
+
+        userExt = self.requestInput('FUV foreground extinction', default=defFUVext)
+
+        return userExt
 
     def createConfigFileInteractive(self):
         """
@@ -299,7 +343,22 @@ class ConfigOptions(object):
 
         # self.clearComments(_config)
 
-        print(cm.Fore.YELLOW + '\nThis process will ask you the minimum parameter needed to run')
+        # Checks if astroquery is installed
+        astroq = self.checkAstroQuery()
+        if astroq == 0:
+            print(cm.Fore.RED + '\nAstroquery is not installed. The script will not')
+            print('be able to parse data from internet.' + cm.Style.RESET_ALL)
+            self._useAQ = False
+        elif astroq == 1:
+            print(cm.Fore.RED + '\nAstroquery is outdated. The script will not')
+            print('be able to parse data from internet. Please, consider updating it' +
+                  cm.Style.RESET_ALL)
+            self._useAQ = False
+        else:
+            self._useAQ = True
+
+        print(cm.Fore.YELLOW +
+              '\nThis script will request from you the essential parameters needed to run')
         print('the pipeline, and will generate a configuration file using')
         print('those values.\n' + cm.Style.RESET_ALL)
 
@@ -331,10 +390,10 @@ class ConfigOptions(object):
 
         # Conversion factors
         print(cm.Fore.YELLOW + '\nInput the following conversion factors for the images.')
-        print ('FUV: CPS to erg sec-1 cm-2 A-1')
-        print ('HI: CPS to cm-2')
+        print('FUV: CPS to erg sec-1 cm-2 A-1')
+        print('HI: CPS to cm-2')
         print('The default values proposed are the conversion factor for GALEX and THINGS')
-        print ('respectively. Use with caution.' + cm.Style.RESET_ALL)
+        print('respectively. Use with caution.' + cm.Style.RESET_ALL)
 
         _fuvScale = self.requestInput('FUVscale', default='1.40e-15')
         _config.set('Images', 'FUVscale', _fuvScale)
@@ -348,41 +407,38 @@ class ConfigOptions(object):
         # Asks for the name of the galaxy (in case is different form the filaname root)
         _galName = self.requestInput('Galaxy name', default=_root)
 
-        # Tries to run astroquery. If something fails, _galParamsReturn=2 (unknown error)
-        try:
+        # Tries to run astroquery.
+        if self._useAQ is True:
             _galParamsReturn = self.getGalParams(_galName)
-        except:
-            _galParamsReturn = 2
 
-        # Depending on the flag received from self.getGalParams
-        sys.stdout.write(cm.Fore.YELLOW)
-        sys.stdout.flush()
-        if _galParamsReturn == 0:
-            # No data obtained. Makes _galParams = None so that the user needs
-            # to input all the values
-            print ('Astroquery is not installed. No parameters downloaded.')
-            _galParams = (None, None, None, None, None, None)
-        elif _galParamsReturn == 1:
-            print ('Astroquery is present but a version >= 0.2 is required.')
-            _galParams = (None, None, None, None, None, None)
-        elif _galParamsReturn == 2:
-            print ('There was an unknown error and the parameters could not be downloaded.')
-            _galParams = (None, None, None, None, None, None)
+            # Depending on the flag received from self.getGalParams
+            sys.stdout.write(cm.Fore.YELLOW)
+            sys.stdout.flush()
+            if _galParamsReturn is None:
+                print ('\nThere was an unknown error and the parameters could not be downloaded.')
+                _galParams = (None, None, None, None, None, None)
+            else:
+                # If _galParamsReturn is not and int, it means that getGalParams has returned
+                #  a tuple with the parameters. We make _galParams = _galParamsReturn
+                print('\nThe parameters were successfully downloaded and will')
+                print('be shown as default options.')
+                _galParams = _galParamsReturn
+            print(cm.Style.RESET_ALL)
+
         else:
-            # If _galParamsReturn is not and int, it means that getGalParams has returned
-            #  a tuple with the parameters. We make _galParams = _galParamsReturn
-            print('The parameters were successfully downloaded and will')
-            print('be shown as default options.')
-            _galParams = _galParamsReturn
-        print(cm.Style.RESET_ALL)
+            _galParams = (None, None, None, None, None, None)
 
         _galFields = ['distance', 'pa', 'incl', 'c_RA', 'c_DEC', 'R25']
         for _nn, _galField in enumerate(_galFields):
             _tmpValue = self.requestInput(_galField, default=_galParams[_nn])
             _config.set('Physical properties', _galField, str(_tmpValue))
 
-        _tmpValue = self.requestInput('ext', default=None)
-        _config.set('Physical properties', 'ext', str(_tmpValue))
+        print(cm.Fore.YELLOW + '\nI\'ll try to connect to IRSA to get th extinction value.' +
+              cm.Style.RESET_ALL)
+        c_RA = _config.get('Physical properties', 'c_RA')
+        c_Dec = _config.get('Physical properties', 'c_DEC')
+        _ext = self._getExtinction(c_RA, c_Dec)
+        _config.set('Physical properties', 'ext', str(_ext))
 
         print('')
 
@@ -395,6 +451,7 @@ class ConfigOptions(object):
         _config.set('FUV', 'fuvSigma', _fuvSigma)
 
         print('')
+
         # Dust-to-gas-ratio
 
         # Before removing the default dust-gas section (which contains the three method)
