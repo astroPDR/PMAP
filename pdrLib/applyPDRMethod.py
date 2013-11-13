@@ -127,7 +127,7 @@ def dustToGas(configOpts, fluxFUVTable, hiData, dataRho, logger):
 
         param_array = [[pdrTable['RA'], pdrTable['Dec']], [c_RA, c_DEC],
                        dustmodel, [pa, incl, dist * 1e-3,
-                                   Rgal, wcsFUV]]
+                                   Rgal], wcsFUV, logger]
 
         # print param_array
         #! should separate dust model from calculating R
@@ -157,7 +157,7 @@ def dustToGas(configOpts, fluxFUVTable, hiData, dataRho, logger):
 def collate(configOpts, fluxFUVTable, hiData, dataDust, logger):
     """
     Compiles all the data from different tables and creates a single one. Two
-    additional fields are created (empty) for NTot and SNTot
+    additional fields are created (empty) for nTot and SnTot
     """
 
     logger.write('Compiling all data ... ', newLine=True)
@@ -192,7 +192,7 @@ def collate(configOpts, fluxFUVTable, hiData, dataDust, logger):
     # Adds columns for the FUV data and NTot
     if configOpts['apVersionSimple'] == '0.2.4':
         fuvCols = table.Table(np.zeros((len(data), 6)),
-                              names=('aperture', 'mean_at_r', 'netflux', 'sflux', 'NTot', 'sNTot'),
+                              names=('aperture', 'mean_at_r', 'netflux', 'sflux', 'nTot', 'snTot'),
                               dtypes=6*['f8'])
     else:
         fuvCols = table.Table(np.zeros((len(data), 6)),

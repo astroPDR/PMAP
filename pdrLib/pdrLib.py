@@ -252,49 +252,64 @@ def determine_dust(scenario, p):
 
     def map():
         # p: [[RA,DEC],[center_RA,center_DEC], [header, image, solar, err_img],
-        # [pa, incl, D_gal(kpc), Rgal], astWCS header]
+        # [pa, incl, D_gal(kpc), Rgal], astWCS header, logger]
+        # 2013-11-13: updated p to include logger
 
         # Returns the pixel value at a given RA, DEC
         # p: [[RA, DEC], astWCS header, numpy image array]
         # print "Converting to d/d0 with solar 12+log(O/H)={0}".format(p[2][2])
 
-        r, d = astCoords.hms2decimal(
-            strip(p[0][0]), " "), astCoords.dms2decimal(strip(p[0][1]), " ")
-        oh = soh = 0
-        if p[2][0].coordsAreInImage(r, d):
-            x, y = np.round(p[2][0].wcs2pix(r, d))
-            # astLib returns indices for the image array; 1 lower in value than DS9 x, y
-        # Assume the image is the first entry in the hdulist
-        # PyFits Handbook p. 16: slow axis first, last axis last,
+        # 2013-11-13 re-write to use astropy only
+        #            todo: deal with logger (needs to be passed)
+        #                  perhaps as last element of p
+        from astropy import coordinates as coord
+        from astropy import wcs
 
-        #!At this time we assume a 12+log(O/H) map so the conversion is hardcoded and should be parameters!!:
-            oh = p[2][1][y, x]
-            if (m.isnan(oh) or oh == 0):
-    # Even if p[2][0] is in image, this box might not be
+        logger = p[5]
+
+        #Ultimately we should update the use of p so we don't have to
+        #convert locally
+        coordstring = p[0][0].tostring() + ' ' + p[0][1].tostring()
+        logger.write(coordstring, newLine=False)
+        location = coord.ICRSCoordinates(coordstring)
+
+        w = p[4] #contains the header object
+        r, d = (location.ra.degrees, location.dec.degrees)
+        x, y = np.round(w.wcs_world2pix([[r, d]], 0))[0] #second argument is base 0; set to 1 if you want DS9-like values
+        ohdata = p[2][1]
+        sohdata= p[2][3]
+        ymax, xmax = ohdata.shape
+        #Need to check that the coordinates are in fact inside the
+        #image since Python will accept negative indices
+        oh = 0
+        soh = 0.0001 #bit of a hack to distinguish between hardcoded soh
+        #If an oh value is found soh will also be non-zero
+        if (x < 0 or x >= xmax) or (y < 0 or y >= ymax):
+            logger.write("Warning: coordinate outside map; setting 0", newLine=False)
+        else:
+            oh = ohdata[y, x]
+            if np.isnan(oh) or oh == 0:
                 try:
                     # If there is no value at this location we will take the
                     # highest value within a small box and warn about it
                     # (ignore NaNs)
                     oh = np.nanmax(p[2][1][y - 2:y + 3, x - 2:x + 3])
                 except:
-                    print "Tried to scan outside image; setting oh to 0"
+                    logger.write("Tried to scan outside image; setting oh to 0", newLine=False)
                 if (m.isnan(oh) or oh == 0):
-                    print "Warning: no value found"
+                    logger.write("Warning: no value found", newLine=False)
                 else:
                     soh = p[2][3][y - 2:y + 3, x - 2:x + 3].ravel()[
                         np.nanargmax(p[2][1][y - 2:y + 3, x - 2:x + 3])]
                     # Note that the proper index applies to a subselection of
                     # both images ^
-                    print "Read 12+log(O/H) = {} +/- {} -- maximum value nearby".format(oh, soh)
+                    logger.write("Read 12+log(O/H) = {} +/- {} -- maximum value nearby".format(oh, soh), newLine=False)
             else:
                 soh = p[2][3][y, x]
-                print "Read 12+log(O/H) = {} +/- {}".format(oh, soh)
-        else:  # coordinate is not on the map
-            print "Warning: coordinate outside map; setting 0"
-        #R = separation(p[0][0], p[0][1], p[1][0], p[1][1], p[3][0], p[3][1], p[3][2], p[4])
+                logger.write("Read 12+log(O/H) = {} +/- {}".format(oh, soh), newLine=False)
 
         if (oh > 9.5):
-            print "Warning: OH > 9.5 rejected, set to 0"
+            logger.write("Warning: OH > 9.5 rejected, set to 0", newLine=False)
             oh = 0
 
         dd0 = 10 ** (oh - p[2][2])
