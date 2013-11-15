@@ -22,12 +22,12 @@ images.
 import os
 import numpy as np
 from Error import raiseError
-# from . import pf
 from calcBackground import calcBackground
 from clfind2d import clfind2d
 from checkFUV import checkFUV
 from createCatalog import createCatalog
 from pdrLib import open_image
+from matchFOV import maskImage
 
 
 def checkCLFindOptions(root, configOpts):
@@ -48,14 +48,15 @@ def checkCLFindOptions(root, configOpts):
     return everyThingOK
 
 
-def calcParameters(root, configOpts, logger, sigmaSep=3.):
+def calcParameters(root, configOpts, logger, sigmaSep=3., fov=None):
 
     image = configOpts[root + 'Image']
     sigma = configOpts[root + 'Sigma']
 
     if configOpts[root + 'Background'] in [None, 'None', 'N', '', '-1', -1.]:
         logger.write('Determining FUV background ...', newLine=True)
-        background = calcBackground(image, logger, verbose=configOpts['verbose'])
+        background = calcBackground(image, logger,
+                                    verbose=configOpts['verbose'], fov=fov)
         configOpts[root + 'Background'] = background
     else:
         background = configOpts[root + 'Background']
@@ -64,7 +65,11 @@ def calcParameters(root, configOpts, logger, sigmaSep=3.):
     configOpts[root + 'lLevel'] = lLevel
 
     if configOpts[root + 'hLevel'] in [None, 'None', 'N', '', '-1', -1.]:
+
         wcs, data, hdu = open_image(image)
+        if fov is not None:
+            data = maskImage(data, wcs, fov)
+
         hLevel = np.nanmax(data) - background
         configOpts[root + 'hLevel'] = hLevel
 
@@ -114,7 +119,7 @@ def getFloat(text, default):
     return value
 
 
-def getRegions(configOpts, logger):
+def getRegions(configOpts, logger, fov=None):
 
     #####################################################################
     ##########################  FUV processing ##########################
@@ -129,17 +134,27 @@ def getRegions(configOpts, logger):
     if (configOpts['fuvMaskFile'].lower() == 'default') or (configOpts['fuvMaskFile'] is None):
         configOpts['fuvMaskFile'] = os.path.splitext(configOpts['fuvImage'])[0] + '_Mask.fits'
 
+    if fov is not None:
+        maskFile = os.path.realpath(configOpts['fuvMaskFile'])
+        trimmedFUVImage = os.path.dirname(maskFile) + '/Trimmed_' + \
+            os.path.basename(maskFile)
+        if os.path.exists(trimmedFUVImage):
+            configOpts['fuvImage'] = trimmedFUVImage
+            logger.write('FUV trimmed image is {0}'.format(os.path.basename(trimmedFUVImage)),
+                         newLine=True, doPrint=True)
+
     doCLFindFUV = True
     if os.path.exists(configOpts['fuvMaskFile']):
         if configOpts['overwrite'] is True:
             doCLFindFUV = True
         else:
-            doCLFindFUV = getYN('\nFound %s. Rerun CLFind? [y/N] ' % configOpts['fuvMaskFile'],
+            doCLFindFUV = getYN('\nFound %s. Rerun CLFind? [y/N] ' %
+                                os.path.basename(configOpts['fuvMaskFile']),
                                 returnOpt=False)
 
     if doCLFindFUV is False:
         logger.write('FUV mask not created. Using previously generated mask %s.' %
-                     configOpts['fuvMaskFile'])
+                     os.path.basename(configOpts['fuvMaskFile']))
 
     else:
 
@@ -152,8 +167,10 @@ def getRegions(configOpts, logger):
 
             logger.write('FUV: Running in interactive mode ... ', newLine=True)
 
-            # data = pf.getdata(fuvImage)
             wcs, data, hdu = open_image(fuvImage)
+            if fov is not None:
+                data = maskImage(data, wcs, fov)
+
             logger.write('Image statistics', newLine=True)
             logger.write('Max: %9.3e' % np.nanmax(data))
             logger.write('Min: %9.3e' % np.nanmin(data))
@@ -166,7 +183,7 @@ def getRegions(configOpts, logger):
             configOpts['fuvnLevels'] = getFloat('Number of levels  [-1 for automatic]: ', -1)
             configOpts['fuvMinPixels'] = getFloat('Minimum number of pixels [20]: ', 20)
 
-        calcParameters('fuv', configOpts, logger)
+        calcParameters('fuv', configOpts, logger, fov=fov)
         printCLFindOptions('fuv', configOpts, logger)
 
         resultCheck = checkCLFindOptions('fuv', configOpts)
@@ -177,8 +194,8 @@ def getRegions(configOpts, logger):
                        logger)
 
         clfind2d(fuvImage, configOpts['fuvMaskFile'], configOpts['fuvLevels'],
-                 nPixMin=configOpts['fuvMinPixels'],
-                 verbose=configOpts['verbose'])
+                 nPixMin=configOpts['fuvMinPixels'], verbose=configOpts['verbose'],
+                 extend=fov)
 
         logger.write('CLFind log can be found in %s.log' %
                      configOpts['fuvMaskFile'], newLine=True, doPrint=False)
@@ -186,20 +203,28 @@ def getRegions(configOpts, logger):
     #####################################################################
     ##########################  FUV rejection ###########################
 
+    # We calculate how many pixels are the physical size of the region
+    physSize = float(configOpts['HIRegSize'])
+    scalePc = configOpts['HI_PcPerPixel']
+    minStampSize = int(np.ceil(physSize / scalePc))
+
     if configOpts['checkFUV']:
-        if (configOpts['fuvMaskFileRej'] is None) or (configOpts['fuvMaskFileRej'].lower() == 'default'):
-            configOpts['fuvMaskFileRej'] = os.path.splitext(configOpts['fuvImage'])[0] + '_RejMsk.fits'
+        if (configOpts['fuvMaskFileRej'] is None) or \
+                (configOpts['fuvMaskFileRej'].lower() == 'default'):
+            configOpts['fuvMaskFileRej'] = os.path.splitext(configOpts['fuvImage'])[0] + \
+                '_RejMsk.fits'
 
         doRejection = True
         if os.path.exists(configOpts['fuvMaskFileRej']) and doCLFindFUV is False:
             if configOpts['overwrite'] is False:
                 doRejection = getYN('\nFound %s. Redo FUV rejection? [y/N] ' %
-                                    configOpts['fuvMaskFileRej'], returnOpt=False)
+                                    os.path.basename(configOpts['fuvMaskFileRej']),
+                                    returnOpt=False)
 
         if doRejection is True:
             configOpts['overwrite'] = True  # From this point on we have to redo everything
             logger.write('FUV rejection', newLine=True)
-            checkFUV(configOpts, logger)
+            checkFUV(configOpts, logger, minStampSize=minStampSize)
             logger.write('New mask saved as %s' % configOpts['fuvMaskFileRej'],
                          newLine=True)
         else:
@@ -235,104 +260,3 @@ def getRegions(configOpts, logger):
                       logger, ellipse=False)
 
     return
-
-    #####################################################################
-    ##########################  HI processing ###########################
-
-    # if configOpts['hiInteractive'] == False:
-    #     areCLParamsOK = checkCLFindOptions('hi')
-    #     if areCLParamsOK == False:
-    #         fancyPrint('Some HI parameters in config file are wrong\n',
-    #             newLine=True, log=True)
-    #         sys.exit()
-    #     fancyPrint('HI parameters loaded', newLine=True, log=True)
-
-    # else:
-
-    #     fancyPrint('HI: Running in interactive mode ... ', newLine=True, log=True)
-
-    #     data = pf.getdata(configOpts['hiImage'])
-    #     fancyPrint('Image statistics', newLine=True, log=True)
-    #     fancyPrint('Max: %9.3e' % np.nanmax(data), log=True)
-    #     fancyPrint('Min: %9.3e' % np.nanmin(data), log=True)
-    #     fancyPrint('Mean: %9.3e' % np.mean(data), log=True)
-    #     fancyPrint('Median: %9.3e' % np.median(data), log=True)
-
-    #     configOpts['hiBackground'] = \
-    #         calcBackground(configOpts['hiImage'], fancyPrint)
-    #     fancyPrint('Background: %.5e' % configOpts['hiBackground'],
-    #         newLine=True, log=False)
-
-    #     fancyPrint('')
-    #     configOpts['hiSigma'] = getFloat('Sigma [3]: ', 3)
-    #     configOpts['hihLevel'] = getFloat('Highest level [-1 for automatic]: ', -1)
-    #     configOpts['hinLevels'] = getFloat('Number of levels  [-1 for automatic]: ', -1)
-    #     configOpts['hiMinPixels'] = getFloat('Minimum number of pixels [20]: ', 20)
-    #     fancyPrint('')
-
-    # hiLevels = calcParameters('hi')
-
-    # if (configOpts['hiMaskFile'].lower() == 'default') or (configOpts['hiMaskFile'] == None):
-    #     configOpts['hiMaskFile'] = os.path.splitext(configOpts['hiImage'])[0] + '_Msk.fits'
-
-    # doIDL = True
-    # if os.path.exists(configOpts['hiMaskFile']):
-    #     doIDL = getYN('\nFound {0}. Rerun CLFind? [y/N] '.format(configOpts['hiMaskFile']),
-    #         returnOpt=False)
-
-    # if doIDL:
-
-    #     status, maskFile, idlLogFile = clfind2dIDL(configOpts['hiImage'], hiLevels,
-    #         log=configOpts['log'], nPixMin=configOpts['hiMinPixels'],
-    #         verbose=configOpts['verbose'])
-
-    #     if not status:
-    #         fancyPrint('Problem found running IDL', newLine=True, log=True)
-    #         fancyPrint('Kill IDL, check {0} and try again\n'.format(idlLogFile), log=True)
-    #         sys.exit()
-
-    #     sh.move(maskFile, configOpts['hiMaskFile'])
-    #     logData = open(idlLogFile, 'r').read().splitlines()
-    #     sh.move(idlLogFile, 'clfind2dHI.log')
-
-    # else:
-    #     logData = open('clfind2dHI.log', 'r').read().splitlines()
-
-    # for line in logData:
-    #     fancyPrint(line, log=True, noPrint=True)
-    #     if 'clumps found (' in line:
-    #         m = re.match(r'(\d+)(.+)(\(+)(\d+)', line.replace(' ',''))
-    #         nClumpsHI = int(m.groups(0)[0])
-    #         nClumpsRejHI = nClumps = int(m.groups(0)[-1])
-
-    # fancyPrint('HI mask file: {0}'.format(configOpts['hiMaskFile']), newLine=True, log=True)
-    # fancyPrint('Number of clumps: {0}'.format(nClumpsHI), log=True)
-    # fancyPrint('Number of clumps rejected: {0}'.format(nClumpsRejHI), log=True)
-
-    # # #####################################################################
-    # # ##########################  HI rejection ###########################
-    # #
-    # # if configOpts['checkHI']:
-    # #     if (configOpts['fuvMaskFileRej'] == None) or (configOpts['fuvMaskFileRej'].lower() == 'default'):
-    # #         configOpts['fuvMaskFileRej'] = os.path.splitext(configOpts['fuvImage'])[0] + '_RejMsk.fits'
-    # #
-    # #     doRejection = True
-    # #     if os.path.exists(configOpts['fuvMaskFileRej']) and doIDL == False:
-    # #         doRejection = getYN('\nFound {0}. Redo FUV rejection? [y/N] '.format(configOpts['fuvMaskFileRej']),
-    # #                             returnOpt=False)
-    # #
-    # #     if doRejection == True:
-    # #         try:
-    # #             checkFUV(configOpts, fancyPrint)
-    # #         except Exception as detail:
-    # #             raise detail
-    # #     else:
-    # #         fancyPrint('Not doing FUV rejection. Using image {0}'.format(configOpts['fuvMaskFileRej']),
-    # #             log=True, noPrint=True, newLine=True)
-    # #
-    # #
-    # # #####################################################################
-
-    # fancyPrint('')
-
-    return configOpts

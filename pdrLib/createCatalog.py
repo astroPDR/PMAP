@@ -57,7 +57,8 @@ def createCatalog(image, mask, voTableCat, ds9RegsFile, peaksFile,
         wcsMask = pw.WCS(hduMask[0].header)
     except:
         wcsMask = None
-        logger.write(cm.Fore.YELLOW + 'No WCS information. The VOTable file will not include those fields.' +
+        logger.write(cm.Fore.YELLOW +
+                     'No WCS information. The VOTable file will not include those fields.' +
                      cm.Style.RESET_ALL)
 
     logger.write('Gathering mask data ... ', newLine=True)
@@ -95,11 +96,14 @@ def createCatalog(image, mask, voTableCat, ds9RegsFile, peaksFile,
             try:
                 return list(fitellipse(data, ellMode)) + [0]
             except RuntimeError:
-                return [regions.Regions[id].getCentroid()[0][0], regions.Regions[id].getCentroid()[0][1],
-                        regions.Regions[idReg].getCentroid()[1], regions.Regions[idReg].getCentroid()[1],
+                return [regions.Regions[id].getCentroid()[0][0],
+                        regions.Regions[id].getCentroid()[0][1],
+                        regions.Regions[idReg].getCentroid()[1],
+                        regions.Regions[idReg].getCentroid()[1],
                         0.0, 1]
 
-        ellipseFit = np.array([getEllParams(regions.Regions[idReg].pixels, idReg) for idReg in regions.idRegions])
+        ellipseFit = np.array([getEllParams(regions.Regions[idReg].pixels, idReg)
+                               for idReg in regions.idRegions])
         ellipseCentroidWCS = np.array(wcsMask.wcs_pix2sky(ellipseFit[:, [1, 0]], 0))
         ellipseAxisWCS = np.array(ellipseFit[:, [2, 3]] * scale)
         ellipseAngle = np.array(-ellipseFit[:, 4] * 180. / np.pi + 90.)

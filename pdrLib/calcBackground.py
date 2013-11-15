@@ -23,12 +23,10 @@ from . import pf
 import numpy as np
 import os
 from pdrLib import open_image
+from matchFOV import cutRegion
 
 
 def calcBack(data, sigma=3.):
-
-    # print
-    # print "  #       Mean          Std           Dif."
 
     tmpData = data.flatten()[np.isfinite(data.flatten())]
 
@@ -51,15 +49,16 @@ def calcBack(data, sigma=3.):
     return mean
 
 
-def calcBackground(image, logger, verbose=True):
+def calcBackground(image, logger, verbose=True, fov=None):
 
     import tempfile
 
     logger.write('Automatic estimation of the background level using clfind2d')
 
     wcsImage, data, imageData = open_image(image)
-    # imageData = pf.open(image)
-    data = imageData[0].data
+    if fov is not None:
+        imageData = cutRegion(image, fov)
+        data = imageData[0].data
     data[data == 0.0] = np.nan
 
     tmpBackgroundLevel = calcBack(data)
@@ -71,7 +70,7 @@ def calcBackground(image, logger, verbose=True):
     tmpLevels = np.linspace(10.0 * tmpBackgroundLevel, np.nanmax(data), 20)
 
     clfind2d(image, tmpMask.name, tmpLevels, log=False, nPixMin=20, verbose=verbose,
-             rejectZero=True)
+             rejectZero=True, extend=fov)
 
     logger.write('Step 3) Calculating residuals', newLine=True, doLog=False)
 
@@ -85,6 +84,13 @@ def calcBackground(image, logger, verbose=True):
 
     if os.path.exists(tmpMask.name):
         os.remove(tmpMask.name)
+
+    if fov is not None:
+        tmpMaskFile = os.path.realpath(tmpMask.name)
+        trimmedFileOut = os.path.dirname(tmpMaskFile) + '/Trimmed_' + \
+            os.path.basename(tmpMaskFile)
+        if os.path.exists(trimmedFileOut):
+            os.remove(trimmedFileOut)
 
     del imageData, dataMask
 

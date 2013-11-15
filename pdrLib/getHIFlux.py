@@ -45,7 +45,7 @@ def copySExFiles(logger):
     return
 
 
-def getHIFlux(configOpts, fluxFUVTable, logger):
+def getHIFlux(configOpts, fluxFUVTable, logger, fov=None):
 
     logger.write('Identifying HI patches ...', newLine=True)
 
@@ -71,7 +71,6 @@ def getHIFlux(configOpts, fluxFUVTable, logger):
 
     # We calculate how many pixels are the physical size of the region
     physSize = float(configOpts['HIRegSize'])
-
     scalePc = configOpts['HI_PcPerPixel']
     size = int(np.ceil(physSize / scalePc))
 
@@ -85,7 +84,7 @@ def getHIFlux(configOpts, fluxFUVTable, logger):
     # Gets the HI background or automatically calculates it
     if configOpts['hiBackground'] in [None, 'None', 'N', '', '-1', -1.]:
         logger.write('Determining HI background ...', newLine=True)
-        hi_bg = calcBackground(imageHI, logger, verbose=configOpts['verbose'])
+        hi_bg = calcBackground(imageHI, logger, verbose=configOpts['verbose'], fov=fov)
         configOpts['hiBackground'] = hi_bg
     else:
         hi_bg = configOpts['hiBackground']

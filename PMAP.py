@@ -144,13 +144,20 @@ def PMAP(configFile, createConfig=False, interactiveConfig=False,
     # Checks astropy version
     checkAstropyVersion(configOpts)
 
+    # Checks the FOV of the FUV and HI images and matchs them
+    matchFOV = configOpts['matchFOV']
+    if matchFOV is True:
+        fov = pdr.matchFOV(configOpts['fuvImage'], configOpts['hiImage'])
+    else:
+        fov = None
+
     # Calls the getRegions routine, which produces the region masks for the FUV and HI images
-    pdr.getRegions(configOpts, logger)
+    pdr.getRegions(configOpts, logger, fov=fov)
 
     #Todo: call reject regions on _Peaks.dat if desired
 
     fluxFUVTable = pdr.getUVFlux(configOpts, logger)
-    hiData = pdr.getHIFlux(configOpts, fluxFUVTable, logger)
+    hiData = pdr.getHIFlux(configOpts, fluxFUVTable, logger, fov=fov)
 
     # Now we apply the PDR mehod to the FUV and HI measurements
     pdrData = pdr.applyPDRMethod(configOpts, fluxFUVTable, hiData, logger)

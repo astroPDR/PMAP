@@ -27,6 +27,13 @@ FUV_Pix_Scale = None
 # If None, it will calculated from the image.
 HI_Pix_Scale = None
 
+# If True, only the areas covered by both the FUV and HI are used.
+# This avoids problems with the pipeline identifying PDR candidates that are
+# outside the FOV of the HI map. It also saves computing time. If
+# the code fails with matchFOV = True, you may want to set it to False
+# or cut the images manually.
+matchFOV = True
+
 
 [Logging options]
 

@@ -47,7 +47,7 @@ def calcAngDist(coords1, coords2):
     return rr
 
 
-def checkFUV(options, logger):
+def checkFUV(options, logger, minStampSize=20):
 
     fuvImage = options['fuvImage']
     fuvMask = options['fuvMaskFile']
@@ -60,6 +60,17 @@ def checkFUV(options, logger):
     hduImage = pf.open(fuvImage)
     # nRegs = np.max(hduMask[0].data)
     regions = Regions.RegionSet(hduMask[0].data, image=hduImage[0].data)
+
+    shapeMask = hduMask[0].data.shape
+    minSizeReg = minStampSize + 10.
+    for regionID in regions.Regions.keys():
+        regCentroid = regions.Regions[regionID].getCentroid()[0]
+        distances = np.array([regCentroid[0], shapeMask[0]-regCentroid[0],
+                              regCentroid[1], shapeMask[1]-regCentroid[1]])
+        if np.min(distances) <= minSizeReg / 2.:
+            regions.deleteReg(regionID)
+            logger.write(
+                'Region {0} deleted (too close to the border of the image)'.format(regionID))
 
     logger.write('Getting adjacent regions ... ', doLog=False)
     adjacentRegions = regions.getAdjacentRegs()

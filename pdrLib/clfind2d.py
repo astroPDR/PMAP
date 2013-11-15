@@ -23,6 +23,7 @@ Usage: clfind2d.py fileIn levels [-l|--nolog] [-o|--out]
 
 import numpy as np
 from pdrLib import open_image, pf
+from matchFOV import cutRegion
 import sys
 import os
 from time import strftime, gmtime, clock
@@ -141,7 +142,8 @@ def testBad(data, nPixMin, nCl, clumpPeak, mask):
 
 
 # Main routine
-def clfind2d(file, mask, levels, log=True, nPixMin=20, verbose=True, rejectZero=False):
+def clfind2d(file, mask, levels, log=True, nPixMin=20,
+             verbose=True, rejectZero=False, extend=None):
 
 # The final name of the mask
     fileOut = mask
@@ -157,9 +159,11 @@ def clfind2d(file, mask, levels, log=True, nPixMin=20, verbose=True, rejectZero=
     tStart = clock()  # The clockwatch is on
     currentTime = strftime('%a, %d %b %Y %H:%M:%S GMT', gmtime())
 
-    printLog('\n----------------------------------------------------------------\n', logFile, verbose=verbose)
+    printLog('\n----------------------------------------------------------------\n',
+             logFile, verbose=verbose)
     printLog('CLFIND2d: %s\n' % currentTime, logFile, verbose=verbose)
-    printLog('----------------------------------------------------------------\n', logFile, verbose=verbose)
+    printLog('----------------------------------------------------------------\n',
+             logFile, verbose=verbose)
     printLog('Filename = %s\n' % file, logFile, verbose=verbose)
     printLog('Mask file = %s\n' % fileOut, logFile, verbose=verbose)
     if log is True:
@@ -170,20 +174,25 @@ def clfind2d(file, mask, levels, log=True, nPixMin=20, verbose=True, rejectZero=
     levStr = ','.join(map(str, levStr))
     printLog('Contour levels at = %s\n' % levStr, logFile, verbose=verbose)
 
-    printLog('----------------------------------------------------------------\n', logFile, verbose=verbose)
+    printLog('----------------------------------------------------------------\n',
+             logFile, verbose=verbose)
 
 # Loads the FITS image
     wcs, data, hdu = open_image(file)
     header = hdu[0].header
-    # data = pf.getdata(file)
-    # header = pf.getheader(file)
+
+# If extend is not None, only the selected area is used.
+    if extend is not None and wcs is not None:
+        hdu = cutRegion(file, extend)
+        data = hdu[0].data
+        header = hdu[0].header
 
     iSize, jSize = data.shape
 
-# Bad pixels are set to -999.9
-    data[np.isnan(data)] = -999.9
+# Bad pixels are set to -999.
+    data[np.isnan(data)] = -999.
     if rejectZero is True:
-        data[data == 0.0] = -999.9
+        data[data == 0.0] = -999.
 
 # Adds a top level to the contours list
     levels = np.append(levels, 99999)
@@ -204,8 +213,8 @@ def clfind2d(file, mask, levels, log=True, nPixMin=20, verbose=True, rejectZero=
 
         nPix, reg, nReg = defReg(data, levMin, levMax, diagonal=True)
 
-        printLog('Contour level %f: %i pixels, %i regions, ' % (levels[nWork], nPix, nReg), logFile,
-                 verbose=verbose)
+        printLog('Contour level %f: %i pixels, %i regions, ' % (levels[nWork], nPix, nReg),
+                 logFile, verbose=verbose)
 
         nNew = defClump(data, levels[nWork], reg, nReg, mask, clumpPeak, nCl)
 
@@ -217,7 +226,8 @@ def clfind2d(file, mask, levels, log=True, nPixMin=20, verbose=True, rejectZero=
     nCl -= nBad
 
     printLog('%d clumps found (%d rejected)\n' % (nCl, nBad), logFile, verbose=verbose)
-    printLog('================================================================\n', logFile, verbose=verbose)
+    printLog('================================================================\n',
+             logFile, verbose=verbose)
 
 # Saves the mask
     if os.path.exists(fileOut):
@@ -228,6 +238,19 @@ def clfind2d(file, mask, levels, log=True, nPixMin=20, verbose=True, rejectZero=
     hdulist.writeto(fileOut)
 
     printLog('Writing output file: %s\n' % fileOut, logFile, verbose=verbose)
+
+# If extend is not None, we also save the trimmed original image
+    if extend is not None:
+        fileOut = os.path.realpath(fileOut)
+        trimmedFileOut = os.path.dirname(fileOut) + '/Trimmed_' + os.path.basename(fileOut)
+        if os.path.exists(trimmedFileOut):
+            os.remove(trimmedFileOut)
+        hdu = pf.PrimaryHDU(data)
+        hdu.header = header
+        hdulist = pf.HDUList([hdu])
+        hdulist.writeto(trimmedFileOut)
+
+        printLog('Writing trimmed image: %s\n' % trimmedFileOut, logFile, verbose=verbose)
 
     tEnd = clock()
     interval = (tEnd - tStart)/60.0
@@ -247,7 +270,8 @@ if __name__ == '__main__':
     parser.add_option('-l', '--nolog', dest='log', action='store_false',
                       help='doesn\'t write the log file', default=True)
     parser.add_option('-n', '--npixmin', dest='npix',
-                      help='minimum number of pixels for a region to be accepted', type=int, default=20)
+                      help='minimum number of pixels for a region to be accepted',
+                      type=int, default=20)
     parser.add_option('-i', '--interval', dest='interval',
                       help='interval of levels [start,end,step]')
 

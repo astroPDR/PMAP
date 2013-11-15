@@ -55,6 +55,7 @@ def extractFromCoords(hduHI, wcsHI, fluxTable, root='HIRegs/HIReg',
         jMax = np.int(coordPix[0] + size)
 
         regionData = hduHI[0].data[iMin:iMax, jMin:jMax]
+
         outPutData[ID] = regionData
         if createMosaic is True:
             mosaicData.append(regionData)
