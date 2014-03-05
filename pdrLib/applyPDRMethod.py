@@ -64,14 +64,21 @@ def getRhoRG(configOpts, fluxFUVTable, hiData, logger):
 
         pdrID = fluxFUVTable['PDRID'][ii]
 
-        Rgal = calcSeparation(
-            fluxFUVTable[ii]['RA'], fluxFUVTable[ii]['Dec'], c_RA, c_DEC,
-            pa, incl, dist * 1e-3,  # dist passed in kpc so Rgal will be in kpc
-            wcsFUV, apVersion=configOpts['apVersionSimple'])
-
+        #Rgal = calcSeparation(
+        #    fluxFUVTable[ii]['RA'], fluxFUVTable[ii]['Dec'], c_RA, c_DEC,
+        #    pa, incl, dist * 1e-3,  # dist passed in kpc so Rgal will be in kpc
+        #    wcsFUV, apVersion=configOpts['apVersionSimple'])
+      
         hiPatchesPDR = hiData[hiData['PDRID'] == pdrID]
         for hiRow in hiPatchesPDR:
             hiID = hiRow['HIID']
+            #2014-03-05: JSH - now using HI patch coordinates instead of FUV
+            # to calculate Rgal
+            Rgal = calcSeparation(
+                hiRow['RA'], hiRow['Dec'], c_RA, c_DEC,
+                pa, incl, dist * 1e-3,  # dist passed in kpc so Rgal will be in kpc
+                wcsFUV, apVersion=configOpts['apVersionSimple'])
+
             rhoHI = calcSeparation(
                 fluxFUVTable[ii]['RA'], fluxFUVTable[ii]['Dec'],
                 hiRow['RA'], hiRow['Dec'],
@@ -114,20 +121,24 @@ def dustToGas(configOpts, fluxFUVTable, hiData, dataRho, logger):
     dd0 = []
     sdd0 = []
     warningIssued = False
-    for rowHI in hiData:
-        pdrID = rowHI['PDRID']
+
+    #JSH - Adding dataRho to the loop since they should be equal length
+    for rowHI, rowRho in zip(hiData, dataRho):
         # print uv_idx, fluxFUVTable.RA[0], fluxFUVTable.RA[uv_idx]#, fluxFUVTable.RA[uv_idx[0]]
 
         # hack: fluxFUVTable.RA[uv_idx] yields [' hh mm ss '] instead
         # of plain string, which causes problems here. Hence [0]
         # dust routine expects D_gal(kpc) but ignored anyway?
 
-        pdrTable = fluxFUVTable[fluxFUVTable['PDRID'] == pdrID]
-        Rgal = dataRho[dataRho['PDRID'] == pdrID]['Rgal'][0]
+        #2014-03-5: JSH - changed code to use coordinates and Rgal of 
+        # HI patches, not FUV source coordiantes
 
-        param_array = [[pdrTable['RA'], pdrTable['Dec']], [c_RA, c_DEC],
+        #param_array = [[pdrTable['RA'], pdrTable['Dec']], [c_RA, c_DEC],
+        #               dustmodel, [pa, incl, dist * 1e-3,
+        #                           Rgal], wcsFUV, logger]
+        param_array = [[rowHI['RA'], rowHI['Dec']], [c_RA, c_DEC],
                        dustmodel, [pa, incl, dist * 1e-3,
-                                   Rgal], wcsFUV, logger]
+                                   rowRho['Rgal']], wcsFUV, logger]
 
         # print param_array
         #! should separate dust model from calculating R

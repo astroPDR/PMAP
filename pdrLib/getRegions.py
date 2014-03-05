@@ -70,7 +70,9 @@ def calcParameters(root, configOpts, logger, sigmaSep=3., fov=None):
         if fov is not None:
             data = maskImage(data, wcs, fov)
 
-        hLevel = np.nanmax(data) - background
+        #hLevel = np.nanmax(data) - background
+        hLevel = np.max(data) - background
+
         configOpts[root + 'hLevel'] = hLevel
 
     hLevel = configOpts[root + 'hLevel']

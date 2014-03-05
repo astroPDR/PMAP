@@ -26,7 +26,7 @@
 
 # from __future__ import with_statement #Needed for logdump's 'with' use
 # in Python 2.5 only?
-import pdb  # debugger
+#import pdb  # debugger
 import numpy as np
 from . import pf, pw
 from string import strip
@@ -273,7 +273,7 @@ def determine_dust(scenario, p):
         logger.write(coordstring, newLine=False)
         location = coord.ICRSCoordinates(coordstring)
 
-        w = p[4] #contains the header object
+        w = p[2][0] #contains the (OH map!) header object
         r, d = (location.ra.degrees, location.dec.degrees)
         x, y = np.round(w.wcs_world2pix([[r, d]], 0))[0] #second argument is base 0; set to 1 if you want DS9-like values
         ohdata = p[2][1]
